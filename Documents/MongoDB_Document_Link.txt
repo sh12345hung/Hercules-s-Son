@@ -1,0 +1,4 @@
+http://mongodb.github.io/mongo-java-driver/3.4/driver/getting-started/installation/
+https://github.com/mongolab/mongodb-driver-examples/blob/master/java/JavaSimpleExample.java
+https://youtu.be/e3vZ5wOeMdQ?list=WL
+https://youtu.be/4-ioBcKtNC8?list=WL
