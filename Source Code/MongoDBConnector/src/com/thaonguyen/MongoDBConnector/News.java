@@ -95,11 +95,11 @@ public class News {
 	}
 	
 	public Document toDocument() {
-		Document doc = new Document("Title", this.getTitle())
-					       .append("URL", this.getURL())
-					       .append("HeaderText", this.getHeaderText())
-					       .append("ImageURL", this.getImageURL())
-					       .append("Modified", this.getModifiedDate());
+		Document doc = new Document("Title", this._title)
+					       .append("URL", this._url)
+					       .append("HeaderText", this._headerText)
+					       .append("ImageURL", this._imageUrl)
+					       .append("Modified", this._modified);
 		return doc;
 	}
 }

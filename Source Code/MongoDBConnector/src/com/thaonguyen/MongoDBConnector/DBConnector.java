@@ -14,7 +14,7 @@ import com.mongodb.client.MongoDatabase;
 import static com.mongodb.client.model.Filters.*;
 
 public class DBConnector {
-	public static final String DEFAULT_STANDARD_MONGODB_URI = "mongodb://<dbuser>:<dbpassword>@ds157278.mlab.com:57278/thaonguyentestdb";
+	public static final String DEFAULT_STANDARD_MONGODB_URI = "mongodb://admin:admin@ds157278.mlab.com:57278/thaonguyentestdb";
 	
 	private MongoClientURI  _uri;
 	private MongoClient     _client;
@@ -64,7 +64,11 @@ public class DBConnector {
 		_client.close();
 	}
 	
-	public boolean ChangeCollection(String CollectionName) {
+	public int getCount() {
+		return (int) _collection.count();
+	}
+	
+	public boolean changeCollection(String CollectionName) {
 		boolean result = false;
 		
 		/* Check if collection is exists */
@@ -83,7 +87,7 @@ public class DBConnector {
 		return result;
 	}
 	
-	public boolean CheckURLExists(String NewsURL) {
+	public boolean checkURLExists(String NewsURL) {
 		boolean result = false;
 		
 		/* Query to database */
@@ -99,7 +103,7 @@ public class DBConnector {
 		ObjectId newsID = null;
 		
 		/* Check if News is exists in database */
-		if (CheckURLExists(News.getURL())) {
+		if (!checkURLExists(News.getURL())) {
 			Document doc = News.toDocument();
 			_collection.insertOne(doc);
 			newsID = (ObjectId)doc.get( "_id" );
@@ -108,7 +112,7 @@ public class DBConnector {
 		return newsID;
 	}
 	
-	public ArrayList<ObjectId> AddNewsList(NewsList NewsList) {
+	public ArrayList<ObjectId> addNewsList(NewsList NewsList) {
 		ArrayList<ObjectId> listID = new ArrayList<ObjectId>();
 		ArrayList<News> listNews = NewsList.toArrayList();
 		

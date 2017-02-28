@@ -54,10 +54,10 @@ CLASS DBConnector:
 	+ DBConnector(CollectionName : String)
 	+ DBConnector(URI : String, CollectionName : String)
 
-	+ Close()                                   : void
-	+ GetCount()                                : int
-	+ ChangeCollection(CollectionName : String) : boolean
-	+ GetNews(Start : int, Number : int)        : NewsList
-	+ CheckURLExists(NewURL : String)           : boolean
-	+ AddNews(News : News)                      : ObjectId
-	+ AddNewsList(NewsList : NewsList)          : ArrayList<ObjectId>
+	+ close()                                   : void
+	+ getCount()                                : int
+	+ changeCollection(CollectionName : String) : boolean
+	+ getNews(Start : int, Number : int)        : NewsList
+	+ checkURLExists(NewURL : String)           : boolean
+	+ addNews(News : News)                      : ObjectId
+	+ addNewsList(NewsList : NewsList)          : ArrayList<ObjectId>
