@@ -40,7 +40,7 @@ public class Test {
 		
 		List<Document> docs = l.toArrayListDocument();*/
 		
-		DBConnector conn = new DBConnector("Newsss"); // Not check with unavailable collection name yet
+		/* DBConnector conn = new DBConnector("News"); // Not check with unavailable collection name yet
 		
 		System.out.println("Document count: " + conn.getCount());
 		
@@ -76,7 +76,19 @@ public class Test {
 		News n5 = new News("title5", "url5", "headertext5", "imageurl5", new Date());
 		l.addNews(n5);
 		
-		System.out.println("Added: " + conn.addNewsList(l));
+		System.out.println("Added: " + conn.addNewsList(l));*/
+		
+		DBConnector conn = new DBConnector("News"); // Not check with unavailable collection name yet
+		
+		System.out.println("Document count: " + conn.getCount());
+		
+		NewsList l = conn.getNews(0, 15);
+		
+		ArrayList<News> aln = l.toArrayList();
+		Iterator<News> i = aln.iterator();
+		while (i.hasNext()) {
+			System.out.println(i.next().getTitle());
+		}
 		
 		conn.close();
 		System.out.println("MongoDBConnector test stop");

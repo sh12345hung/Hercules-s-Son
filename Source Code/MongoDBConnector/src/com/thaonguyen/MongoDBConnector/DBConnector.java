@@ -13,6 +13,8 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import static com.mongodb.client.model.Filters.*;
 
+import java.util.Date;
+
 public class DBConnector {
 	public static final String DEFAULT_STANDARD_MONGODB_URI = "mongodb://admin:admin@ds157278.mlab.com:57278/thaonguyentestdb";
 	
@@ -122,5 +124,22 @@ public class DBConnector {
 		}
 		
 		return listID;
+	}
+	
+	public NewsList getNews(int Start, int MaxCount) {
+		NewsList result = new NewsList();
+		Document tempDoc;
+		News tempNews;
+		FindIterable<Document> obj = _collection.find().skip(Start).limit(MaxCount);
+		
+		Iterator<Document> i = obj.iterator();
+		while (i.hasNext()) {
+			tempDoc = i.next();
+			tempNews = new News(tempDoc.getString("Title"), tempDoc.getString("URL"), tempDoc.getString("HeaderText"), tempDoc.getString("ImageURL"), (Date) tempDoc.get("Modified"));
+			tempNews.setID(((ObjectId)tempDoc.get("_id")).toHexString());
+			result.addNews(tempNews);
+		}
+		
+		return result;
 	}
 }

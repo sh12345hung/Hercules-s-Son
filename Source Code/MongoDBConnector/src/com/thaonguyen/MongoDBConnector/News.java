@@ -24,7 +24,7 @@ public class News {
 		this._modified = null;
 	}
 
-	public News(String Title, String URL, String HeaderText, String ImageURL, Date ModifiedDate) {
+	public News(String Title, String URL, String HeaderText, String ImageURL, Date date) {
 		super();
 
 		this._id = "";
@@ -32,7 +32,7 @@ public class News {
 		this._url = URL;
 		this._headerText = HeaderText;
 		this._imageUrl = ImageURL;
-		this._modified = ModifiedDate;
+		this._modified = date;
 	}
 
 	public News(News Obj) {

@@ -14,7 +14,7 @@ CLASS News:
 	- _modified   : Date
 
 	+ News(Title : String, URL : String)
-	+ News(Title : String, URL : String, HeaderText : String, ImageURL : String, Modified : String)
+	+ News(Title : String, URL : String, HeaderText : String, ImageURL : String, Modified : Date)
 	+ News(Obj : News)
 
 	+ getID()                              : String
@@ -57,7 +57,7 @@ CLASS DBConnector:
 	+ close()                                   : void
 	+ getCount()                                : int
 	+ changeCollection(CollectionName : String) : boolean
-	+ getNews(Start : int, Number : int)        : NewsList
+	+ getNews(Start : int, MaxCount : int)      : NewsList
 	+ checkURLExists(NewURL : String)           : boolean
 	+ addNews(News : News)                      : ObjectId
 	+ addNewsList(NewsList : NewsList)          : ArrayList<ObjectId>
