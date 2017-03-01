@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:textSize="15sp"
             android:text="Nguồn: Vnexpress.vn"
-            android:id="@+id/tvNguon"
+            android:id="@+id/tvSource"
             android:layout_weight="1"
             android:layout_gravity="center|end"/>
         <ImageView

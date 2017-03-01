@@ -1,15 +1,23 @@
 package com.example.trungnguyen.newsapp.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.trungnguyen.newsapp.ButtonExpandable;
+import com.example.trungnguyen.newsapp.DetailActivity;
 import com.example.trungnguyen.newsapp.R;
 import com.example.trungnguyen.newsapp.model.News;
 
@@ -18,17 +26,25 @@ import java.util.List;
 /**
  * Created by Trung Nguyen on 2/27/2017.
  */
-public class ExpandableAdapter extends BaseExpandableListAdapter {
+public class ExpandableAdapter extends BaseExpandableListAdapter implements View.OnClickListener {
 
+    ButtonExpandable mListener;
     Context mContext;
     List<News> mNewsList;
+    NewsViewHolder holder;
+    ExpandableListView expandableListView;
 
-    public ExpandableAdapter(Context context, List<News> list) {
+    public ExpandableAdapter(Context context, List<News> list, ExpandableListView exp) {
         mContext = context;
         mNewsList = list;
+        expandableListView = exp;
     }
 
-    @Override
+
+    public void setOnButtonClickExpand(ButtonExpandable listener) {
+        mListener = listener;
+    }
+
     public int getGroupCount() {
         return mNewsList.size();
     }
@@ -64,7 +80,7 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getGroupView(int parentPos, boolean isExpanded, View view, ViewGroup viewGroup) {
+    public View getGroupView(final int parentPos, boolean isExpanded, View view, ViewGroup viewGroup) {
         View viewGroupParent = view;
         NewsViewHolder holder;
         if (viewGroupParent == null) {
@@ -80,22 +96,36 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
             holder = (NewsViewHolder) viewGroupParent.getTag();
 
         holder.tvTitle.setText(mNewsList.get(parentPos).getTitle());
+        if (isExpanded)
+            holder.tvTitle.setTextColor(Color.parseColor("#183545"));
+        else
+            holder.tvTitle.setTextColor(Color.GRAY);
         holder.tvDes.setText(mNewsList.get(parentPos).getDes());
-        // TODO: 2/27/2017 set more about img Mini picture and More button
+
+        holder.btMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.onButtonExpandableClick(parentPos);
+            }
+        });
+        // TODO: 2/27/2017 set more about img Mini picture using picasso library
         return viewGroupParent;
     }
 
     @Override
     public View getChildView(int parentPos, int childPos, boolean isExpanded, View view, ViewGroup viewGroup) {
         View viewGroupChild = view;
-        NewsViewHolder holder;
-        LayoutInflater.from(mContext).inflate(R.layout.news_item_child, viewGroup, false);
         if (viewGroupChild == null) {
             holder = new NewsViewHolder();
+            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            viewGroupChild = inflater.inflate(R.layout.news_item_child, viewGroup, false);
             holder.tvMoreContent = (TextView) viewGroupChild.findViewById(R.id.tvMoreContent);
-            holder.tvNguon = (TextView) viewGroupChild.findViewById(R.id.tvNguon);
+            holder.tvSource = (TextView) viewGroupChild.findViewById(R.id.tvSource);
             holder.btLater = (ImageView) viewGroupChild.findViewById(R.id.btLater);
-        }
+            viewGroupChild.setTag(holder);
+        } else
+            holder = (NewsViewHolder) viewGroupChild.getTag();
+        holder.tvMoreContent.setText(mNewsList.get(parentPos).getContent());
         return viewGroupChild;
     }
 
@@ -104,13 +134,19 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
         return false;
     }
 
+    @Override
+    public void onClick(View view) {
+
+    }
+
+
     public class NewsViewHolder {
         TextView tvTitle;
         TextView tvDes;
         ImageView imgMiniPic;
         ImageView btMore;
         TextView tvMoreContent;
-        TextView tvNguon;
+        TextView tvSource;
         ImageView btLater;
     }
 }

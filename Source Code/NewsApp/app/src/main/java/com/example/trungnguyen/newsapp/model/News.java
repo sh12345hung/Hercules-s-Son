@@ -9,6 +9,14 @@ public class News {
     String content;
     String mainPicture;
     String des;
+
+    public News(int id, String title, String content, String des) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.des = des;
+    }
+
     public int getId() {
         return id;
     }
