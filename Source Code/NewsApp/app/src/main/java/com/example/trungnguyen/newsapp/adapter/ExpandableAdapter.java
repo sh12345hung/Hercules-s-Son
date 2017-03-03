@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * Created by Trung Nguyen on 2/27/2017.
  */
-public class ExpandableAdapter extends BaseExpandableListAdapter implements View.OnClickListener {
+public class ExpandableAdapter extends BaseExpandableListAdapter {
 
     ButtonExpandable mListener;
     Context mContext;
@@ -132,11 +132,6 @@ public class ExpandableAdapter extends BaseExpandableListAdapter implements View
     @Override
     public boolean isChildSelectable(int i, int i1) {
         return false;
-    }
-
-    @Override
-    public void onClick(View view) {
-
     }
 
 
