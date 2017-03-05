@@ -55,7 +55,6 @@ public class FragmentTheGioi extends Fragment implements ButtonExpandable, Expan
 
         expListView.setAdapter(adapter);
 
-
         adapter.setOnButtonClickExpand(this);
 
         return view;
