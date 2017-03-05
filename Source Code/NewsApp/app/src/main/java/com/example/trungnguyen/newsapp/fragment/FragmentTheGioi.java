@@ -1,9 +1,14 @@
 package com.example.trungnguyen.newsapp.fragment;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.NestedScrollView;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,18 +23,19 @@ import com.example.trungnguyen.newsapp.model.News;
 
 import java.util.ArrayList;
 import java.util.List;
-
 /**
  * Created by Trung Nguyen on 2/21/2017.
  */
 public class FragmentTheGioi extends Fragment implements ButtonExpandable, ExpandableListView.OnGroupClickListener {
     List<News> newsList;
     ExpandableListView expListView;
-
+    NestedScrollView scrollView;
+    SwipeRefreshLayout mSwipeLayout;
+    AppBarLayout appBarLayout;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_thegioi, container, false);
+        View mReturnView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_thegioi, container, false);
         newsList = new ArrayList<News>();
         newsList.add(new News(1, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des)));
         newsList.add(new News(2, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des)));
@@ -46,9 +52,9 @@ public class FragmentTheGioi extends Fragment implements ButtonExpandable, Expan
         newsList.add(new News(13, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des)));
         newsList.add(new News(14, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des)));
         newsList.add(new News(15, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des)));
-
-        expListView = (ExpandableListView) view.findViewById(R.id.expTheGioi);
-
+        mSwipeLayout = (SwipeRefreshLayout) mReturnView.findViewById(R.id.swipeToRefresh);
+        expListView = (ExpandableListView) mReturnView.findViewById(R.id.expTheGioi);
+        appBarLayout = (AppBarLayout) mReturnView.findViewById(R.id.appBar);
         expListView.setOnGroupClickListener(this);
 
         ExpandableAdapter adapter = new ExpandableAdapter(getContext(), newsList, expListView);
@@ -57,7 +63,14 @@ public class FragmentTheGioi extends Fragment implements ButtonExpandable, Expan
 
         adapter.setOnButtonClickExpand(this);
 
-        return view;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            expListView.setNestedScrollingEnabled(true);
+        }else {
+            CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) mSwipeLayout.getLayoutParams();
+            params.bottomMargin = appBarLayout.getHeight();
+            mSwipeLayout.setLayoutParams(params);
+        }
+        return mReturnView;
     }
 
     @Override
