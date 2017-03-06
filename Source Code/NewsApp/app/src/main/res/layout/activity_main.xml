@@ -18,39 +18,44 @@
             android:background="@color/backgroundAppBarLayout"
             android:fitsSystemWindows="true">
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbarID"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_scrollFlags="scroll|enterAlways"
-                app:theme="@style/colorMenuItem"
-                app:title="@string/app_name"
-                app:titleTextColor="@color/backgroundSearch">
-            </android.support.v7.widget.Toolbar>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                app:layout_scrollFlags="scroll|enterAlways"
-                android:background="@drawable/backgroundsearch"
-                android:orientation="horizontal">
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbarID"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
+                    app:theme="@style/colorMenuItem"
+                    app:title="@string/app_name"
+                    app:titleTextColor="@color/backgroundSearch">
 
-                <Button
+                    <!--nếu sử dụng enterAlways khi scroll lên mà chưa tới top, toolbar vẫn hiện ra-->
+                    <!--sử dụng enterAlwaysCollapsed thì khi scroll tới top mới hiện toolbar-->
+                </android.support.v7.widget.Toolbar>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:layout_weight="1"
-                    android:background="@drawable/selector_background_search"
-                    android:drawableLeft="@drawable/ic_search_black_24dp"
-                    android:paddingLeft="10dp"
-                    android:text="@string/tim_tin_tuc"
-                    android:textAlignment="textStart"
-                    android:textAllCaps="false"
-                    android:textColor="@color/colorGrey" />
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/backgroundsearch"
+                    android:orientation="horizontal"
+                    app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
 
-            </LinearLayout>
+                    <Button
+                        android:id="@+id/btSearch"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_weight="1"
+                        android:background="@drawable/selector_background_search"
+                        android:drawableLeft="@drawable/ic_search_black_24dp"
+                        android:paddingLeft="10dp"
+                        android:text="@string/tim_tin_tuc"
+                        android:textAlignment="textStart"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorGrey" />
+
+                </LinearLayout>
 
             <android.support.design.widget.TabLayout
                 android:id="@+id/tab"
@@ -69,12 +74,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
-            <!--<android.support.v4.widget.NestedScrollView-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:fillViewport="true"-->
-                <!--android:fitsSystemWindows="true">-->
-            <!--</android.support.v4.widget.NestedScrollView>-->
+
         </android.support.v4.view.ViewPager>
 
     </android.support.design.widget.CoordinatorLayout>

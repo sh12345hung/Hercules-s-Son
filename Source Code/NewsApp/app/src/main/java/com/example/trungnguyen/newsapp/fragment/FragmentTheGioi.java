@@ -3,11 +3,11 @@ package com.example.trungnguyen.newsapp.fragment;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,18 +20,23 @@ import com.example.trungnguyen.newsapp.DetailActivity;
 import com.example.trungnguyen.newsapp.R;
 import com.example.trungnguyen.newsapp.adapter.ExpandableAdapter;
 import com.example.trungnguyen.newsapp.model.News;
+import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout;
+import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayoutDirection;
 
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  * Created by Trung Nguyen on 2/21/2017.
  */
-public class FragmentTheGioi extends Fragment implements ButtonExpandable, ExpandableListView.OnGroupClickListener {
+public class FragmentTheGioi extends Fragment implements
+        ButtonExpandable, ExpandableListView.OnGroupClickListener,
+        SwipyRefreshLayout.OnRefreshListener {
     List<News> newsList;
     ExpandableListView expListView;
-    NestedScrollView scrollView;
-    SwipeRefreshLayout mSwipeLayout;
+    SwipyRefreshLayout mSwipeLayout;
     AppBarLayout appBarLayout;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -52,25 +57,33 @@ public class FragmentTheGioi extends Fragment implements ButtonExpandable, Expan
         newsList.add(new News(13, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des)));
         newsList.add(new News(14, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des)));
         newsList.add(new News(15, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des)));
-        mSwipeLayout = (SwipeRefreshLayout) mReturnView.findViewById(R.id.swipeToRefresh);
-        expListView = (ExpandableListView) mReturnView.findViewById(R.id.expTheGioi);
-        appBarLayout = (AppBarLayout) mReturnView.findViewById(R.id.appBar);
-        expListView.setOnGroupClickListener(this);
+        addControls(mReturnView);
 
-        ExpandableAdapter adapter = new ExpandableAdapter(getContext(), newsList, expListView);
-
-        expListView.setAdapter(adapter);
-
-        adapter.setOnButtonClickExpand(this);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             expListView.setNestedScrollingEnabled(true);
-        }else {
+        } else {
             CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) mSwipeLayout.getLayoutParams();
             params.bottomMargin = appBarLayout.getHeight();
             mSwipeLayout.setLayoutParams(params);
         }
         return mReturnView;
+    }
+
+    private void addControls(View mReturnView) {
+        mSwipeLayout = (SwipyRefreshLayout) mReturnView.findViewById(R.id.swipeToRefresh);
+        mSwipeLayout.setOnRefreshListener(this);
+        mSwipeLayout.setDirection(SwipyRefreshLayoutDirection.BOTTOM);
+
+
+        expListView = (ExpandableListView) mReturnView.findViewById(R.id.expTheGioi);
+        expListView.setOnGroupClickListener(this);
+
+        appBarLayout = (AppBarLayout) mReturnView.findViewById(R.id.appBar);
+
+        ExpandableAdapter adapter = new ExpandableAdapter(getContext(), newsList, expListView);
+        expListView.setAdapter(adapter);
+        adapter.setOnButtonClickExpand(this);
     }
 
     @Override
@@ -88,5 +101,23 @@ public class FragmentTheGioi extends Fragment implements ButtonExpandable, Expan
         getActivity().startActivity(intent);
         // Must return true to remove action expand or collapse when we click on Group (not button)
         return true;
+    }
+
+//    @Override
+//    public void onRefresh() {
+
+//    }
+
+    @Override
+    public void onRefresh(SwipyRefreshLayoutDirection direction) {
+        mSwipeLayout.setRefreshing(true);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.d("TEST", "CHẠY HANDLER");
+                mSwipeLayout.setRefreshing(false);
+            }
+        }, 1000);
+        Log.d("TEST", "ĐANG REFRESH RỒI KU");
     }
 }
