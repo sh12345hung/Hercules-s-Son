@@ -6,13 +6,25 @@
 	<item value="false" key="TypeHierarchyViewPart.linkeditors"/>
 	<item value="2" key="TypeHierarchyViewPart.hierarchyview"/>
 	<item value="2" key="org.eclipse.jdt.ui.last.selected.jre.kind2"/>
+	<section name="RefactoringWizard.preview">
+		<item value="600" key="width"/>
+		<item value="400" key="height"/>
+	</section>
+	<section name="org.eclipse.ltk.ui.refactoring.settings">
+		<item value="false" key="renameSubpackages"/>
+		<item value="false" key="updateQualifiedNames"/>
+		<item value="*" key="patterns"/>
+		<item value="false" key="updateTextualMatches"/>
+	</section>
 	<section name="FatJarPackageWizard">
 		<item value="/home/thaonguyen/workspace/ServerClientSocketWorkSpace" key="FatJarPackageWizardPage.ANTSCRIPT_LOCATION"/>
-		<item value="GreetingClient - SingleConnectionSocketClientExample" key="FatJarPackageWizardPage.LAUNCH_CONFIGURATION_SELECTION_NAME"/>
-		<item value="/home/thaonguyen/Desktop/Client.jar" key="FatJarPackageWizardPage.DESTINATION_PATH_SELECTION"/>
+		<item value="ClientDemo - MultiConnectionSocketClientExample" key="FatJarPackageWizardPage.LAUNCH_CONFIGURATION_SELECTION_NAME"/>
+		<item value="/home/thaonguyen/Desktop/MultiConnClient.jar" key="FatJarPackageWizardPage.DESTINATION_PATH_SELECTION"/>
 		<item value="false" key="FatJarPackageWizardPage.ANTSCRIPT_SAVE"/>
 		<item value="1" key="FatJarPackageWizardPage.LIBRARY_HANDLING"/>
 		<list key="FatJarPackageWizardPage.DESTINATION_NAMES_ID">
+			<item value="/home/thaonguyen/Desktop/MultiConnClient.jar"/>
+			<item value="/home/thaonguyen/Desktop/MultiConnServer.jar"/>
 			<item value="/home/thaonguyen/Desktop/Client.jar"/>
 			<item value="/home/thaonguyen/Desktop/Server.jar"/>
 		</list>

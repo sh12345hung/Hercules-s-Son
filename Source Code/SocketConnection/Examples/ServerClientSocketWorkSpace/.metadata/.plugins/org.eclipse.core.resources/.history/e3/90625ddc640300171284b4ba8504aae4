@@ -1,0 +1,15 @@
+package com.thaonguyen.javanetworking.socketserverexample;
+
+public class ServerThread extends Thread {
+	private int clientNumber;
+	private Socket socketOfServer;
+	
+	public ServerThread() {
+		
+	}
+	
+	@Override
+	public void run() {
+		
+	}
+}

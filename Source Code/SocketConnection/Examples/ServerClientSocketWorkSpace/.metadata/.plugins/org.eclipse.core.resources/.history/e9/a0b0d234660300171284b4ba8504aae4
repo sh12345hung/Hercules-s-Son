@@ -1,0 +1,28 @@
+package com.thaonguyen.javanetworking.socketserverexample;
+
+import java.net.*;
+import java.io.*;
+
+public class ServerThread extends Thread {
+	private int clientNumber;
+	private Socket socketOfServer;
+	
+	public ServerThread(Socket socketOfServer, int clientNumer) {
+		this.socketOfServer = socketOfServer;
+		this.clientNumber = clientNumber;
+		
+		log("New connection with client #" + this.clientNumber + " at " + this.socketOfServer);
+	}
+	
+	@Override
+	public void run() {
+		try {
+			BufferedReader is = new BufferedReader(new InputStreamReader(socketOfServer.getInputStream()));
+			BufferedWriter os = new BufferedWriter(new OutputStreamWriter(socketOfServer.getOutputStream())); 
+		}
+	}
+	
+	private static void log(String message) {
+	       System.out.println(message);
+	   }
+}
