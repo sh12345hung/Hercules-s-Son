@@ -25,10 +25,11 @@ CLASS News:
 	+ setURL(URL : String)                 : void
 	+ getHeaderText()                      : String
 	+ setHeaderText(HeaderText : String    : void
-	+ getImageURL()                        : String
+	+ getImageURL()                        : Stringd
 	+ setImageURL(ImageURL : String)       : void
 	+ getModifiedTime()                    : Date
 	+ setModifiedTime(ModifiedDate : Date) : void
+
 	+ toDocument()                         : Document
 
 -----------------------------------------------------------------------------------------------------------------------------
@@ -57,7 +58,7 @@ CLASS DBConnector:
 	+ close()                                   : void
 	+ getCount()                                : int
 	+ changeCollection(CollectionName : String) : boolean
-	+ getNews(Start : int, MaxCount : int)      : NewsList
 	+ checkURLExists(NewURL : String)           : boolean
 	+ addNews(News : News)                      : ObjectId
 	+ addNewsList(NewsList : NewsList)          : ArrayList<ObjectId>
+	+ getNews(Start : int, MaxCount : int)      : NewsList
