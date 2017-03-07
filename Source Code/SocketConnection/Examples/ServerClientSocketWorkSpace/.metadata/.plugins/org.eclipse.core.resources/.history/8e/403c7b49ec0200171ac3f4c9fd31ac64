@@ -1,0 +1,18 @@
+package com.thaonguyen.multithreading.test;
+
+public class RunnableDemo implements Runnable {
+	private Thread t;
+	private String threadName;
+	
+	public RunnableDemo(String name) {
+		threadName = name;
+		Systen.out.println("Creating " + threadName);
+	}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+
+	}
+
+}

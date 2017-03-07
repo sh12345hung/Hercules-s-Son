@@ -1,0 +1,13 @@
+package com.thaonguyen.javanetworking.socketserverexample;
+
+import java.io.*;
+import java.net.*;
+
+public class GreetingServer extends Thread {
+	private ServerSocket serverSocket;
+	
+	public GreetingServer(int port) throw IOException {
+		serverSocket = new ServerSocket(port);
+		serverSocket.setSoTimeout(10000);
+	}
+}

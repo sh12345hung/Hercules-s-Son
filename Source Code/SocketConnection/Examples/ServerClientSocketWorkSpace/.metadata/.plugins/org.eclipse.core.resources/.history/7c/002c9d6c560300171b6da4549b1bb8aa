@@ -1,0 +1,9 @@
+package com.thaonguyen.javanetworking.socketserverexample;
+
+public class RunServer {
+
+	public static void main(String[] args) {
+		int port = Integer.parseInt(args[0]);
+	}
+
+}

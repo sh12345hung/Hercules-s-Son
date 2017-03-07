@@ -1,0 +1,16 @@
+package com.thaonguyen.multithreading.thread;
+
+public class ThreadDemo extends Thread {
+	private Thread t;
+	private String threadName;
+	
+	public ThreadDemo(String name) {
+		threadName = name;
+		System.out.println("Creating " + threadName);
+	}
+	
+	@Override
+	public void run() {
+		System.out.println("Creating " + threadName);
+	}
+}

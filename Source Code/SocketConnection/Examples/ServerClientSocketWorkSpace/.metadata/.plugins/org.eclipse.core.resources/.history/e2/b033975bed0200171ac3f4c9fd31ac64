@@ -1,0 +1,9 @@
+package com.thaonguyen.multithreading.test;
+
+public class Test {
+
+	public static void main(String[] args) {
+		RunnableDemo R1 = new RunnableDemo("Thread-1");
+		RunnableDemo R2 = new RunnableDemo("Thread-2");
+	}
+}

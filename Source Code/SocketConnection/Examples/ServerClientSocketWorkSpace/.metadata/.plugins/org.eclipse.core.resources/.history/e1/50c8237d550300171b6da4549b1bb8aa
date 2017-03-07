@@ -1,0 +1,32 @@
+package com.thaonguyen.javanetworking.socketserverexample;
+
+import java.io.*;
+import java.net.*;
+
+public class GreetingServer extends Thread {
+	private ServerSocket serverSocket;
+	
+	public GreetingServer(int port) throws IOException {
+		serverSocket = new ServerSocket(port);
+		serverSocket.setSoTimeout(10000);
+	}
+	
+	@Override
+	public void run() {
+		while (true) {
+			try {
+				System.out.println("Waiting for client on port " + serverSocket.getLocalPort() + "...");
+				Socket server = serverSocket.accept();
+				
+				System.out.println("Just connected to " + server.getRemoteSocketAddress());
+				DataInputStream in = new DataInputStream(server.getInputStream());
+			}
+			catch (SocketTimeoutException e) {
+				
+			}
+			catch (IOException e) {
+				
+			}
+		}
+	}
+}

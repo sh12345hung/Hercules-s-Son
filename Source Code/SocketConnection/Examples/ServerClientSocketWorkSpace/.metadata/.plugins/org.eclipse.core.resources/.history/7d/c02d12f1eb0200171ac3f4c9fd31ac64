@@ -1,0 +1,11 @@
+package com.thaonguyen.multithreading.test;
+
+public class RunnableDemo implements Runnable {
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+
+	}
+
+}

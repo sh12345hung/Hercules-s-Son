@@ -1,0 +1,8 @@
+package com.thaonguyen.javanetworking.socketserverexample;
+
+import java.io.*;
+import java.net.*;
+
+public class GreetingServer extends Thread {
+	
+}

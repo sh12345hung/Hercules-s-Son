@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename package &apos;com.thaonguyen.multithreading.test&apos; to &apos;com.thaonguyen.multithreading.runnable&apos;&#x0A;- Original project: &apos;Multithreading&apos;&#x0A;- Original element: &apos;Multithreading/src/com.thaonguyen.multithreading.test&apos;&#x0A;- Renamed element: &apos;Multithreading/src/com.thaonguyen.multithreading.runnable&apos;&#x0A;- Update references to refactored element&#x0A;- Update textual occurrences in comments and strings" description="Rename package &apos;com.thaonguyen.multithreading.test&apos;" flags="589830" hierarchical="false" id="org.eclipse.jdt.ui.rename.package" input="/src&lt;com.thaonguyen.multithreading.test" name="com.thaonguyen.multithreading.runnable" qualified="false" references="true" stamp="1488866082975" textual="false" version="1.0"/>
+</session>

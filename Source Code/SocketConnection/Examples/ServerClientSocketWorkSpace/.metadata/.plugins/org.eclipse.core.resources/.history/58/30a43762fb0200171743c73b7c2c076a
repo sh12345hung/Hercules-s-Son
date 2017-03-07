@@ -1,0 +1,8 @@
+package com.thaonguyen.multithreading.thread;
+
+public class ThreadDemo extends Thread {
+	private Thread t;
+	private String threadName;
+	
+	
+}
