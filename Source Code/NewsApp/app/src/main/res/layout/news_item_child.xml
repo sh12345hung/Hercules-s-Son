@@ -2,34 +2,46 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="270dp"
-    android:padding="10dp">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Nguyen Duy Trung"
-        android:id="@+id/tvMoreContent"/>
-
+    android:padding="5dp">
     <LinearLayout
         android:padding="10dp"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="43dp"
-        android:layout_marginTop="180dp"
-        android:background="#ead3d3">
+        android:layout_marginTop="200dp"
+        android:background="@drawable/backgroundchild">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:text="Nguồn: Vnexpress.vn"
+            android:textSize="17sp"
+            android:text="Vnexpress.vn"
             android:id="@+id/tvSource"
+            android:textColor="@color/backgroundSearch"
             android:layout_weight="1"
-            android:layout_gravity="center|end"/>
+            android:layout_gravity="center|start"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:src="@drawable/message"/>
+        <TextView
+            android:layout_marginLeft="5dp"
+            android:layout_width="match_parent"
+            android:textSize="17sp"
+            android:layout_weight="1"
+            android:id="@+id/tvCmt"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:textColor="@color/backgroundSearch"
+            android:layout_height="wrap_content"
+            android:text="Comments"/>
+
         <ImageView
             android:id="@+id/btLater"
             android:layout_gravity="center|end"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/clock" />
+            android:src="@drawable/clock_white" />
     </LinearLayout>
 </LinearLayout>

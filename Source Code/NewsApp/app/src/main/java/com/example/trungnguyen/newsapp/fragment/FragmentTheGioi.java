@@ -6,16 +6,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ExpandableListView;
 
-import com.example.trungnguyen.newsapp.ButtonExpandable;
+import com.example.trungnguyen.newsapp.CommentDialog;
+import com.example.trungnguyen.newsapp.ExpandableListViewImp;
 import com.example.trungnguyen.newsapp.DetailActivity;
 import com.example.trungnguyen.newsapp.R;
 import com.example.trungnguyen.newsapp.adapter.ExpandableAdapter;
@@ -30,7 +31,7 @@ import java.util.List;
  * Created by Trung Nguyen on 2/21/2017.
  */
 public class FragmentTheGioi extends Fragment implements
-        ButtonExpandable, ExpandableListView.OnGroupClickListener,
+        ExpandableListViewImp, ExpandableListView.OnGroupClickListener,
         SwipyRefreshLayout.OnRefreshListener {
     List<News> newsList;
     ExpandableListView expListView;
@@ -57,15 +58,18 @@ public class FragmentTheGioi extends Fragment implements
         newsList.add(new News(13, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des)));
         newsList.add(new News(14, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des)));
         newsList.add(new News(15, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des)));
+        newsList.add(new News(16, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des)));
+        newsList.add(new News(17, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des)));
         addControls(mReturnView);
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             expListView.setNestedScrollingEnabled(true);
         } else {
-            CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) mSwipeLayout.getLayoutParams();
-            params.bottomMargin = appBarLayout.getHeight();
-            mSwipeLayout.setLayoutParams(params);
+//            CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) mSwipeLayout.getLayoutParams();
+//            params.bottomMargin = appBarLayout.getHeight();
+//            mSwipeLayout.setLayoutParams(params);
+            // TODO fix error on API < 20 devices
         }
         return mReturnView;
     }
@@ -73,7 +77,7 @@ public class FragmentTheGioi extends Fragment implements
     private void addControls(View mReturnView) {
         mSwipeLayout = (SwipyRefreshLayout) mReturnView.findViewById(R.id.swipeToRefresh);
         mSwipeLayout.setOnRefreshListener(this);
-        mSwipeLayout.setDirection(SwipyRefreshLayoutDirection.BOTTOM);
+        mSwipeLayout.setDirection(SwipyRefreshLayoutDirection.BOTH);
 
 
         expListView = (ExpandableListView) mReturnView.findViewById(R.id.expTheGioi);
@@ -88,25 +92,26 @@ public class FragmentTheGioi extends Fragment implements
 
     @Override
     public void onButtonExpandableClick(int groupPosition) {
-        Log.d("KIEMTRA", "Ban click button roi");
+        Log.d("KIEMTRA", "button clicked");
         if (expListView.isGroupExpanded(groupPosition))
             expListView.collapseGroup(groupPosition);
         else expListView.expandGroup(groupPosition);
     }
 
     @Override
+    public void onCommentsClick(int position) {
+        CommentDialog dialogFragment = new CommentDialog();
+        dialogFragment.show(getActivity().getSupportFragmentManager(), "COMMENT_DIALOG");
+    }
+
+    @Override
     public boolean onGroupClick(ExpandableListView expandableListView, View view, int position, long l) {
-        Log.d("KIEMTRA", "Ban click group roi");
+        Log.d("KIEMTRA", "group clicked");
         Intent intent = new Intent(getActivity(), DetailActivity.class);
         getActivity().startActivity(intent);
         // Must return true to remove action expand or collapse when we click on Group (not button)
         return true;
     }
-
-//    @Override
-//    public void onRefresh() {
-
-//    }
 
     @Override
     public void onRefresh(SwipyRefreshLayoutDirection direction) {
@@ -114,10 +119,10 @@ public class FragmentTheGioi extends Fragment implements
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Log.d("TEST", "CHẠY HANDLER");
+                Log.d("TEST", "RUN HANDLER");
                 mSwipeLayout.setRefreshing(false);
             }
-        }, 1000);
-        Log.d("TEST", "ĐANG REFRESH RỒI KU");
+        }, 3000);
+        Log.d("TEST", "REFRESHING");
     }
 }

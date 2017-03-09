@@ -1,14 +1,9 @@
 package com.example.trungnguyen.newsapp.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
@@ -16,8 +11,7 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.trungnguyen.newsapp.ButtonExpandable;
-import com.example.trungnguyen.newsapp.DetailActivity;
+import com.example.trungnguyen.newsapp.ExpandableListViewImp;
 import com.example.trungnguyen.newsapp.R;
 import com.example.trungnguyen.newsapp.model.News;
 
@@ -28,7 +22,7 @@ import java.util.List;
  */
 public class ExpandableAdapter extends BaseExpandableListAdapter {
 
-    ButtonExpandable mListener;
+    ExpandableListViewImp mListener;
     Context mContext;
     List<News> mNewsList;
     NewsViewHolder holder;
@@ -41,7 +35,7 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
     }
 
 
-    public void setOnButtonClickExpand(ButtonExpandable listener) {
+    public void setOnButtonClickExpand(ExpandableListViewImp listener) {
         mListener = listener;
     }
 
@@ -113,19 +107,26 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getChildView(int parentPos, int childPos, boolean isExpanded, View view, ViewGroup viewGroup) {
+    public View getChildView(final int parentPos, int childPos, boolean isExpanded, View view, ViewGroup viewGroup) {
         View viewGroupChild = view;
         if (viewGroupChild == null) {
             holder = new NewsViewHolder();
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             viewGroupChild = inflater.inflate(R.layout.news_item_child, viewGroup, false);
-            holder.tvMoreContent = (TextView) viewGroupChild.findViewById(R.id.tvMoreContent);
             holder.tvSource = (TextView) viewGroupChild.findViewById(R.id.tvSource);
             holder.btLater = (ImageView) viewGroupChild.findViewById(R.id.btLater);
+            holder.tvCmt = (TextView) viewGroupChild.findViewById(R.id.tvCmt);
             viewGroupChild.setTag(holder);
         } else
             holder = (NewsViewHolder) viewGroupChild.getTag();
-        holder.tvMoreContent.setText(mNewsList.get(parentPos).getContent());
+
+        holder.tvCmt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.onCommentsClick(parentPos);
+            }
+        });
+
         return viewGroupChild;
     }
 
@@ -140,8 +141,8 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
         TextView tvDes;
         ImageView imgMiniPic;
         ImageView btMore;
-        TextView tvMoreContent;
         TextView tvSource;
         ImageView btLater;
+        TextView tvCmt;
     }
 }

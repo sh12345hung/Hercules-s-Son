@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         addControls();
-        setTitle(getResources().getString(R.string.app_name));
         setSupportActionBar(toolbar); // vì ta đang sử dụng gói AppCompatActivity tức gói thư viện hổ trợ
         ViewPagerAdapter pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
@@ -113,9 +112,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             drawerLayout.closeDrawer(GravityCompat.START);
         else {
             AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-            dialog.setTitle("Thoát ứng dụng");
-            dialog.setMessage("Bạn có muốn thoát ứng dụng?");
-            dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            dialog.setTitle("Thoát ứng dụng")
+                    .setMessage("Bạn có muốn thoát ứng dụng?")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     finish();
