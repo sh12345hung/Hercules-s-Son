@@ -1,9 +1,7 @@
 package com.example.trungnguyen.newsapp;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
+
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -12,8 +10,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
-import com.example.trungnguyen.newsapp.R;
 
 import java.util.ArrayList;
 

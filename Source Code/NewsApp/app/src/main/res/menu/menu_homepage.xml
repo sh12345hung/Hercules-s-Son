@@ -17,10 +17,10 @@
         app:showAsAction="always">
         <menu>
             <item
-                android:id="@+id/menuBrowser"
-                android:icon="@drawable/earth"
+                android:id="@+id/menuLogin"
+                android:icon="@drawable/account"
                 android:orderInCategory="100"
-                android:title="Open On Browser"
+                android:title="Login "
                 app:showAsAction="never" />
             <item
                 android:id="@+id/menuAbout"
