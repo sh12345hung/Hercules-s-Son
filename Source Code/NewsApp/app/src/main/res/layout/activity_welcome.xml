@@ -28,6 +28,15 @@
         <!--set android:indeterminate="true" to auto spin circle progress-->
         <!--create xml file of loading animation and set it to indeterminateDrawable="@drawable/loading_animation"-->
 
+
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/login_button"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:layout_below="@+id/progressBar"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="80dp"
+            />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

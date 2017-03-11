@@ -28,6 +28,14 @@
                 android:orderInCategory="101"
                 android:title="About Us"
                 app:showAsAction="never" />
+
+            <item
+                android:id="@+id/menuLogout"
+                android:icon="@drawable/logout"
+                android:orderInCategory="101"
+                android:title="Log out"
+                android:visible="false"
+                app:showAsAction="never" />
         </menu>
 
     </item>
