@@ -5,14 +5,6 @@
     android:background="@drawable/background_comment_dialog"
     android:orientation="vertical">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="COMMENTS"
-        android:textColor="@color/backgroundSearch"
-        android:background="@color/backgroundAppBarLayout"
-        android:textSize="30sp"
-        android:gravity="center_horizontal"/>
     <ListView
         android:id="@+id/lvComments"
         android:layout_width="match_parent"
@@ -22,6 +14,7 @@
 
     <EditText
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Type your comments" />
+        android:layout_height="50dp"
+        android:background="@null"
+        android:hint="Type your comments..." />
 </LinearLayout>

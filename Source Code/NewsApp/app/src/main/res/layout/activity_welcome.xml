@@ -14,17 +14,17 @@
         tools:context="com.example.trungnguyen.newsapp.WelcomeActivity">
 
         <ProgressBar
-            android:layout_width="150dp"
-            android:layout_height="150dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:id="@+id/progressBar"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:indeterminate="true"
             android:indeterminateDrawable="@drawable/loading_animation"
             android:progressDrawable="@drawable/circular_progress_bar"
-            style="?android:attr/progressBarStyleSmall"
             />
 
+        <!--don't need to set style for your progress bar-->
         <!--set android:indeterminate="true" to auto spin circle progress-->
         <!--create xml file of loading animation and set it to indeterminateDrawable="@drawable/loading_animation"-->
 

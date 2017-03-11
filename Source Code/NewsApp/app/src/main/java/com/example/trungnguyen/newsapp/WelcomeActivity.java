@@ -30,6 +30,9 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                Intent mainIntent = new Intent(WelcomeActivity.this, MainActivity.class);
+                startActivity(mainIntent);
+                finish();
             }
         }, 3000);
     }
