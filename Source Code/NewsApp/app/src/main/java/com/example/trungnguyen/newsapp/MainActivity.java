@@ -2,6 +2,7 @@ package com.example.trungnguyen.newsapp;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.trungnguyen.newsapp.adapter.ViewPagerAdapter;
+import com.example.trungnguyen.newsapp.helper.ImageHelper;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.FacebookSdk;
@@ -43,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     String facebookUserName;
     boolean isUserLogin = false;
     String loginMenuTitle;
+    String facebookPictureUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,16 +69,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 public void onCompleted(JSONObject object, GraphResponse response) {
                     Log.d(TAG, "complete Graph API");
                     try {
+//                        Log.d(TAG, object.toString());
                         facebookUserName = object.getString("name");
+                        JSONObject pictureObj = object.getJSONObject("picture");
+                        JSONObject dataObj = pictureObj.getJSONObject("data");
+                        facebookPictureUrl = dataObj.getString("url");
                         invalidateOptionsMenu();
-                        Log.d(TAG, facebookUserName);
+//                        Log.d(TAG, facebookPictureUrl);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
             });
             Bundle parameters = new Bundle();
-            parameters.putString("fields", "id,name,link, email");
+            parameters.putString("fields", "id,name,link, email, picture");
             request.setParameters(parameters);
             request.executeAsync();
         }
@@ -200,9 +207,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem item;
+        ImageHelper imageHelper = new ImageHelper(this, facebookPictureUrl);
         if (isUserLogin) {
             item = menu.findItem(R.id.menuLogin);
             item.setTitle(facebookUserName);
+            item.setIcon(new BitmapDrawable(imageHelper.circleBitmap()));
             item = menu.findItem(R.id.menuLogout);
             item.setVisible(true);
         } else {
