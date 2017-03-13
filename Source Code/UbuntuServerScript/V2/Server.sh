@@ -73,7 +73,7 @@ case "$1" in
         clear
         ;;
     *)
-        echo "Usage: $SCRIPTNAME {start|stop|restart|reload|reboot|status}"
+        echo "Usage: $SCRIPTNAME {start|stop|restart|reload|reboot|status|clear|clean}"
         exit 1
 esac
 exit 0
