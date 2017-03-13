@@ -9,7 +9,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#66183545"
+        android:background="#6637474F"
 
         tools:context="com.example.trungnguyen.newsapp.WelcomeActivity">
 

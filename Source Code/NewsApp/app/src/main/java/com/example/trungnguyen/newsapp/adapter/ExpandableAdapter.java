@@ -91,7 +91,7 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
 
         holder.tvTitle.setText(mNewsList.get(parentPos).getTitle());
         if (isExpanded)
-            holder.tvTitle.setTextColor(Color.parseColor("#183545"));
+            holder.tvTitle.setTextColor(Color.parseColor("#37474F"));
         else
             holder.tvTitle.setTextColor(Color.GRAY);
         holder.tvDes.setText(mNewsList.get(parentPos).getDes());

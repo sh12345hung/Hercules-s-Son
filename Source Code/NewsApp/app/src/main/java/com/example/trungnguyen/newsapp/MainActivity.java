@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "oncreate");
+//        Log.d(TAG, "oncreate");
         FacebookSdk.sdkInitialize(this.getApplicationContext());
         setContentView(R.layout.activity_main);
         isUserLogin = getIntent().getBooleanExtra(WelcomeActivity.IS_LOGIN, false);
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         JSONObject dataObj = pictureObj.getJSONObject("data");
                         facebookPictureUrl = dataObj.getString("url");
                         invalidateOptionsMenu();
-//                        Log.d(TAG, facebookPictureUrl);
+                        Log.d(TAG, facebookPictureUrl);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -207,11 +207,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem item;
-        ImageHelper imageHelper = new ImageHelper(this, facebookPictureUrl);
+        ImageHelper imageHelper = new ImageHelper(this);
         if (isUserLogin) {
             item = menu.findItem(R.id.menuLogin);
             item.setTitle(facebookUserName);
-            item.setIcon(new BitmapDrawable(imageHelper.circleBitmap()));
+            item.setIcon(new BitmapDrawable(imageHelper.
+                    circleBitmap(imageHelper.getBitmapFromUrl(facebookPictureUrl))));
             item = menu.findItem(R.id.menuLogout);
             item.setVisible(true);
         } else {

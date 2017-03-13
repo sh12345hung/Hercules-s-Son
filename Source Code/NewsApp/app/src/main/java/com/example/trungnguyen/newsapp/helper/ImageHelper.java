@@ -1,7 +1,11 @@
 package com.example.trungnguyen.newsapp.helper;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -9,15 +13,14 @@ import java.util.concurrent.ExecutionException;
  */
 public class ImageHelper {
     private Context mContext;
-    String mUrl;
     Bitmap mImage;
+    List<Bitmap> list;
 
-    public ImageHelper(Context context, String url) {
+    public ImageHelper(Context context) {
         mContext = context;
-        mUrl = url;
     }
 
-    public Bitmap getBitmapFromUrl() {
+    public Bitmap getBitmapFromUrl(String url) {
 //        Thread thread = new Thread(new Runnable() {
 //            @Override
 //            public void run() {
@@ -52,7 +55,7 @@ public class ImageHelper {
 //        Picasso.with(mContext).load(mUrl).resize(126, 126).into(mTarget);
 //
         DownLoadImageTask task = new DownLoadImageTask();
-        task.execute(mUrl);
+        task.execute(url);
         try {
             mImage = task.get();
         } catch (InterruptedException e) {
@@ -65,11 +68,23 @@ public class ImageHelper {
         return mImage;
     }
 
-    public Bitmap circleBitmap() {
+    public Bitmap circleBitmap(Bitmap bitmap) {
         DrawCircleImage circleImage = new DrawCircleImage(mContext);
-        Bitmap bitmap = getBitmapFromUrl();
         if (bitmap != null)
             return circleImage.getCroppedBitmap(bitmap, 400);
         else return bitmap;
+    }
+
+    public List<Bitmap> getListBitmap(ArrayList<String> stringArrayAvatar) {
+        DownloadListImageTask task = new DownloadListImageTask();
+        task.execute(stringArrayAvatar);
+        try {
+            list = task.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 }

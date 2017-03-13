@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
+    android:paddingRight="5dp">
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/imgCmtUserAvatar" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Duy Trung"
+        android:textColor="@color/backgroundAppBarLayout"
+        android:textSize="18sp"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/imgCmtUserAvatar"
+        android:id="@+id/tvCmtUserName" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:textSize="17sp"
+        android:layout_marginLeft="10dp"
+        android:layout_below="@id/tvCmtUserName"
+        android:layout_toRightOf="@id/imgCmtUserAvatar"
+        android:id="@+id/tvCmtContent" />
+</RelativeLayout>

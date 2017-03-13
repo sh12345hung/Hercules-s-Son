@@ -22,6 +22,7 @@ import com.example.trungnguyen.newsapp.ExpandableListViewImp;
 import com.example.trungnguyen.newsapp.DetailActivity;
 import com.example.trungnguyen.newsapp.R;
 import com.example.trungnguyen.newsapp.adapter.ExpandableAdapter;
+import com.example.trungnguyen.newsapp.helper.DownloadListImageTask;
 import com.example.trungnguyen.newsapp.model.News;
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout;
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayoutDirection;
