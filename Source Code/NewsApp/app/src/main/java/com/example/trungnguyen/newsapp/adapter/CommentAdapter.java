@@ -2,12 +2,14 @@ package com.example.trungnguyen.newsapp.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.trungnguyen.newsapp.R;
@@ -39,6 +41,7 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
         imageHelper = new ImageHelper(mContext);
     }
 
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 //        Log.d("CommentAdapter", "getView " + position);
@@ -48,6 +51,7 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
             holder.imgCmtUserAvatar = (ImageView) convertView.findViewById(R.id.imgCmtUserAvatar);
             holder.tvCmtUserName = (TextView) convertView.findViewById(R.id.tvCmtUserName);
             holder.tvCmtContent = (TextView) convertView.findViewById(R.id.tvCmtContent);
+            holder.progressBar = (ProgressBar) convertView.findViewById(R.id.progressBarCmt);
             this.configData();
             convertView.setTag(holder);
         } else
@@ -57,8 +61,13 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
 //        );
 //        holder.tvCmtUserName.setText(mCommentList.get(position).getmCmtUser().getmUserName());
 //        holder.tvCmtContent.setText(mCommentList.get(position).getmCmtContent());
-
-        holder.imgCmtUserAvatar.setImageBitmap(imageHelper.getBitmapFromUrl(avatars.get(position)));
+        holder.imgCmtUserAvatar.setImageBitmap(imageHelper.getBitmapFromUrl(avatars.get(position), new ImageHelper.LoadSuccess() {
+            @Override
+            public void onLoadSuccess() {
+                Log.d("CMTADAP", "CALLBACK");
+                holder.progressBar.setVisibility(View.GONE);
+            }
+        }));
         holder.tvCmtUserName.setText(names.get(position));
         holder.tvCmtContent.setText(contents.get(position));
 
@@ -80,5 +89,6 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
         ImageView imgCmtUserAvatar;
         TextView tvCmtUserName;
         TextView tvCmtContent;
+        ProgressBar progressBar;
     }
 }

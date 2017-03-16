@@ -26,7 +26,7 @@
                     android:id="@+id/toolbarID"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
-                    app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
+                    app:layout_scrollFlags="scroll|enterAlways"
                     app:theme="@style/colorMenuItem"
                     app:titleTextColor="@color/backgroundSearch">
                     <!--nếu sử dụng enterAlways khi scroll lên mà chưa tới top, toolbar vẫn hiện ra-->
@@ -40,7 +40,7 @@
                     android:layout_marginRight="15dp"
                     android:background="@drawable/backgroundsearch"
                     android:orientation="horizontal"
-                    app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
+                    app:layout_scrollFlags="scroll|enterAlways">
 
                     <Button
                         android:id="@+id/btSearch"

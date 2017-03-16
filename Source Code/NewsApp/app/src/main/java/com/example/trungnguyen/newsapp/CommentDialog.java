@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.trungnguyen.newsapp.adapter.CommentAdapter;
+import com.example.trungnguyen.newsapp.fragment.FragmentTheGioi;
 import com.example.trungnguyen.newsapp.model.Comment;
 import com.example.trungnguyen.newsapp.model.User;
 
@@ -31,6 +32,7 @@ public class CommentDialog extends DialogFragment {
     int mNewsPosition;
     ListView lvComment;
     ProgressDialog dialog;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,28 +54,9 @@ public class CommentDialog extends DialogFragment {
         // to set dialog full of screen width and if keyboard is showing, the dialog will be collapsed
         // and one more function, the dialog will be have the radius attributes
 
-        List<Comment> comments = new ArrayList<>();
-        String url = "https://scontent.xx.fbcdn.net/v/t1.0-1/p50x50/16427427_590536551139263_444919452715704300_n.jpg?oh=12843c9c03620ffd91e9febaf2a7add8&oe=596DC86E";
-        User user = new User(url, "Duy Trung", "", "");
-        String content = "Bố anh hút rất nhiều thuốc...";
-        Comment comment = new Comment(user, content);
-        comments.add(comment);
-        comments.add(comment);
-        comments.add(comment);
-        comments.add(comment);
-        comments.add(comment);
-        comments.add(comment);
-        comments.add(comment);
-        comments.add(comment);
-        comments.add(comment);
-        comments.add(comment);
-        comments.add(comment);
-        comments.add(comment);
-        comments.add(comment);
-        comments.add(comment);
-        comments.add(comment);
-        comments.add(comment);
-        comments.add(comment);
+
+        List<Comment> comments = getArguments().getParcelableArrayList(FragmentTheGioi.COMMENT);
+
         CommentAdapter adapter = new CommentAdapter(getContext(), R.layout.comment_item, comments);
 
         lvComment.setAdapter(adapter);

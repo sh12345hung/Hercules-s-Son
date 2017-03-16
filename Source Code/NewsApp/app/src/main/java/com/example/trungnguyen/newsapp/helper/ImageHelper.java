@@ -13,11 +13,61 @@ import java.util.concurrent.ExecutionException;
  */
 public class ImageHelper {
     private Context mContext;
-    Bitmap mImage;
+    static Bitmap mImage;
     List<Bitmap> list;
 
     public ImageHelper(Context context) {
         mContext = context;
+    }
+
+    public Bitmap getBitmapFromUrl(String url, LoadSuccess loadSuccess) {
+//        Thread thread = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    Log.d("HELPER", "CALL DI");
+//                    mImage = Picasso.with(mContext).load(mUrl).get();
+//                } catch (IOException e) {
+//                    Log.d("HELPER", e.toString());
+//                }
+//            }
+//        });
+//        thread.start();
+//        Log.d("HELP", "getDrawableFromUrl");
+//
+//        if (mTarget == null) mTarget = new Target() {
+//            @Override
+//            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+//                mImage = bitmap;
+//                Log.d("HELP", "onBitmapLoaded");
+//            }
+//
+//            @Override
+//            public void onBitmapFailed(Drawable errorDrawable) {
+//                Log.d("HELP", "failed");
+//            }
+//
+//            @Override
+//            public void onPrepareLoad(Drawable placeHolderDrawable) {
+//            }
+//        };
+//
+//        Picasso.with(mContext).load(mUrl).resize(126, 126).into(mTarget);
+//
+        DownLoadImageTask task = new DownLoadImageTask();
+        task.execute(url);
+        try {
+            mImage = task.get();
+            if (mImage != null)
+                loadSuccess.onLoadSuccess();
+        } catch (InterruptedException e) {
+//            Log.d("HELP", e.toString());
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+//            Log.d("HELP", e.toString());
+            e.printStackTrace();
+        }
+        return mImage;
     }
 
     public Bitmap getBitmapFromUrl(String url) {
@@ -86,5 +136,9 @@ public class ImageHelper {
             e.printStackTrace();
         }
         return list;
+    }
+
+    public interface LoadSuccess {
+        void onLoadSuccess();
     }
 }

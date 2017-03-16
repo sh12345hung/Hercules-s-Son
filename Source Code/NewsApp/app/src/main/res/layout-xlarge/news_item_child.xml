@@ -2,20 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="5dp">
+    android:padding="10dp">
     <LinearLayout
         android:padding="10dp"
+        android:layout_marginBottom="15dp"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="280dp"
         android:background="@drawable/backgroundchild">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="17sp"
+            android:textSize="33sp"
             android:text="Vnexpress.vn"
             android:id="@+id/tvSource"
             android:textColor="@color/backgroundSearch"
@@ -30,7 +30,7 @@
         <TextView
             android:layout_marginLeft="5dp"
             android:layout_width="match_parent"
-            android:textSize="17sp"
+            android:textSize="33sp"
             android:layout_weight="1"
             android:id="@+id/tvCmt"
             android:layout_gravity="center_vertical|center_horizontal"

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.DialogFragment;
@@ -23,7 +24,9 @@ import com.example.trungnguyen.newsapp.DetailActivity;
 import com.example.trungnguyen.newsapp.R;
 import com.example.trungnguyen.newsapp.adapter.ExpandableAdapter;
 import com.example.trungnguyen.newsapp.helper.DownloadListImageTask;
+import com.example.trungnguyen.newsapp.model.Comment;
 import com.example.trungnguyen.newsapp.model.News;
+import com.example.trungnguyen.newsapp.model.User;
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout;
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayoutDirection;
 
@@ -36,6 +39,7 @@ import java.util.List;
 public class FragmentTheGioi extends Fragment implements
         ExpandableListViewImp, ExpandableListView.OnGroupClickListener,
         SwipyRefreshLayout.OnRefreshListener {
+    public static final String COMMENT = "comment";
     List<News> newsList;
     ExpandableListView expListView;
     SwipyRefreshLayout mSwipeLayout;
@@ -103,7 +107,32 @@ public class FragmentTheGioi extends Fragment implements
 
     @Override
     public void onCommentsClick(int position) {
+        List<Comment> comments = new ArrayList<>();
+        String url = "https://scontent.xx.fbcdn.net/v/t1.0-1/p50x50/16427427_590536551139263_444919452715704300_n.jpg?oh=12843c9c03620ffd91e9febaf2a7add8&oe=596DC86E";
+        User user = new User(url, "Duy Trung", "", "");
+        String content = "Bố anh hút rất nhiều thuốc, mẹ anh chửi ổng quá trời";
+        Comment comment = new Comment(user, content);
+        comments.add(comment);
+        comments.add(comment);
+        comments.add(comment);
+        comments.add(comment);
+        comments.add(comment);
+        comments.add(comment);
+        comments.add(comment);
+        comments.add(comment);
+        comments.add(comment);
+        comments.add(comment);
+        comments.add(comment);
+        comments.add(comment);
+        comments.add(comment);
+        comments.add(comment);
+        comments.add(comment);
+        comments.add(comment);
+        comments.add(comment);
         CommentDialog dialogFragment = new CommentDialog();
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList(COMMENT, (ArrayList<? extends Parcelable>) comments);
+        dialogFragment.setArguments(bundle);
         dialogFragment.show(getActivity().getSupportFragmentManager(), "COMMENT_DIALOG");
     }
 

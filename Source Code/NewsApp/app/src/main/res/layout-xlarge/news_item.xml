@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
+    android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
+        android:textSize="35sp"
         android:layout_marginLeft="3dp"
         android:text="UAV mang lựu đạn của IS bị bắn hạ "
         android:id="@+id/tvTitle"
@@ -21,30 +20,32 @@
         <ImageView
             android:id="@+id/imgMiniPic"
             android:layout_marginTop="5dp"
-            android:layout_width="165dp"
-            android:layout_height="100dp"
+            android:layout_width="300dp"
+            android:layout_height="200dp"
             android:src="@drawable/mini_image_png" />
 
 
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_marginLeft="6dp"
+            android:layout_marginLeft="3dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <TextView
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="12dp"
+                android:textSize="30sp"
                 android:layout_width="wrap_content"
-                android:layout_height="73dp"
+                android:layout_height="wrap_content"
                 android:text="Một chiếc UAV gắn lựu đạn của phiến quân Nhà nước Hồi giáo tự xưng (IS) đã bị quân đội Iraq bắn hạ gần Mosul."
                 android:id="@+id/tvDescription" />
 
             <ImageView
+                android:layout_marginTop="13dp"
                 android:layout_marginRight="3dp"
                 android:background="@drawable/selector_background_search"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_gravity="end|bottom"
                 android:src="@drawable/reorderhorizontal"
                 android:id="@+id/btMore" />

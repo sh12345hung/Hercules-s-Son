@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/progressBar"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="80dp"
             android:background="@drawable/loginbutton_bg"
             android:paddingBottom="10dp"
             android:paddingLeft="15dp"
@@ -50,7 +50,7 @@
             android:layout_centerHorizontal="true"
             android:textColor="@color/backgroundSearch"
             android:layout_alignTop="@+id/login_button"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="150dp"
             android:text="Skip for now"
             android:textStyle="italic"
             android:id="@+id/tvSkip" />

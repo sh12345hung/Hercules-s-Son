@@ -1,9 +1,11 @@
 package com.example.trungnguyen.newsapp.model;
 
+import java.io.Serializable;
+
 /**
  * Created by Trung Nguyen on 3/13/2017.
  */
-public class User {
+public class User implements Serializable{
     String mAvatarUrl;
     String mUserName;
     String mUserEmail;
