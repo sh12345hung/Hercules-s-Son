@@ -15,7 +15,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="33sp"
+            android:textSize="35sp"
             android:text="Vnexpress.vn"
             android:id="@+id/tvSource"
             android:textColor="@color/backgroundSearch"
@@ -30,7 +30,7 @@
         <TextView
             android:layout_marginLeft="5dp"
             android:layout_width="match_parent"
-            android:textSize="33sp"
+            android:textSize="35sp"
             android:layout_weight="1"
             android:id="@+id/tvCmt"
             android:layout_gravity="center_vertical|center_horizontal"
@@ -43,6 +43,6 @@
             android:layout_gravity="center|end"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/clock_white" />
+            android:src="@drawable/ic_clock_white_48dp" />
     </LinearLayout>
 </LinearLayout>

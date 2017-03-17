@@ -21,8 +21,10 @@ import android.widget.ExpandableListView;
 import com.example.trungnguyen.newsapp.CommentDialog;
 import com.example.trungnguyen.newsapp.ExpandableListViewImp;
 import com.example.trungnguyen.newsapp.DetailActivity;
+import com.example.trungnguyen.newsapp.MainActivity;
 import com.example.trungnguyen.newsapp.R;
 import com.example.trungnguyen.newsapp.adapter.ExpandableAdapter;
+import com.example.trungnguyen.newsapp.helper.CheckForNetworkState;
 import com.example.trungnguyen.newsapp.helper.DownloadListImageTask;
 import com.example.trungnguyen.newsapp.model.Comment;
 import com.example.trungnguyen.newsapp.model.News;
@@ -44,11 +46,15 @@ public class FragmentTheGioi extends Fragment implements
     ExpandableListView expListView;
     SwipyRefreshLayout mSwipeLayout;
     AppBarLayout appBarLayout;
+    CheckForNetworkState checker;
+    boolean isLogin = false;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View mReturnView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_thegioi, container, false);
+        isLogin = getArguments().getBoolean(MainActivity.IS_LOGIN);
+        checker = new CheckForNetworkState(getContext());
         newsList = new ArrayList<News>();
         newsList.add(new News(1, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des)));
         newsList.add(new News(2, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des)));
@@ -132,15 +138,19 @@ public class FragmentTheGioi extends Fragment implements
         CommentDialog dialogFragment = new CommentDialog();
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(COMMENT, (ArrayList<? extends Parcelable>) comments);
+        bundle.putBoolean(MainActivity.IS_LOGIN, isLogin);
         dialogFragment.setArguments(bundle);
-        dialogFragment.show(getActivity().getSupportFragmentManager(), "COMMENT_DIALOG");
+        if (checker.isNetworkAvailable())
+            dialogFragment.show(getActivity().getSupportFragmentManager(), "COMMENT_DIALOG");
     }
 
     @Override
     public boolean onGroupClick(ExpandableListView expandableListView, View view, int position, long l) {
         Log.d("KIEMTRA", "group clicked");
-        Intent intent = new Intent(getActivity(), DetailActivity.class);
-        getActivity().startActivity(intent);
+        if (checker.isNetworkAvailable()) {
+            Intent intent = new Intent(getActivity(), DetailActivity.class);
+            getActivity().startActivity(intent);
+        }
         // Must return true to remove action expand or collapse when we click on Group (not button)
         return true;
     }

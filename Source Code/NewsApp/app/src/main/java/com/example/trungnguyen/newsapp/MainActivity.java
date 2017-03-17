@@ -1,7 +1,10 @@
 package com.example.trungnguyen.newsapp;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -21,6 +24,7 @@ import android.widget.Button;
 
 import com.example.trungnguyen.newsapp.adapter.ViewPagerAdapter;
 import com.example.trungnguyen.newsapp.helper.ImageHelper;
+import com.example.trungnguyen.newsapp.helper.NetworkStateReceiver;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.FacebookSdk;
@@ -31,9 +35,11 @@ import com.facebook.login.LoginManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
+public class MainActivity extends AppCompatActivity implements
+        NavigationView.OnNavigationItemSelectedListener,
         View.OnClickListener {
     private static final String TAG = MainActivity.class.getSimpleName();
+    public static final String IS_LOGIN = "is_login";
     Toolbar toolbar;
     TabLayout tab;
     Button btSearch;
@@ -67,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             GraphRequest request = GraphRequest.newMeRequest(mAccessToken, new GraphRequest.GraphJSONObjectCallback() {
                 @Override
                 public void onCompleted(JSONObject object, GraphResponse response) {
-                    Log.d(TAG, "complete Graph API");
+//                    Log.d(TAG, "complete Graph API");
                     try {
 //                        Log.d(TAG, object.toString());
                         facebookUserName = object.getString("name");
@@ -88,7 +94,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         addControls();
         setSupportActionBar(toolbar); // Because we are using AppCompat, that is support library
-        ViewPagerAdapter pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(IS_LOGIN, isUserLogin);
+        ViewPagerAdapter pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), bundle);
         viewPager.setAdapter(pagerAdapter);
         tab.setupWithViewPager(viewPager);
         drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close); //drawerToggle phải đc khỏi tạo sau toolbar
@@ -124,10 +132,36 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.menuLogout:
                 LoginManager.getInstance().logOut();
                 isUserLogin = false;
+                Intent intent = new Intent(MainActivity.this, WelcomeActivity.class);
+                startActivity(intent);
+                finish();
                 invalidateOptionsMenu();
                 break;
         }
         return true;
+    }
+
+    BroadcastReceiver updateUIReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            boolean isNetworkAvailable = intent.getBooleanExtra(NetworkStateReceiver.IS_NETWORK_AVAILABLE, false);
+            Log.d(TAG, "receiver: " + isNetworkAvailable);
+            if (!isNetworkAvailable)
+                showAlertDialogNetworkStateChange();
+        }
+    };
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter filter = new IntentFilter(NetworkStateReceiver.UPDATE_UI_FROM_BROADCAST_CHANGE_NETWORK_STATE);
+        registerReceiver(updateUIReceiver, filter);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(updateUIReceiver);
     }
 
     private void addControls() {
@@ -169,7 +203,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         else
             changeViewPagerPage(6);
 
-        Log.d("KIEMTRA", "onNavigationItemSelected " + viewPager.getCurrentItem());
+//        Log.d("KIEMTRA", "onNavigationItemSelected " + viewPager.getCurrentItem());
 
         return true;
     }
@@ -196,6 +230,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             });
             dialog.show();
         }
+    }
+
+    private void showAlertDialogNetworkStateChange() {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setTitle("NETWORK NOT AVAILABLE")
+                .setMessage("You need to connect to network");
+        dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        dialog.show();
     }
 
     @Override

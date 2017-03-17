@@ -49,7 +49,6 @@ public class DrawCircleImage extends ImageView {
 
         Bitmap roundBitmap = getCroppedBitmap(bitmap, w);
         canvas.drawBitmap(roundBitmap, 0, 0, null);
-
     }
 
     public static Bitmap getCroppedBitmap(Bitmap bmp, int radius) {

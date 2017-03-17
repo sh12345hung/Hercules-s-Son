@@ -4,8 +4,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <ProgressBar
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:id="@+id/progressBarCmt"
         android:layout_gravity="center"
         style="@android:style/Widget.Holo.ProgressBar.Large"
@@ -14,22 +14,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingTop="5dp"
-        android:paddingBottom="5dp"
+        android:paddingBottom="10dp"
         android:paddingRight="5dp">
 
         <ImageView
-            android:layout_width="75dp"
-            android:layout_height="75dp"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
             android:id="@+id/imgCmtUserAvatar" />
-
-
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Duy Trung"
             android:textColor="@color/backgroundAppBarLayout"
-            android:textSize="23sp"
+            android:textSize="30sp"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/imgCmtUserAvatar"
             android:id="@+id/tvCmtUserName" />
@@ -38,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="New Text"
-            android:textSize="18sp"
+            android:textSize="26sp"
             android:layout_marginLeft="10dp"
             android:layout_below="@id/tvCmtUserName"
             android:layout_toRightOf="@id/imgCmtUserAvatar"

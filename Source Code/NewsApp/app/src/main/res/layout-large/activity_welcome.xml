@@ -41,12 +41,12 @@
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
             android:paddingTop="10dp"
-            android:textSize="17sp" />
+            android:textSize="28sp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
+            android:textSize="28sp"
             android:layout_centerHorizontal="true"
             android:textColor="@color/backgroundSearch"
             android:layout_alignTop="@+id/login_button"

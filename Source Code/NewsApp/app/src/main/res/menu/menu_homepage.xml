@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/menuNotification"
-        android:icon="@drawable/bell"
+        android:icon="@drawable/ic_bell_outline_white_24dp"
         android:orderInCategory="0"
         android:title="Watch Later"
         app:showAsAction="always" />

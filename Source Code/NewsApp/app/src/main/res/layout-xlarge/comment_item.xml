@@ -14,12 +14,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingTop="5dp"
-        android:paddingBottom="5dp"
+        android:paddingBottom="10dp"
         android:paddingRight="5dp">
 
         <ImageView
-            android:layout_width="130dp"
-            android:layout_height="130dp"
+            android:layout_width="135dp"
+            android:layout_height="135dp"
             android:id="@+id/imgCmtUserAvatar" />
 
 
@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:text="Duy Trung"
             android:textColor="@color/backgroundAppBarLayout"
-            android:textSize="30sp"
+            android:textSize="31sp"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/imgCmtUserAvatar"
             android:id="@+id/tvCmtUserName" />
@@ -38,7 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="New Text"
-            android:textSize="26sp"
+            android:textSize="27sp"
             android:layout_marginLeft="10dp"
             android:layout_below="@id/tvCmtUserName"
             android:layout_toRightOf="@id/imgCmtUserAvatar"

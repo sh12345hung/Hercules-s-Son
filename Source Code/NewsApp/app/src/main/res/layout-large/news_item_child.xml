@@ -43,6 +43,6 @@
             android:layout_gravity="center|end"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/clock_white" />
+            android:src="@drawable/ic_clock_white_36dp" />
     </LinearLayout>
 </LinearLayout>

@@ -2,18 +2,22 @@ package com.example.trungnguyen.newsapp;
 
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.trungnguyen.newsapp.adapter.CommentAdapter;
 import com.example.trungnguyen.newsapp.fragment.FragmentTheGioi;
@@ -31,6 +35,8 @@ public class CommentDialog extends DialogFragment {
 
     int mNewsPosition;
     ListView lvComment;
+    EditText etCmt;
+    TextView tvLoginCmt;
     ProgressDialog dialog;
 
     @Override
@@ -45,6 +51,16 @@ public class CommentDialog extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View mReturnView = inflater.inflate(R.layout.comment_dialog, container, false);
         lvComment = (ListView) mReturnView.findViewById(R.id.lvComments);
+        etCmt = (EditText) mReturnView.findViewById(R.id.etComment);
+        tvLoginCmt = (TextView) mReturnView.findViewById(R.id.tvLoginCmt);
+        Bundle bundle = getArguments();
+        if (!bundle.getBoolean(MainActivity.IS_LOGIN)) {
+            etCmt.setVisibility(View.GONE);
+            tvLoginCmt.setVisibility(View.VISIBLE);
+        } else {
+            etCmt.setVisibility(View.VISIBLE);
+            tvLoginCmt.setVisibility(View.GONE);
+        }
         // Setup dialog
         getDialog().getWindow().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM); // todo set position of dialog fragment
 
@@ -55,7 +71,7 @@ public class CommentDialog extends DialogFragment {
         // and one more function, the dialog will be have the radius attributes
 
 
-        List<Comment> comments = getArguments().getParcelableArrayList(FragmentTheGioi.COMMENT);
+        List<Comment> comments = bundle.getParcelableArrayList(FragmentTheGioi.COMMENT);
 
         CommentAdapter adapter = new CommentAdapter(getContext(), R.layout.comment_item, comments);
 

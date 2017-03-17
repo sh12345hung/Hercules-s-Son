@@ -1,5 +1,6 @@
 package com.example.trungnguyen.newsapp.adapter;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -22,9 +23,11 @@ public class ViewPagerAdapter extends FragmentPagerAdapter{
     List<Fragment> fragments = new ArrayList<Fragment>();
     List<String> titleFragment = new ArrayList<String>();
 
-    public ViewPagerAdapter(FragmentManager fm) {
+    public ViewPagerAdapter(FragmentManager fm, Bundle bundle) {
         super(fm);
-        fragments.add(new FragmentTheGioi());
+        FragmentTheGioi fragmentTheGioi = new FragmentTheGioi();
+        fragmentTheGioi.setArguments(bundle);
+        fragments.add(fragmentTheGioi);
         fragments.add(new FragmentTheThao());
         fragments.add(new FragmentCongNghe());
         fragments.add(new FragmentGiaiTri());

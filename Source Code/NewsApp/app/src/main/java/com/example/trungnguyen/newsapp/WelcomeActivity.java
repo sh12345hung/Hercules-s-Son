@@ -1,19 +1,16 @@
 package com.example.trungnguyen.newsapp;
 
 import android.annotation.TargetApi;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Handler;
 import android.provider.Settings;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
@@ -23,6 +20,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.trungnguyen.newsapp.helper.CheckForNetworkState;
+import com.example.trungnguyen.newsapp.helper.NetworkStateReceiver;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -31,8 +30,6 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 public class WelcomeActivity extends AppCompatActivity implements View.OnClickListener {
@@ -42,6 +39,8 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
     ProgressBar progressBar;
 
     CallbackManager callbackManager;
+
+    CheckForNetworkState checker;
 
     LoginButton loginButton;
 
@@ -56,19 +55,18 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
 
         setContentView(R.layout.activity_welcome);
         addControls();
-
+        checker = new CheckForNetworkState(this);
         callbackManager = CallbackManager.Factory.create();
 
         accessToken = AccessToken.getCurrentAccessToken();
-
-
         loginButton.setReadPermissions(Arrays.asList("public_profile", "email"));
 
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 Log.d("TEST", "THANH CONG");
-                moveToMainActivity(true);
+                if (checker.isNetworkAvailable())
+                    moveToMainActivity(true);
             }
 
             @Override
@@ -107,17 +105,55 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         }, 3000);
     }
 
+    BroadcastReceiver updateUIReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            boolean isNetworkAvailable = intent.getBooleanExtra(NetworkStateReceiver.IS_NETWORK_AVAILABLE, false);
+            Log.d(TAG, "receiver: " + isNetworkAvailable);
+            if (!isNetworkAvailable)
+                showAlertDialogNetworkStateChange();
+            else {
+                if (accessToken != null) {
+                    moveToMainActivity(true);
+                }
+            }
+
+        }
+    };
+
+    private void showAlertDialogNetworkStateChange() {
+        AlertDialog.Builder dialog = new android.support.v7.app.AlertDialog.Builder(this);
+        dialog.setTitle("NETWORK NOT AVAILABLE")
+                .setMessage("You need to connect to network");
+        dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        dialog.show();
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
+        registerReceiver(updateUIReceiver, new IntentFilter(
+                NetworkStateReceiver.UPDATE_UI_FROM_BROADCAST_CHANGE_NETWORK_STATE)
+        );
         if (accessToken != null) {
-            if (isNetworkAvailable())
+            if (checker.isNetworkAvailable())
                 moveToMainActivity(true);
             else {
                 Toast.makeText(WelcomeActivity.this, "Thiết bị chưa được kết nối Internet", Toast.LENGTH_LONG).show();
                 progressBar.setVisibility(View.VISIBLE);
             }
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(updateUIReceiver);
     }
 
     private void addControls() {
@@ -136,7 +172,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onClick(View view) {
-        if (!isNetworkAvailable())
+        if (!checker.isNetworkAvailable())
             Toast.makeText(WelcomeActivity.this, "Thiết bị chưa được kết nối Internet", Toast.LENGTH_SHORT).show();
         else
             moveToMainActivity(false);
@@ -150,23 +186,5 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
 
-    private void showDialogToEnableWifi() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Bạn cần phải bật wifi trước khi thực hiện kết nối");
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
-                startActivity(intent);
-            }
-        });
-        builder.show();
-    }
 }

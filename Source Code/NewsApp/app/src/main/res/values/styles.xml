@@ -5,6 +5,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="actionOverflowMenuStyle">@style/ChangeOptionsMenuColor</item>
     </style>
 
     <style name="colorMenuItem" parent="AppTheme">
@@ -29,5 +30,9 @@
     <style name="MySearchView">
         <item name="android:textSize">33sp</item>
         <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
+    <style name="ChangeOptionsMenuColor" parent="Widget.AppCompat.PopupMenu.Overflow">
+        <item name="android:popupBackground">#CCffffff</item>
     </style>
 </resources>
