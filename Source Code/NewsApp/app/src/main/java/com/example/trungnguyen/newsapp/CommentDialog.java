@@ -53,6 +53,7 @@ public class CommentDialog extends DialogFragment {
         lvComment = (ListView) mReturnView.findViewById(R.id.lvComments);
         etCmt = (EditText) mReturnView.findViewById(R.id.etComment);
         tvLoginCmt = (TextView) mReturnView.findViewById(R.id.tvLoginCmt);
+        //Commit
         Bundle bundle = getArguments();
         if (!bundle.getBoolean(MainActivity.IS_LOGIN)) {
             etCmt.setVisibility(View.GONE);
