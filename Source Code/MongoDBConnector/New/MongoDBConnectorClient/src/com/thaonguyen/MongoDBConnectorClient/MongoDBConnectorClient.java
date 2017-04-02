@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
@@ -12,8 +13,9 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 public abstract class MongoDBConnectorClient extends WebSocketClient {
-	private static final String DEFAULT_SERVER_URI = "ws://192.168.14.128:7777";
+	//private static final String DEFAULT_SERVER_URI = "ws://192.168.14.128:7777";
 	//private static final String DEFAULT_SERVER_URI = "ws://127.0.0.1:7777";
+	private static final String DEFAULT_SERVER_URI = "ws://54.250.240.202:7777";
 	private String _userID;
 	
 	public MongoDBConnectorClient(String UserID) throws URISyntaxException {
@@ -33,13 +35,14 @@ public abstract class MongoDBConnectorClient extends WebSocketClient {
 
 	@Override
 	public void onMessage(String message) {
+		log(message);
 		try {
 			JSONParser parser = new JSONParser();
 			JSONObject obj = (JSONObject) parser.parse(message);
 			
 			boolean isNewUser;
-			int count;
-			String contain;
+			long count;
+			List<String> contain;
 			
 			switch ((String)obj.get("TYPE")) {
 			case "LOGIN":
@@ -47,27 +50,27 @@ public abstract class MongoDBConnectorClient extends WebSocketClient {
 				this.Login_Callback(isNewUser);
 				break;
 			case "GETNEWS":
-				count = (int) obj.get("Count");
-				contain = (String) obj.get("Contain");
+				count = (long)obj.get("Count");
+				contain = (List<String>)obj.get("Contain");
 				this.GetNews_Callback(count, contain);
 				break;
 			case "GETCOMMENT":
-				count = (int) obj.get("Count");
-				contain = (String) obj.get("Contain");
-				this.GetComment_Callback(count, contain);
+				log("called");
+				contain = (List<String>) obj.get("COMMENT");
+				this.GetComment_Callback(contain);
 				break;
 			default:
 				break;
 			}
 		}
 		catch (Exception ex) {
-			
+			ex.printStackTrace();
 		}
 	}
 	
 	public void Login() throws InterruptedException {
 		this.connect();
-		Thread.sleep(200);
+		Thread.sleep(1000);
 		
 		String json = "{\"TYPE\" : \"LOGIN\",\"UserID\" : \"" + this._userID + "\"}";
 		this.send(json);
@@ -86,14 +89,14 @@ public abstract class MongoDBConnectorClient extends WebSocketClient {
 		this.send(json);
 	}
 	
-	public abstract void GetNews_Callback(int count, String News);
+	public abstract void GetNews_Callback(long count, List<String> News);
 	
 	public void GetComment(String NewsID) {
 		String json = "{\"TYPE\" : \"GETCOMMENT\",\"NewsID\" : \"" + NewsID + "\"}";
 		this.send(json);
 	}
 	
-	public abstract void GetComment_Callback(int count, String Comment);
+	public abstract void GetComment_Callback(List<String> Comment);
 	
 	public void AddComment(String NewsID, String Comment) {
 		String json = "{\"TYPE\" : \"ADDCOMMENT\",\"UserID\" : \"" + this._userID + "\",\"NewsID\" : \"" + NewsID + "\",\"Comment\" : \"" + Comment + "\"}";

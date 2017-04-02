@@ -1,15 +1,19 @@
 package com.thaonguyen.MongoDBConnectorClient;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.List;
+
 import org.java_websocket.handshake.ServerHandshake;
 
 public class Example {
 	public static void main(String[] args) {
 		try {
-			MongoDBConnectorClient client = new MongoDBConnectorClient("ThaoNguyen") {
+			MongoDBConnectorClient client = new MongoDBConnectorClient("ThaiNguyen") {
 
 				@Override
 				public void onClose(int arg0, String arg1, boolean arg2) {
-					
+					MongoDBConnectorClient.log("Connection closed");
 				}
 
 				@Override
@@ -19,7 +23,7 @@ public class Example {
 
 				@Override
 				public void onOpen(ServerHandshake arg0) {
-					
+					MongoDBConnectorClient.log("Connection opened");
 				}
 
 				@Override
@@ -33,30 +37,38 @@ public class Example {
 				}
 
 				@Override
-				public void GetNews_Callback(int count, String News) {
+				public void GetNews_Callback(long count, List<String> News) {
 					MongoDBConnectorClient.log("Count: " + count);
-					MongoDBConnectorClient.log("News: " + News);
+					for (int i = 0; i < News.size(); i++) {
+						MongoDBConnectorClient.log("News: " + News.get(i));
+					}
 				}
 
 				@Override
-				public void GetComment_Callback(int count, String Comment) {
-					
+				public void GetComment_Callback(List<String> Comment) {
+					MongoDBConnectorClient.log("Comment: " + Comment);
 				}
 			};
+			
 			client.Login();
 			MongoDBConnectorClient.log("Login OK");
 			
 //			client.GetNews("THEGIOI");
 //			MongoDBConnectorClient.log("Get news OK");
 			
-//			client.GetComment("abc123");
+//			client.GetComment("58e081e8ac0e564b41cc51b7");
 //			MongoDBConnectorClient.log("Get comment OK");
 			
-//			client.AddComment("abc123", "LOL");
-//			MongoDBConnectorClient.log("Add comment OK");
+			client.AddComment("58e081e8ac0e564b41cc51b7", "LOL");
+			MongoDBConnectorClient.log("Add comment OK");
 			
-//			client.Read("abc123");
-//			MongoDBConnectorClient.log("Read OK");
+			BufferedReader sysin = new BufferedReader( new InputStreamReader( System.in ) );
+			while (true) {
+				String in = sysin.readLine();
+				if(in.equals("exit")) {
+					break;
+				}
+			}
 			
 			client.Logout();
 			MongoDBConnectorClient.log("Logout OK");
