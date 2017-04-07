@@ -1,7 +1,6 @@
 package com.example.trungnguyen.newsapp;
 
 import android.annotation.TargetApi;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,11 +8,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Handler;
-import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -122,7 +119,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
     };
 
     private void showAlertDialogNetworkStateChange() {
-        AlertDialog.Builder dialog = new android.support.v7.app.AlertDialog.Builder(this);
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle("NETWORK NOT AVAILABLE")
                 .setMessage("You need to connect to network");
         dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {

@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ExpandableListView;
+import android.widget.Toast;
 
 import com.example.trungnguyen.newsapp.CommentDialog;
 import com.example.trungnguyen.newsapp.ExpandableListViewImp;
@@ -42,6 +43,8 @@ public class FragmentTheGioi extends Fragment implements
         ExpandableListViewImp, ExpandableListView.OnGroupClickListener,
         SwipyRefreshLayout.OnRefreshListener {
     public static final String COMMENT = "comment";
+    public static final String NEWS_URL = "news_url";
+    public static final String CHECK_NETWOK = "check_network";
     List<News> newsList;
     ExpandableListView expListView;
     SwipyRefreshLayout mSwipeLayout;
@@ -56,23 +59,29 @@ public class FragmentTheGioi extends Fragment implements
         isLogin = getArguments().getBoolean(MainActivity.IS_LOGIN);
         checker = new CheckForNetworkState(getContext());
         newsList = new ArrayList<News>();
-        newsList.add(new News(1, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des)));
-        newsList.add(new News(2, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des)));
-        newsList.add(new News(3, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des)));
-        newsList.add(new News(4, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des)));
-        newsList.add(new News(5, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des)));
-        newsList.add(new News(6, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des)));
-        newsList.add(new News(7, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des)));
-        newsList.add(new News(8, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des)));
-        newsList.add(new News(9, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des)));
-        newsList.add(new News(10, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des)));
-        newsList.add(new News(11, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des)));
-        newsList.add(new News(12, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des)));
-        newsList.add(new News(13, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des)));
-        newsList.add(new News(14, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des)));
-        newsList.add(new News(15, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des)));
-        newsList.add(new News(16, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des)));
-        newsList.add(new News(17, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des)));
+        newsList.add(new News(1, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des), "http://thethao.vnexpress.net/photo/hau-truong/nhung-ong-chu-giau-nhat-cua-bong-da-anh-3563614.html"));
+        newsList.add(new News(2, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des), "http://thethao.vnexpress.net/photo/hau-truong/nhung-ong-chu-giau-nhat-cua-bong-da-anh-3563614.html"));
+        newsList.add(new News(3, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des), "http://thethao.vnexpress.net/photo/hau-truong/nhung-ong-chu-giau-nhat-cua-bong-da-anh-3563614.html"));
+        newsList.add(new News(4, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des), "http://thethao.vnexpress.net/photo/hau-truong/nhung-ong-chu-giau-nhat-cua-bong-da-anh-3563614.html"));
+        newsList.add(new News(5, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des), "http://thethao.vnexpress.net/photo/hau-truong/nhung-ong-chu-giau-nhat-cua-bong-da-anh-3563614.html"));
+        newsList.add(new News(6, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des), "http://thethao.vnexpress.net/photo/hau-truong/nhung-ong-chu-giau-nhat-cua-bong-da-anh-3563614.html"));
+        newsList.add(new News(7, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des), "http://thethao.vnexpress.net/photo/hau-truong/nhung-ong-chu-giau-nhat-cua-bong-da-anh-3563614.html"));
+        newsList.add(new News(8, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des), "http://thethao.vnexpress.net/photo/hau-truong/nhung-ong-chu-giau-nhat-cua-bong-da-anh-3563614.html"));
+        newsList.add(new News(9, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des), "http://thethao.vnexpress.net/photo/hau-truong/nhung-ong-chu-giau-nhat-cua-bong-da-anh-3563614.html"));
+        newsList.add(new News(10, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des), "http://thethao.vnexpress.net/photo/hau-truong/nhung-ong-chu-giau-nhat-cua-bong-da-anh-3563614.html"));
+        newsList.add(new News(11, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des), "http://thethao.vnexpress.net/photo/hau-truong/nhung-ong-chu-giau-nhat-cua-bong-da-anh-3563614.html"));
+        newsList.add(new News(12, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des), "http://thethao.vnexpress.net/photo/hau-truong/nhung-ong-chu-giau-nhat-cua-bong-da-anh-3563614.html"));
+        newsList.add(new News(13, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des), "http://thethao.vnexpress.net/photo/hau-truong/nhung-ong-chu-giau-nhat-cua-bong-da-anh-3563614.html"));
+        newsList.add(new News(14, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des), "http://thethao.vnexpress.net/photo/hau-truong/nhung-ong-chu-giau-nhat-cua-bong-da-anh-3563614.html"));
+        newsList.add(new News(15, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des), "http://thethao.vnexpress.net/photo/hau-truong/nhung-ong-chu-giau-nhat-cua-bong-da-anh-3563614.html"));
+        newsList.add(new News(16, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des), "http://thethao.vnexpress.net/photo/hau-truong/nhung-ong-chu-giau-nhat-cua-bong-da-anh-3563614.html"));
+        newsList.add(new News(17, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des), "http://thethao.vnexpress.net/photo/hau-truong/nhung-ong-chu-giau-nhat-cua-bong-da-anh-3563614.html"));
+        newsList.add(new News(18, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des), "http://thethao.vnexpress.net/photo/hau-truong/nhung-ong-chu-giau-nhat-cua-bong-da-anh-3563614.html"));
+        newsList.add(new News(19, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des), "http://thethao.vnexpress.net/photo/hau-truong/nhung-ong-chu-giau-nhat-cua-bong-da-anh-3563614.html"));
+        newsList.add(new News(20, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des), "http://thethao.vnexpress.net/photo/hau-truong/nhung-ong-chu-giau-nhat-cua-bong-da-anh-3563614.html"));
+        newsList.add(new News(21, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des), "http://thethao.vnexpress.net/photo/hau-truong/nhung-ong-chu-giau-nhat-cua-bong-da-anh-3563614.html"));
+        newsList.add(new News(22, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des), "http://thethao.vnexpress.net/photo/hau-truong/nhung-ong-chu-giau-nhat-cua-bong-da-anh-3563614.html"));
+        newsList.add(new News(23, getString(R.string.title), "Nguyen Duy Trung", getString(R.string.des), "http://thethao.vnexpress.net/photo/hau-truong/nhung-ong-chu-giau-nhat-cua-bong-da-anh-3563614.html"));
         addControls(mReturnView);
 
 
@@ -149,8 +158,11 @@ public class FragmentTheGioi extends Fragment implements
         Log.d("KIEMTRA", "group clicked");
         if (checker.isNetworkAvailable()) {
             Intent intent = new Intent(getActivity(), DetailActivity.class);
+            intent.putExtra(NEWS_URL, newsList.get(position).getUrl());
+//            intent.putExtra(CHECK_NETWOK, checker.isNetworkAvailable());
             getActivity().startActivity(intent);
-        }
+        } else
+            Toast.makeText(getActivity(), "Thiết bị hiện tại không kết nối internet", Toast.LENGTH_LONG).show();
         // Must return true to remove action expand or collapse when we click on Group (not button)
         return true;
     }

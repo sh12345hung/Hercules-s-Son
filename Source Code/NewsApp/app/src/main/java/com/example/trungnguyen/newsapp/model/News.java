@@ -9,12 +9,22 @@ public class News {
     String content;
     String mainPicture;
     String des;
+    String url;
 
-    public News(int id, String title, String content, String des) {
+    public News(int id, String title, String content, String des, String url) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.des = des;
+        this.url = url;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public int getId() {

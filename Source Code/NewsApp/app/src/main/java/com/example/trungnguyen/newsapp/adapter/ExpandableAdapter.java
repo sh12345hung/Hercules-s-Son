@@ -27,7 +27,6 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
     List<News> mNewsList;
     NewsViewHolder holder;
     ExpandableListView expandableListView;
-
     public ExpandableAdapter(Context context, List<News> list, ExpandableListView exp) {
         mContext = context;
         mNewsList = list;
@@ -93,7 +92,7 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
         if (isExpanded)
             holder.tvTitle.setTextColor(Color.parseColor("#37474F"));
         else
-            holder.tvTitle.setTextColor(Color.GRAY);
+            holder.tvTitle.setTextColor(Color.BLACK);
         holder.tvDes.setText(mNewsList.get(parentPos).getDes());
 
         holder.btMore.setOnClickListener(new View.OnClickListener() {

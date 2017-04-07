@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements
         }
         addControls();
         setSupportActionBar(toolbar); // Because we are using AppCompat, that is support library
+        toolbar.setTitle("");
         Bundle bundle = new Bundle();
         bundle.putBoolean(IS_LOGIN, isUserLogin);
         ViewPagerAdapter pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), bundle);
