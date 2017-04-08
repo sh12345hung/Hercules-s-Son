@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/swipeToRefresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="4dp"
+    android:background="@color/background_list"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
-    <ExpandableListView
+
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/expTheGioi"
+        android:dividerHeight="5dp"
+        android:divider="@color/background_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:groupIndicator="@null">
-    </ExpandableListView>
+    </android.support.v7.widget.RecyclerView>
 </com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout>
 

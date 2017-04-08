@@ -25,7 +25,7 @@
                 android:title=""
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:layout_scrollFlags="scroll|enterAlways"
+                app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
                 app:theme="@style/colorMenuItem"
                 app:layout_collapseMode="pin"
                 app:titleTextColor="@color/backgroundSearch">
@@ -40,7 +40,7 @@
                 android:layout_marginRight="15dp"
                 android:background="@drawable/backgroundsearch"
                 android:orientation="horizontal"
-                app:layout_scrollFlags="scroll|enterAlways">
+                app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
 
                 <Button
                     android:id="@+id/btSearch"

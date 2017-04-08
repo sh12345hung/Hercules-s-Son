@@ -1,56 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:background="#fff"
-    android:layout_width="match_parent"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:paddingBottom="7dp"
+    android:paddingTop="7dp"
+    android:paddingLeft="7dp"
+    android:paddingRight="7dp"
+    android:background="@color/backgroundSearch"
     android:layout_height="wrap_content">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:textColor="#000"
-        android:layout_marginLeft="3dp"
-        android:text="UAV mang lựu đạn của IS bị bắn hạ "
-        android:id="@+id/tvTitle"
-        android:textStyle="bold|italic" />
+    <ImageView
+        android:id="@+id/news_item_img"
+        android:layout_width="95dp"
+        android:layout_height="95dp"
+        android:background="@color/colorGrey"/>
 
     <LinearLayout
+        android:paddingLeft="10dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/imgMiniPic"
-            android:layout_width="165dp"
-            android:layout_height="100dp"
-            android:layout_marginTop="5dp"
-            android:src="@drawable/mini_image_png" />
-
+        android:paddingRight="5dp"
+        android:paddingBottom="5dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:textColor="#000"
+            android:text="Công Vinh lên tiếng trước tin đồn 'săn' Berbatov, Kiatisak chỉ trích liên đoàn bóng đá Thái Lan"
+            android:id="@+id/news_item_des"
+            android:layout_width="match_parent"
+            android:layout_height="75dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content">
             <TextView
-                android:id="@+id/tvDescription"
-                android:layout_width="wrap_content"
-                android:layout_height="73dp"
-                android:layout_marginTop="5dp"
-                android:paddingLeft="7dp"
-                android:text="Một chiếc UAV gắn lựu đạn của phiến quân Nhà nước Hồi giáo tự xưng (IS) đã bị quân đội Iraq bắn hạ gần Mosul."
-                android:textColor="#000" />
-
-            <ImageView
-                android:id="@+id/btMore"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|bottom"
-                android:layout_marginRight="3dp"
-                android:background="@drawable/selector_background_search"
-                android:src="@drawable/reorderhorizontal" />
+                android:text="Báo mới"
+                android:textColor="@color/backgroundAppBarLayout"
+                android:id="@+id/news_item_resource"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content" />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:src="@drawable/clock_news_item"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+                <TextView
+                    android:textColor="@color/backgroundAppBarLayout"
+                    android:id="@+id/news_item_time"
+                    android:layout_width="wrap_content"
+                    android:text="10 minutes ago"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
         </LinearLayout>
-
     </LinearLayout>
 </LinearLayout>
