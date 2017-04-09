@@ -1,6 +1,8 @@
 package Data;
 
 import java.io.IOException;
+import java.util.Date;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -94,7 +96,7 @@ public class vnexpress {
             else {
             	System.out.println("ADD");
             	try {
-					conn.AddNews(_address, _title, _image, _currentTopic, _content);
+					conn.AddNews(_address, _title, _image, _currentTopic, _content, "VNExpress", (new Date()).toString());
 				} catch (Exception e) {
 					e.printStackTrace();
 					System.out.println("ADD FAIL");
@@ -126,7 +128,7 @@ public class vnexpress {
             else {
             	System.out.println("ADD");
             	try {
-					conn.AddNews(_address, _title, _image, _currentTopic, _content);
+					conn.AddNews(_address, _title, _image, _currentTopic, _content, "VNExpress", (new Date()).toString());
 				} catch (Exception e) {
 					e.printStackTrace();
 					System.out.println("ADD FAIL");
