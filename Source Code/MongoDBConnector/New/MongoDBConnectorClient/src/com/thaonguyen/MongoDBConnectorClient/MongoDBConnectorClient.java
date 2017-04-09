@@ -13,41 +13,40 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 public abstract class MongoDBConnectorClient extends WebSocketClient {
-	//private static final String DEFAULT_SERVER_URI = "ws://192.168.14.128:7777";
-	//private static final String DEFAULT_SERVER_URI = "ws://127.0.0.1:7777";
-	private static final String DEFAULT_SERVER_URI = "ws://54.250.240.202:7777";
+	private static final String DEFAULT_SERVER_URI = "ws://ec2-54-250-240-202.ap-northeast-1.compute.amazonaws.com:7777";
 	private String _userID;
+	private boolean logedInFlag = false;
 	
-	public MongoDBConnectorClient(String UserID) throws URISyntaxException {
+	public MongoDBConnectorClient() throws URISyntaxException {
 		super(new URI(DEFAULT_SERVER_URI));
-		this._userID = UserID;
 	}
 	
-	public MongoDBConnectorClient(String UserID, URI serverUri, Draft draft) {
+	public MongoDBConnectorClient(URI serverUri, Draft draft) {
 		super(serverUri, draft);
-		this._userID = UserID;
 	}
 
-	public MongoDBConnectorClient(String UserID, URI serverURI) {
+	public MongoDBConnectorClient(URI serverURI) {
 		super(serverURI);
-		this._userID = UserID;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void onMessage(String message) {
-		log(message);
 		try {
 			JSONParser parser = new JSONParser();
 			JSONObject obj = (JSONObject) parser.parse(message);
 			
 			boolean isNewUser;
+			String UserID;
 			long count;
 			List<String> contain;
 			
 			switch ((String)obj.get("TYPE")) {
 			case "LOGIN":
+				UserID = (String) obj.get("UserID");
 				isNewUser = (boolean) obj.get("IsNewUser");
-				this.Login_Callback(isNewUser);
+				logedInFlag = true;
+				this.Login_Callback(UserID, isNewUser);
 				break;
 			case "GETNEWS":
 				count = (long)obj.get("Count");
@@ -55,7 +54,6 @@ public abstract class MongoDBConnectorClient extends WebSocketClient {
 				this.GetNews_Callback(count, contain);
 				break;
 			case "GETCOMMENT":
-				log("called");
 				contain = (List<String>) obj.get("COMMENT");
 				this.GetComment_Callback(contain);
 				break;
@@ -68,44 +66,69 @@ public abstract class MongoDBConnectorClient extends WebSocketClient {
 		}
 	}
 	
-	public void Login() throws InterruptedException {
-		this.connect();
-		Thread.sleep(1000);
-		
-		String json = "{\"TYPE\" : \"LOGIN\",\"UserID\" : \"" + this._userID + "\"}";
-		this.send(json);
+	public void Login(String Token) throws InterruptedException {
+		JSONObject json = new JSONObject();
+		json.put("TYPE", "LOGIN");
+		json.put("Token", Token);
+		this.send(json.toJSONString());
 	}
 	
-	public abstract void Login_Callback(boolean IsNewUser);
+	public abstract void Login_Callback(String UserID, boolean IsNewUser);
 	
 	public void Logout() {
-		String json = "{\"TYPE\" : \"LOGOUT\",\"UserID\" : \"" + this._userID + "\"}";
-		this.send(json);
-		this.close();
+		JSONObject json = new JSONObject();
+		json.put("TYPE", "LOGOUT");
+		json.put("UserID", this._userID);
+		this.send(json.toJSONString());
 	}
 	
 	public void GetNews(String Topic) {
-		String json = "{\"TYPE\" : \"GETNEWS\",\"Topic\" : \"" + Topic + "\"}";
-		this.send(json);
+		JSONObject json = new JSONObject();
+		json.put("TYPE", "GETNEWS");
+		json.put("Topic", Topic);
+		
+		this.send(json.toJSONString());
+	}
+	
+	public void GetNews(String Topic, int Start, int Count) {
+		JSONObject json = new JSONObject();
+		json.put("TYPE", "GETNEWS2");
+		json.put("Topic", Topic);
+		json.put("Start", Start);
+		json.put("Count", Count);
+		
+		this.send(json.toJSONString());
 	}
 	
 	public abstract void GetNews_Callback(long count, List<String> News);
 	
 	public void GetComment(String NewsID) {
-		String json = "{\"TYPE\" : \"GETCOMMENT\",\"NewsID\" : \"" + NewsID + "\"}";
-		this.send(json);
+		JSONObject json = new JSONObject();
+		json.put("TYPE", "GETCOMMENT");
+		json.put("NewsID", NewsID);
+		
+		this.send(json.toJSONString());
 	}
 	
 	public abstract void GetComment_Callback(List<String> Comment);
 	
 	public void AddComment(String NewsID, String Comment) {
-		String json = "{\"TYPE\" : \"ADDCOMMENT\",\"UserID\" : \"" + this._userID + "\",\"NewsID\" : \"" + NewsID + "\",\"Comment\" : \"" + Comment + "\"}";
-		this.send(json);
+		JSONObject json = new JSONObject();
+		json.put("TYPE", "ADDCOMMENT");
+		json.put("UserID", this._userID);
+		json.put("NewsID", NewsID);
+		json.put("Comment", Comment);
+		
+		this.send(json.toJSONString());
 	}
 	
 	public void Read(String NewsID) {
-		String json = "{\"TYPE\" : \"READ\"\"UserID\" : \"" + this._userID + "\",\"NewsID\" : \"" + NewsID + "\"}";
-		this.send(json);
+		JSONObject json = new JSONObject();
+		json.put("TYPE", "ADDCOMMENT");
+		json.put("UserID", this._userID);
+		json.put("NewsID", NewsID);
+		
+		this.send(json.toJSONString());
 	}
 	
 	public static void log(String message) {
@@ -113,4 +136,18 @@ public abstract class MongoDBConnectorClient extends WebSocketClient {
 		Date date = new Date();
 		System.out.println(dateFormat.format(date) + ": " + message);
    }
+
+	public String get_userID() {
+		return _userID;
+	}
+
+	public void set_userID(String _userID) {
+		this._userID = _userID;
+	}
+	
+	public void waitForLogin() throws InterruptedException {
+		while (!logedInFlag) {
+			Thread.sleep(50);
+		}
+	}
 }

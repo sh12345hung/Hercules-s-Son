@@ -2,9 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry kind="lib" path="/home/thaonguyen/Downloads/mongo-java-driver-3.4.2.jar"/>
-	<classpathentry kind="lib" path="/home/thaonguyen/Downloads/java_websocket.jar"/>
-	<classpathentry kind="lib" path="/home/thaonguyen/Downloads/json-simple-1.1.1.jar"/>
 	<classpathentry kind="lib" path="/home/thaonguyen/Downloads/restfb-2.0.0-rc.2/restfb-2.0.0-rc.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

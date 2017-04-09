@@ -25,6 +25,11 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Projections;
+import com.restfb.DefaultFacebookClient;
+import com.restfb.FacebookClient;
+import com.restfb.Parameter;
+import com.restfb.Version;
+import com.restfb.types.User;
 
 import static com.mongodb.client.model.Filters.*;
 
@@ -79,12 +84,13 @@ public class MongoDBConnectorServer extends WebSocketServer {
 			/* Parse message to JSON Object */
 			JSONParser parser = new JSONParser();
 			JSONObject obj = (JSONObject) parser.parse(message);
-			String UserID, Topic, NewsID, Comment;
+			String UserID, Topic, NewsID, Comment, Token;
+			long Count, Start;
 			switch ((String)obj.get("TYPE")) { /* Get TYPE in JSON Object to identify type of message */
 			case "LOGIN":
-				UserID = (String) obj.get("UserID");
-				if (UserID != null) {
-					conn.send(Login(UserID));
+				Token = (String) obj.get("Token");
+				if (Token != null) {
+					conn.send(Login(Token));
 				}
 				else {
 					CloseConnection(conn);
@@ -93,7 +99,7 @@ public class MongoDBConnectorServer extends WebSocketServer {
 			case "LOGOUT":
 				UserID = (String) obj.get("UserID");
 				if (UserID != null) {
-					Logout(UserID);
+					Logout(conn, UserID);
 				}
 				else {
 					CloseConnection(conn);
@@ -103,6 +109,17 @@ public class MongoDBConnectorServer extends WebSocketServer {
 				Topic = (String) obj.get("Topic");
 				if (Topic != null) {
 					conn.send(GetNews(Topic));
+				}
+				else {
+					CloseConnection(conn);
+				}
+				break;
+			case "GETNEWS2":
+				Topic = (String) obj.get("Topic");
+				Count = (long) obj.get("Count");
+				Start = (long) obj.get("Start");
+				if (Topic != null) {
+					conn.send(GetNews(Topic, Start, Count));
 				}
 				else {
 					CloseConnection(conn);
@@ -164,31 +181,43 @@ public class MongoDBConnectorServer extends WebSocketServer {
 		System.out.println(getCurrentDateTime() + ": " + message);
    }
 	
-	private String Login(String UserID) {
+	private String Login(String Token) {
+		/* Check access token */
+		FacebookClient client = new DefaultFacebookClient(Token, Version.LATEST);
+		User me = client.fetchObject("me", User.class, Parameter.with("fields", "id,name,email,birthday"));
+		
+		/* Get data */
+		String UserID = me.getId();
+		
 		/* Find UserID in database */
 		long count = _user.count(eq("UserID", UserID)); /* Check if UserID existed in database */
 		boolean state = (count == 0);
 		if (state) {
 			/* Insert new UserID to database */
-			_user.insertOne(new Document("UserID", UserID));
+			Document user = new Document("UserID", UserID);
+			user.append("Name", me.getName());
+			user.append("Birthday", me.getBirthday());
+			user.append("Email", me.getEmail());
+			
+			_user.insertOne(user);
 		}
 		
-		/* Add history */
-//		Document DocToInsert = new Document("Time", getCurrentDateTime());
-//		Document UpdateQuery = new Document("UserID", UserID);
-//		Document UpdateCommand = new Document("$push", new Document("History.Login", DocToInsert));
-//		_user.updateOne(UpdateQuery, UpdateCommand);
-		/* Not implement yet */
+		Document json = new Document();
+		json.put("TYPE", "LOGIN");
+		json.put("UserID", UserID);
+		json.put("IsNewUser", state);
 		
-		//String json = "{\"TYPE\" : \"LOGIN\",\"IsNewUser\" : "+ state +"}"; /* Generate JSON string to send to client */
-		Document json = new Document("TYPE", "LOGIN").append("IsNewUser", state);
 		log("Loged in with " + state + " UserID " + UserID);
+		
 		return json.toJson();
 	}
 	
-	private void Logout(String UserID) throws Exception {
+	private void Logout(WebSocket conn, String UserID) throws Exception {
 		if (_user.count(eq("UserID", UserID)) == 0) {
 			throw (new Exception("UserID is not available"));
+		}
+		else {
+			conn.close(1);
 		}
 		
 		/* Add history */
@@ -205,7 +234,30 @@ public class MongoDBConnectorServer extends WebSocketServer {
 		Iterator<Document> i = doc.iterator();
 		while (i.hasNext()) {
 			count++;
-			contain.add(((Document)i.next()).toJson());
+			contain.add(i.next().toJson());
+		}
+
+		/* Generate JSON string */
+		Document json = new Document();
+		json.put("TYPE", "GETNEWS");
+		json.put("Count", count);
+		json.put("Contain", contain);
+		
+		log("Get news with Topic " + Topic);
+		return json.toJson();
+	}
+	
+	private String GetNews(String Topic, long Start, long Count) {
+		/* Query to database */
+		FindIterable<Document> doc = _news.find(eq("TOPIC", Topic)).skip((int)Start).limit((int)Count).projection(Projections.exclude("COMMENT"));
+		
+		/* Get information */
+		List<String> contain = new ArrayList<String>();
+		int count = 0;
+		Iterator<Document> i = doc.iterator();
+		while (i.hasNext()) {
+			count++;
+			contain.add(i.next().toJson());
 		}
 
 		/* Generate JSON string */
@@ -221,7 +273,7 @@ public class MongoDBConnectorServer extends WebSocketServer {
 	private String GetComments(String NewsID) throws Exception {
 		try {
 			/* Query to database */
-			FindIterable<Document> doc = _news.find(eq("_id", new ObjectId(NewsID))).projection(Projections.include("COMMENT"));
+			FindIterable<Document> doc = _news.find(eq("_id", new ObjectId(NewsID))).projection(Projections.include("COMMENT.Name", "COMMENT.Comment"));
 			Document json;
 			
 			/* Check if NewsID is exists */
@@ -242,9 +294,17 @@ public class MongoDBConnectorServer extends WebSocketServer {
 		}
 	}
 	
-	private void AddComments(String UserID, String NewsID, String Comment) {
+	private void AddComments(String UserID, String NewsID, String Comment) throws Exception {
+		/* Find user name */
+		Document user = _user.find(eq("UserID", UserID)).first();
+		if (user == null) {
+			throw (new Exception("User is NOT EXIST"));
+		}
+		String name = user.getString("Name");
+		
+		/* Add comment */
 		Document findQuery = new Document("_id", new ObjectId(NewsID));
-		Document item = new Document("COMMENT", new Document("UserID", UserID).append("Comment", Comment));
+		Document item = new Document("COMMENT", new Document("UserID", UserID).append("Name", name).append("Comment", Comment));
 		Document updateQuery = new Document("$push", item);
 		_news.updateOne(findQuery, updateQuery);
 		

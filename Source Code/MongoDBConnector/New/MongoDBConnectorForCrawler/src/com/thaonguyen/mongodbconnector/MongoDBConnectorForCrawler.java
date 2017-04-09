@@ -1,7 +1,6 @@
 package com.thaonguyen.mongodbconnector;
 
 import org.bson.Document;
-import java.util.List;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.FindIterable;
@@ -23,7 +22,6 @@ import static com.mongodb.client.model.Filters.*;
 public class MongoDBConnectorForCrawler {
 	/* ----- Constants ----- */
 	private static final String NEWS_COLLECTION_NAME = "News";
-	private static final int NUM_OF_CHAR_IN_SHORTDESC = 30;
 	
 	/* ----- Variables ----- */
 	private MongoClientURI  _uri = null;
@@ -105,11 +103,13 @@ public class MongoDBConnectorForCrawler {
 	 * @param ImageURL ImageURL of the article.
 	 * @param Topic Topic of the article.
 	 * @param Description Description of the article.
+	 * @param Source Source of news.
+	 * @param Time Time that release the new.
 	 * @return It add successfully.
 	 * @throws Exception On connection to database is not established.
 	 * @see Exception 
 	 */
-	public boolean AddNews(String URL, String Title, String ImageURL, String Topic, String Description)  throws Exception {
+	public boolean AddNews(String URL, String Title, String ImageURL, String Topic, String Description, String Source, String Time)  throws Exception {
 		if (_news != null) { /* Check if database is accessed */
 			if (this.CheckAvailable(URL)) { /* If URL is available */
 				/* Create new news */
@@ -119,50 +119,9 @@ public class MongoDBConnectorForCrawler {
 				doc.put("TITLE", Title);
 				doc.put("IMAGEURL", ImageURL);
 				doc.put("TOPIC", Topic);
-				int len = Description.length();
-				doc.put("SHORTDESC", Description.substring(0, len>NUM_OF_CHAR_IN_SHORTDESC?NUM_OF_CHAR_IN_SHORTDESC:len));
 				doc.put("FULLDESC", Description);
-				
-				/* Add to collection */
-				_news.insertOne(doc);
-				
-				/* Success */
-				return true; /* News is inserted */
-			}
-			else { /* URL is existed in database */
-				return false; /* News is not inserted */
-			}
-		}
-		else{
-			throw (new Exception("_news is not initialized."));
-		}
-	}
-	
-	/**
-	 * Add a new article to database (it's not need to check URL first)
-	 * 
-	 * @param URL URL of the article.
-	 * @param Title Title of the article.
-	 * @param ImageURL ImageURL of the article.
-	 * @param Topic List of topic of the article.
-	 * @param Description Description of the article.
-	 * @return It add successfully.
-	 * @throws Exception On connection to database is not established.
-	 * @see Exception
-	 */
-	public boolean AddNews(String URL, String Title, String ImageURL, List<String> Topic, String Description)  throws Exception {
-		if (_news != null) { /* Check if database is accessed */
-			if (this.CheckAvailable(URL)) { /* If URL is available */
-				/* Create new news */
-				Document doc = new Document();
-				
-				doc.put("URL", URL);
-				doc.put("TITLE", Title);
-				doc.put("IMAGEURL", ImageURL);
-				doc.put("TOPIC", Topic);
-				int len = Description.length();
-				doc.put("SHORTDESC", Description.substring(0, len>NUM_OF_CHAR_IN_SHORTDESC?NUM_OF_CHAR_IN_SHORTDESC:len));
-				doc.put("FULLDESC", Description);
+				doc.put("SOURCE", Source);
+				doc.put("TIME", Time);
 				
 				/* Add to collection */
 				_news.insertOne(doc);
