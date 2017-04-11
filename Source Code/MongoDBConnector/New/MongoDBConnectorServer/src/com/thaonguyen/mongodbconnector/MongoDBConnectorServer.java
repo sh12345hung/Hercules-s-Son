@@ -53,6 +53,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import com.mongodb.MongoClient;
+import com.mongodb.client.DistinctIterable;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -188,6 +189,9 @@ public class MongoDBConnectorServer extends WebSocketServer {
 				else {
 					CloseConnection(conn);
 				}
+				break;
+			case "GETTOPIC":
+				conn.send(GetTopic());
 				break;
 			default:
 				CloseConnection(conn);
@@ -348,6 +352,20 @@ public class MongoDBConnectorServer extends WebSocketServer {
 	private void Read(String UserID, String NewsID) {
 		/* Not implement yet */
 		log("Read with UserID " + UserID + " NewsID " + NewsID);
+	}
+	
+	private String GetTopic() {
+		Document json = new Document("TYPE", "GETTOPIC");
+		
+		/* Querry to database */
+		DistinctIterable<String> result = _news.distinct("TOPIC", String.class);
+		List<String> list = new ArrayList<String>();
+		for (String str:result) {
+			list.add(str);
+		}
+		
+		json.put("Contain", list);
+		return json.toJson();
 	}
 	
 	private void CloseConnection(WebSocket conn) {

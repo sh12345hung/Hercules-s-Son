@@ -11,8 +11,17 @@ public class Example {
 	static boolean connected = false, logedin = false;
 	static String userID = "";
 	public static void main(String[] args) {
+		//String defaultServer = "ws://ec2-54-250-240-202.ap-northeast-1.compute.amazonaws.com";
+		String defaultServer = "ws://127.0.0.1";
+		int defaultPort = 7777;
+		
+		if (args.length > 0) {
+			defaultServer = args[0];
+			defaultPort = Integer.parseInt(args[1]);
+		}
+		
 		try {
-			MongoDBConnectorClient client = new MongoDBConnectorClient(new URI("ws://127.0.0.1:7777")) {
+			MongoDBConnectorClient client = new MongoDBConnectorClient(new URI(defaultServer + ":" + defaultPort)) {
 
 				@Override
 				public void onClose(int arg0, String arg1, boolean arg2) {
@@ -53,6 +62,13 @@ public class Example {
 					}
 					userID = UserID;
 				}
+
+				@Override
+				public void GetTopic_Callback(List<String> Topic) {
+					for (String str : Topic) {
+						MongoDBConnectorClient.log(str);
+					}
+				}
 			};
 			
 			client.connect();
@@ -62,23 +78,25 @@ public class Example {
 				Thread.sleep(50);
 			}
 			
-			client.Login("EAACEdEose0cBAKCZAGKuZBCurSDwmzrntuQ95vDX65AF8MUv381p4ClaojfyfWhk8Dra0FFlNrlrZCdZAGHX3315ZAn25qTuovjmRaDBZB8MaHoqPRDZCoRyt5CK1ED4ZB4nnjeZAEhFPdZACYoOZB5cyJN2Fv3VRy4n2ZBlsz5YACKInXqDUhvF5NfHQnDQdIWt0e4ZD");
+			client.Login("EAACEdEose0cBALcoZATO0kBZAS4BBUhYO1rxLTU0tE09HMbPdZCZBYqqSJWtsVslDhlERuaBviAIhn20feNvHRgvIWxgEjYSaTyVLStjkonfZArlBkdWZBjfB3WTHkY0JZBeZChByY9oA3oT2MYeCdKNA1eiEHLriCRkK35VBEvjEZCOwf4PSoVZCNJQ5whmpjlGUZD");
 			MongoDBConnectorClient.log("Login OK");
 			
 			client.waitForLogin();
 			client.set_userID(userID);
 			
-			client.GetNews("Cười", 0, 100);
-			MongoDBConnectorClient.log("Get news OK");
+			client.GetTopic();
 			
-			client.GetComment("58ea7285543715147ae13773");
-			MongoDBConnectorClient.log("Get comment OK");
+//			client.GetNews("Cười", 0, 100);
+//			MongoDBConnectorClient.log("Get news OK");
 			
-			client.AddComment("58ea7285543715147ae13773", "Bố anh hút rất nhiều thuốc, mẹ anh chửi ổng quá trời!");
-			MongoDBConnectorClient.log("Add comment OK");
+//			client.GetComment("58ea7285543715147ae13773");
+//			MongoDBConnectorClient.log("Get comment OK");
 			
-			client.GetComment("58ea7285543715147ae13773");
-			MongoDBConnectorClient.log("Get comment OK");
+//			client.AddComment("58ea7285543715147ae13773", "Bố anh hút rất nhiều thuốc, mẹ anh chửi ổng quá trời!");
+//			MongoDBConnectorClient.log("Add comment OK");
+//			
+//			client.GetComment("58ea7285543715147ae13773");
+//			MongoDBConnectorClient.log("Get comment OK");
 			
 			BufferedReader sysin = new BufferedReader( new InputStreamReader( System.in ) );
 			while (true) {

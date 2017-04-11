@@ -1,11 +1,43 @@
 package com.thaonguyen.MongoDBConnectorClient;
 
+/* TimeZone
+ * EST - -05:00
+ * HST - -10:00
+ * MST - -07:00
+ * ACT - Australia/Darwin
+ * AET - Australia/Sydney
+ * AGT - America/Argentina/Buenos_Aires
+ * ART - Africa/Cairo
+ * AST - America/Anchorage
+ * BET - America/Sao_Paulo
+ * BST - Asia/Dhaka
+ * CAT - Africa/Harare
+ * CNT - America/St_Johns
+ * CST - America/Chicago
+ * CTT - Asia/Shanghai
+ * EAT - Africa/Addis_Ababa
+ * ECT - Europe/Paris
+ * IET - America/Indiana/Indianapolis
+ * IST - Asia/Kolkata
+ * JST - Asia/Tokyo
+ * MIT - Pacific/Apia
+ * NET - Asia/Yerevan
+ * NST - Pacific/Auckland
+ * PLT - Asia/Karachi
+ * PNT - America/Phoenix
+ * PRT - America/Puerto_Rico
+ * PST - America/Los_Angeles
+ * SST - Pacific/Guadalcanal
+ * VST - Asia/Ho_Chi_Minh
+ */
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
@@ -14,7 +46,9 @@ import org.json.simple.parser.JSONParser;
 
 public abstract class MongoDBConnectorClient extends WebSocketClient {
 	private static final String DEFAULT_SERVER_URI = "ws://ec2-54-250-240-202.ap-northeast-1.compute.amazonaws.com:7777";
-	private String _userID;
+	private static final String DATEFORMAT = "yyyy/MM/dd HH:mm:ss";
+	private static final String TIMEZONE = "VST"; /* Asia/Ho_Chi_Minh */
+	private String _userID = "";
 	private boolean logedInFlag = false;
 	
 	public MongoDBConnectorClient() throws URISyntaxException {
@@ -56,6 +90,10 @@ public abstract class MongoDBConnectorClient extends WebSocketClient {
 			case "GETCOMMENT":
 				contain = (List<String>) obj.get("COMMENT");
 				this.GetComment_Callback(contain);
+				break;
+			case "GETTOPIC":
+				contain = (List<String>) obj.get("Contain");
+				this.GetTopic_Callback(contain);
 				break;
 			default:
 				break;
@@ -131,10 +169,24 @@ public abstract class MongoDBConnectorClient extends WebSocketClient {
 		this.send(json.toJSONString());
 	}
 	
-	public static void log(String message) {
-		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+	public void GetTopic() {
+		JSONObject json = new JSONObject();
+		json.put("TYPE", "GETTOPIC");
+		
+		this.send(json.toJSONString());
+	}
+	
+	public abstract void GetTopic_Callback(List<String> Comment);
+	
+	private static String getCurrentDateTime() {
+		DateFormat dateFormat = new SimpleDateFormat(DATEFORMAT);
+		dateFormat.setTimeZone(TimeZone.getTimeZone(TIMEZONE));
 		Date date = new Date();
-		System.out.println(dateFormat.format(date) + ": " + message);
+		return dateFormat.format(date);
+	}
+	
+	public static void log(String message) {
+		System.out.println(getCurrentDateTime() + ": " + message);
    }
 
 	public String get_userID() {
