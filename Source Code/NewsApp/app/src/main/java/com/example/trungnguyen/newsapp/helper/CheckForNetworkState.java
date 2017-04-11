@@ -8,13 +8,13 @@ import android.net.NetworkInfo;
  * Created by Trung Nguyen on 3/17/2017.
  */
 public class CheckForNetworkState {
-    Context mContext;
+    private static Context mContext;
 
     public CheckForNetworkState(Context context) {
         mContext = context;
     }
 
-    public boolean isNetworkAvailable() {
+    public static boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();

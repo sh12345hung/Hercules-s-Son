@@ -1,19 +1,16 @@
 package com.example.trungnguyen.newsapp;
 
-import android.graphics.Picture;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.trungnguyen.newsapp.customview.CustomWebView;
 import com.example.trungnguyen.newsapp.fragment.FragmentTheGioi;
 import com.example.trungnguyen.newsapp.helper.CheckForNetworkState;
-
-import org.w3c.dom.Text;
 
 public class DetailActivity extends AppCompatActivity implements CustomWebView.OnPageContentDisplayed {
     private String mUrl;

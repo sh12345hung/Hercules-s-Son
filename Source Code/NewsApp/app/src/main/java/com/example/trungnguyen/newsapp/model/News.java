@@ -12,14 +12,27 @@ public class News {
     String url;
     String topic;
     public boolean hasFadedIn = false;
-    public News(String id, String title, String content, String des, String url, String topic, String mainPicture) {
+    String source;
+
+    public News(){
+
+    }
+
+    public News(String id, String title, String content, String url, String topic, String mainPicture, String source) {
         this.id = id;
         this.title = title;
         this.content = content;
-        this.des = des;
         this.url = url;
         this.topic = topic;
         this.mainPicture = mainPicture;
+        this.source = source;
+    }
+
+    public String getSource(){
+        return source;
+    }
+    public void setSource(String source){
+        this.source = source;
     }
 
     public String getTopic(){

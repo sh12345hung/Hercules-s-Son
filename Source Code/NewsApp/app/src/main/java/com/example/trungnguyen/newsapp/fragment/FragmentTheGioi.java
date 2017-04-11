@@ -1,48 +1,35 @@
 package com.example.trungnguyen.newsapp.fragment;
 
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.ExpandableListView;
-import android.widget.Toast;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
-import com.example.trungnguyen.newsapp.CommentDialog;
-import com.example.trungnguyen.newsapp.ExpandableListViewImp;
-import com.example.trungnguyen.newsapp.DetailActivity;
 import com.example.trungnguyen.newsapp.MainActivity;
+import com.example.trungnguyen.newsapp.OnLoadMoreDataListener;
 import com.example.trungnguyen.newsapp.R;
 import com.example.trungnguyen.newsapp.adapter.NewsAdapter;
-import com.example.trungnguyen.newsapp.helper.CheckForNetworkState;
-import com.example.trungnguyen.newsapp.helper.DownloadListImageTask;
 import com.example.trungnguyen.newsapp.helper.SimpleDividerItemDecoration;
-import com.example.trungnguyen.newsapp.model.Comment;
 import com.example.trungnguyen.newsapp.model.News;
-import com.example.trungnguyen.newsapp.model.User;
-import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout;
-import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayoutDirection;
+
 import com.thaonguyen.MongoDBConnectorClient.MongoDBConnectorClient;
 
 import org.java_websocket.handshake.ServerHandshake;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
+import java.nio.channels.NotYetConnectedException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,26 +39,37 @@ import static com.facebook.FacebookSdk.getApplicationContext;
  * Created by Trung Nguyen on 2/21/2017.
  */
 public class FragmentTheGioi extends Fragment implements
-        SwipyRefreshLayout.OnRefreshListener, NewsAdapter.OnRecyclerViewOnClickListener {
+        SwipeRefreshLayout.OnRefreshListener {
     public static final String COMMENT = "comment";
     public static final String NEWS_URL = "news_url";
-    public static final String CHECK_NETWOK = "check_network";
-    List<News> newsList;
-    RecyclerView mRecyclerView;
-    SwipyRefreshLayout mSwipeLayout;
-    AppBarLayout appBarLayout;
-    NewsAdapter mAdapter;
-    CheckForNetworkState checker;
-    MongoDBConnectorClient mClient;
+    public static final String TOPIC = "Thế giới";
+    public static final String CHECK_NETWORK = "check_network";
+    public static final int GET_NEWS_COUNT = 15;
+    private ArrayList<News> mNewsList;
+    private LinearLayout llBackground;
+    private RecyclerView mRecyclerView;
+    private SwipeRefreshLayout mSwipeLayout;
+    private AppBarLayout appBarLayout;
+    private ProgressBar mProgressBar;
+    private NewsAdapter mAdapter;
+    private MongoDBConnectorClient mClient;
+    private int mCurrentNews;
+    private RecyclerView.OnScrollListener mLoadingMore;
     boolean isLogin = false;
+    private LinearLayoutManager mLayoutManager;
+    private boolean mIsLoading;
+    private boolean mIsFirstTime;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View mReturnView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_thegioi, container, false);
         isLogin = getArguments().getBoolean(MainActivity.IS_LOGIN);
-        checker = new CheckForNetworkState(getContext());
-        newsList = new ArrayList<News>();
+//        checker = new CheckForNetworkState(getContext());
+        mNewsList = new ArrayList<News>();
+        mCurrentNews = 0;
+        mIsFirstTime = true;
+        mIsLoading = false;
         addControls(mReturnView);
         try {
             mClient = new MongoDBConnectorClient("Duy Trung") {
@@ -97,26 +95,39 @@ public class FragmentTheGioi extends Fragment implements
 
                 @Override
                 public void GetNews_Callback(long l, List<String> list) {
-                    for (String item : list) {
-                        try {
-                            JSONObject object = new JSONObject(item);
-                            JSONObject idObj = object.getJSONObject("_id");
-                            String id = idObj.getString("$oid");
-                            String title = object.getString("TITLE");
-                            String url = object.getString("URL");
-                            String imageUrl = object.getString("IMAGEURL");
-                            String topic = object.getString("TOPIC");
-                            String sortDes = object.getString("SHORTDESC");
-                            String fullDes = object.getString("FULLDESC");
-                            News news = new News(id, title, fullDes, sortDes, url, topic, imageUrl);
-                            newsList.add(news);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                    try {
+                        mNewsList.clear();
+                        for (String item : list) {
+                            try {
+                                JSONObject object = new JSONObject(item);
+                                JSONObject idObj = object.getJSONObject("_id");
+                                String id = idObj.getString("$oid");
+                                String title = object.getString("TITLE");
+                                String url = object.getString("URL");
+                                String imageUrl = object.getString("IMAGEURL");
+                                String topic = object.getString("TOPIC");
+                                String fullDes = object.getString("DESC");
+                                String source = object.getString("SOURCE");
+                                News news = new News(id, title, fullDes, url, topic, imageUrl, source);
+                                mNewsList.add(news);
+                                Log.d("GOI", "123");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
+                        updateCurrentNewsPosition();
+                        if (mIsLoading) {
+                            mIsLoading = false;
+                            mAdapter.loadingfinish();
+                            mAdapter.addMoreItems(mNewsList);
+                        } else {
+                            mAdapter.addNewList(mNewsList);
+                            mProgressBar.setVisibility(View.INVISIBLE);
+                            llBackground.setVisibility(View.INVISIBLE);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-//                    mAdapter.addItems(newsList);
-                    mAdapter.notifyDataSetChanged();
-//                    mAdapter.loadingStart();
                 }
 
                 @Override
@@ -128,24 +139,36 @@ public class FragmentTheGioi extends Fragment implements
             e.printStackTrace();
         }
 
+//        Thread thread = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    mClient.Login();
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                } catch (NotYetConnectedException e) {
+//                    Log.d("SERVER DISCONNECT", "SERVER DISCONNECT");
+//                }
+//            }
+//        });
+//        thread.start();
+
         try {
             mClient.Login();
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | NotYetConnectedException e) {
             e.printStackTrace();
         }
 
-        mClient.GetNews("Thời sự", 1, 15);
-
-        mAdapter = new NewsAdapter(getContext(), newsList);
+        mAdapter = new NewsAdapter(getContext());
         mRecyclerView.setAdapter(mAdapter);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(layoutManager);
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setHasFixedSize(true);
-        mAdapter.setOnRecyclerViewOnClickListener(this);
+//        mAdapter.setOnRecyclerViewOnClickListener(this);
         mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(
                 getApplicationContext()
         ));
-//        mAdapter.setOnButtonClickExpand(this);
+        mRecyclerView.addOnScrollListener(mLoadingMore);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mRecyclerView.setNestedScrollingEnabled(true);
@@ -155,22 +178,100 @@ public class FragmentTheGioi extends Fragment implements
 //            mSwipeLayout.setLayoutParams(params);
             // TODO fix error on API < 20 devices
         }
+
+        mAdapter.setOnLoadMoreListener(new OnLoadMoreDataListener() {
+            @Override
+            public void onLoadMoreData() {
+//              index+=1;
+//                mNewsList.add(null);
+//                mAdapter.notifyItemInserted(mNewsList.size() - 1);
+                mIsLoading = true;
+                mAdapter.addProgressItem(null); // add null news item for checking progress bar visibility
+                mClient.GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
+
+            }
+        });
+
+
+        mAdapter.setOnRefreshCompleted(new NewsAdapter.OnRefreshCompleted() {
+            @Override
+            public void oneRefreshCompleted() {
+                Log.d("FragmentTheGioi", "HIHI truoc " + mSwipeLayout.isRefreshing());
+                mSwipeLayout.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mSwipeLayout.setRefreshing(false);
+                    }
+                });
+                Log.d("FragmentTheGioi", "HIHI sau " + mSwipeLayout.isRefreshing());
+            }
+        });
+
         return mReturnView;
     }
 
-    private void addControls(View mReturnView) {
-        mSwipeLayout = (SwipyRefreshLayout) mReturnView.findViewById(R.id.swipeToRefresh);
-        mSwipeLayout.setOnRefreshListener(this);
-        mSwipeLayout.setDirection(SwipyRefreshLayoutDirection.BOTH);
+//    public void updateNews() {
+//        mAdapter.loadingfinish();
+//        mIsLoading = false;
+//        mAdapter.addItems(mNewsList);
+//        mSwipeLayout.setRefreshing(false);
+//        Log.d("GOI", "IS REFRESH AFTER "+ mSwipeLayout.isRefreshing());
+//    }
 
+
+    private void addControls(View mReturnView) {
+        mSwipeLayout = (SwipeRefreshLayout) mReturnView.findViewById(R.id.swipeToRefresh);
+        mSwipeLayout.setOnRefreshListener(this);
+
+        mProgressBar = (ProgressBar) mReturnView.findViewById(R.id.progressBarTheGioi);
 
         mRecyclerView = (RecyclerView) mReturnView.findViewById(R.id.expTheGioi);
 //        mRecyclerView.setOnGroupClickListener(this);
-
+        intialListener();
         appBarLayout = (AppBarLayout) mReturnView.findViewById(R.id.appBar);
 
-
+        llBackground = (LinearLayout) mReturnView.findViewById(R.id.ll_loading);
     }
+
+    private void intialListener() {
+
+        mLoadingMore = new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                Log.d("KAKA", "scroll " + dy);
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0) {
+//                    Log.d("KAKA", "dy>0 roi " + dy);
+                    int visibleItemCount = mLayoutManager.getChildCount();
+                    int totalItemCount = mLayoutManager.getItemCount();
+                    int pastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
+//                    Log.d("KAKA", "dy>0 roi " + visibleItemCount);
+//                    Log.d("KAKA", "dy>0 roi " + pastVisiblesItems);
+//                    Log.d("KAKA", "dy>0 roi " + totalItemCount);
+                    if (!mIsLoading && (visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+//                        mIsLoading = true;
+////                        index+=1;
+//
+//                        mAdapter.loadingStart();
+//                        mNewsList.add(null);
+//                        mAdapter.notifyDataSetChanged();
+////                        mAdapter.notifyItemInserted(mNewsList.size() - 1);
+//                        mClient.GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
+//                        updateCurrentNewsPosition();
+                        mAdapter.loadingStart();
+                    }
+//                    mClient.GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
+//                    updateCurrentNews();
+                }
+            }
+        };
+    }
+
 
 //    @Override
 //    public void onButtonExpandableClick(int groupPosition) {
@@ -219,7 +320,7 @@ public class FragmentTheGioi extends Fragment implements
 //        if (checker.isNetworkAvailable()) {
 //            Intent intent = new Intent(getActivity(), DetailActivity.class);
 //            intent.putExtra(NEWS_URL, newsList.get(position).getUrl());
-////            intent.putExtra(CHECK_NETWOK, checker.isNetworkAvailable());
+////            intent.putExtra(CHECK_NETWORK, checker.isNetworkAvailable());
 //            getActivity().startActivity(intent);
 //        } else
 //            Toast.makeText(getActivity(), "Thiết bị hiện tại không kết nối internet", Toast.LENGTH_LONG).show();
@@ -227,33 +328,62 @@ public class FragmentTheGioi extends Fragment implements
 //        return true;
 //    }
 
-    @Override
-    public void onRefresh(SwipyRefreshLayoutDirection direction) {
-        mSwipeLayout.setRefreshing(true);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Log.d("TEST", "RUN HANDLER");
-                mSwipeLayout.setRefreshing(false);
-            }
-        }, 3000);
-        Log.d("TEST", "REFRESHING");
+    private void updateCurrentNewsPosition() {
+        mCurrentNews = GET_NEWS_COUNT + mCurrentNews;
     }
 
+//    @Override
+//    public void onRecyclerViewClickListener(int position) {
+//        if (checker.isNetworkAvailable()) {
+//            Intent intent = new Intent(getActivity(), DetailActivity.class);
+//            intent.putExtra(NEWS_URL, newsList.get(position).getUrl());
+//            intent.putExtra(CHECK_NETWORK, checker.isNetworkAvailable());
+//            getActivity().startActivity(intent);
+//        } else
+//            Toast.makeText(getActivity(), "Thiết bị hiện tại không kết nối internet", Toast.LENGTH_LONG).show();
+//    }
+
     @Override
-    public void onRecyclerViewClickListener(int position) {
-        if (checker.isNetworkAvailable()) {
-            Intent intent = new Intent(getActivity(), DetailActivity.class);
-            intent.putExtra(NEWS_URL, newsList.get(position).getUrl());
-            intent.putExtra(CHECK_NETWOK, checker.isNetworkAvailable());
-            getActivity().startActivity(intent);
-        } else
-            Toast.makeText(getActivity(), "Thiết bị hiện tại không kết nối internet", Toast.LENGTH_LONG).show();
+    public void onRefresh() {
+        Log.d("GOI", "REFRESH");
+        mSwipeLayout.setRefreshing(true);
+        mCurrentNews = 0;
+//        if (mAdapter.getItemCount() > 0)
+//            mAdapter.clearData();
+        mClient.GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
     }
 
     public interface LoadingMore {
         void loadingStart();
 
         void loadingfinish();
+    }
+
+    @Override
+    public void onStart() {
+        Log.d("FRAG", "onStart");
+        super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        Log.d("FRAG", "onResume " + mCurrentNews);
+        super.onResume();
+        if (mIsFirstTime) {
+            mIsFirstTime = false;
+            mClient.GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        Log.d("FRAG", "onPause " + mCurrentNews);
+        super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        Log.d("FRAG", "onStop " + mCurrentNews);
+        super.onStop();
     }
 }

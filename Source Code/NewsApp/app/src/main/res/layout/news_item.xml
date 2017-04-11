@@ -23,6 +23,7 @@
         android:orientation="vertical">
         <TextView
             android:textColor="#000"
+            android:textSize="14.5sp"
             android:text="Công Vinh lên tiếng trước tin đồn 'săn' Berbatov, Kiatisak chỉ trích liên đoàn bóng đá Thái Lan"
             android:id="@+id/news_item_des"
             android:layout_width="match_parent"
@@ -35,8 +36,8 @@
             android:layout_height="wrap_content">
             <TextView
                 android:text="Báo mới"
-                android:textColor="@color/backgroundAppBarLayout"
-                android:id="@+id/news_item_resource"
+                android:textColor="@color/colorPrimary"
+                android:id="@+id/news_item_source"
                 android:layout_width="match_parent"
                 android:layout_weight="1"
                 android:layout_height="wrap_content" />

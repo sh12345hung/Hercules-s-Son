@@ -1,4 +1,4 @@
-package com.example.trungnguyen.newsapp;
+package com.example.trungnguyen.newsapp.customview;
 
 import android.content.Context;
 import android.util.AttributeSet;
