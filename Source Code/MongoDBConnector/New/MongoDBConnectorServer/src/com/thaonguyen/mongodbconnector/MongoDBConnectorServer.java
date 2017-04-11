@@ -1,5 +1,36 @@
 package com.thaonguyen.mongodbconnector;
 
+/* TimeZone
+ * EST - -05:00
+ * HST - -10:00
+ * MST - -07:00
+ * ACT - Australia/Darwin
+ * AET - Australia/Sydney
+ * AGT - America/Argentina/Buenos_Aires
+ * ART - Africa/Cairo
+ * AST - America/Anchorage
+ * BET - America/Sao_Paulo
+ * BST - Asia/Dhaka
+ * CAT - Africa/Harare
+ * CNT - America/St_Johns
+ * CST - America/Chicago
+ * CTT - Asia/Shanghai
+ * EAT - Africa/Addis_Ababa
+ * ECT - Europe/Paris
+ * IET - America/Indiana/Indianapolis
+ * IST - Asia/Kolkata
+ * JST - Asia/Tokyo
+ * MIT - Pacific/Apia
+ * NET - Asia/Yerevan
+ * NST - Pacific/Auckland
+ * PLT - Asia/Karachi
+ * PNT - America/Phoenix
+ * PRT - America/Puerto_Rico
+ * PST - America/Los_Angeles
+ * SST - Pacific/Guadalcanal
+ * VST - Asia/Ho_Chi_Minh
+ */
+
 /*----- Libraries -----*/
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -37,6 +69,8 @@ public class MongoDBConnectorServer extends WebSocketServer {
 	/*----- Constants -----*/
 	private static final String DEFAULT_DATABASE_HOST_NAME = "localhost";
 	private static final int DEFAULT_DATABASE_PORT = 27017;
+	private static final String TIMEZONE = "VST"; /* Asia/Ho_Chi_Minh */
+	private static final String DATEFORMAT = "yyyy/MM/dd HH:mm:ss";
 	private static final String DATABASE_NAME = "test";
 	private static final String NEWS_COLLECTION_NAME = "News";
 	private static final String USER_COLLECTION_NAME = "User";
@@ -167,12 +201,12 @@ public class MongoDBConnectorServer extends WebSocketServer {
 	
 	@Override
 	public final void onError(WebSocket conn, Exception ex) {
-		//ex.printStackTrace();
 		log("error " + ex.getMessage());
 	}
 	
 	private String getCurrentDateTime() {
-		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		DateFormat dateFormat = new SimpleDateFormat(DATEFORMAT);
+		dateFormat.setTimeZone(TimeZone.getTimeZone(TIMEZONE));
 		Date date = new Date();
 		return dateFormat.format(date);
 	}
@@ -217,7 +251,7 @@ public class MongoDBConnectorServer extends WebSocketServer {
 			throw (new Exception("UserID is not available"));
 		}
 		else {
-			conn.close(1);
+			conn.close(1002);
 		}
 		
 		/* Add history */
@@ -226,7 +260,7 @@ public class MongoDBConnectorServer extends WebSocketServer {
 	
 	private String GetNews(String Topic) {
 		/* Query to database */
-		FindIterable<Document> doc = _news.find(eq("TOPIC", Topic));
+		FindIterable<Document> doc = _news.find(eq("TOPIC", Topic)).sort(new Document("TIME", -1));
 		
 		/* Get information */
 		List<String> contain = new ArrayList<String>();
@@ -249,7 +283,7 @@ public class MongoDBConnectorServer extends WebSocketServer {
 	
 	private String GetNews(String Topic, long Start, long Count) {
 		/* Query to database */
-		FindIterable<Document> doc = _news.find(eq("TOPIC", Topic)).skip((int)Start).limit((int)Count).projection(Projections.exclude("COMMENT"));
+		FindIterable<Document> doc = _news.find(eq("TOPIC", Topic)).sort(new Document("TIME", -1)).skip((int)Start).limit((int)Count).projection(Projections.exclude("COMMENT"));
 		
 		/* Get information */
 		List<String> contain = new ArrayList<String>();
@@ -317,8 +351,8 @@ public class MongoDBConnectorServer extends WebSocketServer {
 	}
 	
 	private void CloseConnection(WebSocket conn) {
-		conn.close(1, "TYPE is not available.");
-		log("Wrong TYPE from" + conn.getRemoteSocketAddress());
+		log("Wrong format from" + conn.getRemoteSocketAddress());
+		conn.close(1002, "TYPE is not available.");
 	}
 	
 	public static void main(String[] args) throws IOException, InterruptedException {
