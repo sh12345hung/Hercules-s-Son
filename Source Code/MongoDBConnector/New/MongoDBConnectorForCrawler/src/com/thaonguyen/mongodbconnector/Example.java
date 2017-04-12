@@ -1,7 +1,5 @@
 package com.thaonguyen.mongodbconnector;
 
-import java.util.Date;
-
 public class Example {
 
 	public static void main(String[] args) {
@@ -16,7 +14,7 @@ public class Example {
 		String Topic = "THEGIOI";
 		
 		try {
-			conn.AddNews(URL, Title, ImageURL, Topic, Description, "VNExpress", (new Date()).toString());
+			conn.AddNews(URL, Title, ImageURL, Topic, Description, "VNExpress");
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -24,13 +22,13 @@ public class Example {
 		
 		/* Add news 2 */
 		URL = "http://eva.vn/lang-sao/hh-thu-thao-ke-chuyen-qua-khu-trong-ngay-nhan-bang-tot-nghiep-dai-hoc-c20a304022.html";
-		Title = "HH Thu Thảo kể chuyện quá khứ trong ngày nhận bằng tốt nghiệp Đại học";
+		Title = "HH Thu Thảo kể chuyện quá khứ trong ngày nhận bằng tốt nghiệp Đại học abc q w e r t y u i o p a s d f g h asd bvf df";
 		ImageURL = "http://eva-img.24hstatic.com/upload/1-2017/images/2017-03-26/hh-thu-thao-ke-chuyen-qua-khu-trong-ngay-nhan-bang-tot-nghiep-dai-hoc-1-1490461664-width500height625.jpg";
 		Description = "Hoa hậu Việt Nam 2012 từng bị bố mẹ cấm cản đi học vì gia đình không có đủ tiền cho con gái theo học.";
 		String TOPIC = "THEGIOI";
 		
 		try {
-			conn.AddNews(URL, Title, ImageURL, TOPIC, Description, "VNExpress", (new Date()).toString());
+			conn.AddNews(URL, Title, ImageURL, TOPIC, Description, "VNExpress");
 		}
 		catch (Exception e) {
 			e.printStackTrace();

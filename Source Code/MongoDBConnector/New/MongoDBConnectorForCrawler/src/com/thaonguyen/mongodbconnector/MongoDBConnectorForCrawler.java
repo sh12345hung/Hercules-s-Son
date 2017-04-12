@@ -8,6 +8,11 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import static com.mongodb.client.model.Filters.*;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
 /**
  * <h1>MongoDBConnectorForCrawler</h1>
  * The library to connect to MongoDB database
@@ -21,6 +26,10 @@ import static com.mongodb.client.model.Filters.*;
 
 public class MongoDBConnectorForCrawler {
 	/* ----- Constants ----- */
+	private static final int NUM_CHAR_IN_DESC = 35;
+	private static final int NUM_WORD_IN_TITLE = 25;
+	private static final String TIMEZONE = "VST"; /* Asia/Ho_Chi_Minh */
+	private static final String DATEFORMAT = "yyyy/MM/dd HH:mm:ss";
 	private static final String NEWS_COLLECTION_NAME = "News";
 	
 	/* ----- Variables ----- */
@@ -109,19 +118,19 @@ public class MongoDBConnectorForCrawler {
 	 * @throws Exception On connection to database is not established.
 	 * @see Exception 
 	 */
-	public boolean AddNews(String URL, String Title, String ImageURL, String Topic, String Description, String Source, String Time)  throws Exception {
+	public boolean AddNews(String URL, String Title, String ImageURL, String Topic, String Description, String Source)  throws Exception {
 		if (_news != null) { /* Check if database is accessed */
 			if (this.CheckAvailable(URL)) { /* If URL is available */
 				/* Create new news */
 				Document doc = new Document();
 				
 				doc.put("URL", URL);
-				doc.put("TITLE", Title);
+				doc.put("TITLE", TitleTrim(Title));
 				doc.put("IMAGEURL", ImageURL);
 				doc.put("TOPIC", Topic);
-				doc.put("FULLDESC", Description);
+				doc.put("DESC", Description.substring(0, NUM_CHAR_IN_DESC) + ((Description.length() > NUM_CHAR_IN_DESC)?"...":""));
 				doc.put("SOURCE", Source);
-				doc.put("TIME", Time);
+				doc.put("TIME", this.getCurrentDateTime());
 				
 				/* Add to collection */
 				_news.insertOne(doc);
@@ -136,6 +145,31 @@ public class MongoDBConnectorForCrawler {
 		else{
 			throw (new Exception("_news is not initialized."));
 		}
+	}
+	
+	private String TitleTrim(String Title) {
+		String result = "";
+		
+		/* Trim the title if it has more than limit word number */
+		String arr[] = Title.split(" ");
+		if (arr.length < NUM_WORD_IN_TITLE) {
+			result = Title;
+		}
+		else {
+			for (int i = 0; i < NUM_WORD_IN_TITLE - 1; i++) {
+				result += arr[i] + " ";
+			}
+			result += arr[NUM_WORD_IN_TITLE - 1] + "...";
+		}
+		
+		return result;
+	}
+	
+	public String getCurrentDateTime() {
+		DateFormat dateFormat = new SimpleDateFormat(DATEFORMAT);
+		dateFormat.setTimeZone(TimeZone.getTimeZone(TIMEZONE));
+		Date date = new Date();
+		return dateFormat.format(date);
 	}
 	
 	/**

@@ -1,7 +1,6 @@
 package Data;
 
 import java.io.IOException;
-import java.util.Date;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -12,13 +11,15 @@ import com.thaonguyen.mongodbconnector.*;
 
 
 public class vnexpress {
+	private static final String DATABASE_NAME = "test";
+	
     public String LinkTitle;
     public String Title;
     public String _currentTopic;
     private MongoDBConnectorForCrawler conn;
     
     public vnexpress() {
-    	conn = new MongoDBConnectorForCrawler("localhost", 27017, "test");
+    	conn = new MongoDBConnectorForCrawler("localhost", 27017, DATABASE_NAME);
     }
     
     public void close() {
@@ -96,7 +97,7 @@ public class vnexpress {
             else {
             	System.out.println("ADD");
             	try {
-					conn.AddNews(_address, _title, _image, _currentTopic, _content, "VNExpress", (new Date()).toString());
+					conn.AddNews(_address, _title, _image, _currentTopic, _content, "VNExpress");
 				} catch (Exception e) {
 					e.printStackTrace();
 					System.out.println("ADD FAIL");
@@ -128,7 +129,7 @@ public class vnexpress {
             else {
             	System.out.println("ADD");
             	try {
-					conn.AddNews(_address, _title, _image, _currentTopic, _content, "VNExpress", (new Date()).toString());
+					conn.AddNews(_address, _title, _image, _currentTopic, _content, "VNExpress");
 				} catch (Exception e) {
 					e.printStackTrace();
 					System.out.println("ADD FAIL");
