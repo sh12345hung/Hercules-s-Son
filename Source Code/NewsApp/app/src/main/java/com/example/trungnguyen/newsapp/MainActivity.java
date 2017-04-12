@@ -40,18 +40,18 @@ public class MainActivity extends AppCompatActivity implements
         View.OnClickListener {
     private static final String TAG = MainActivity.class.getSimpleName();
     public static final String IS_LOGIN = "is_login";
-    Toolbar toolbar;
-    TabLayout tab;
-    Button btSearch;
-    ViewPager viewPager;
-    ActionBarDrawerToggle drawerToggle;
-    DrawerLayout drawerLayout;
-    NavigationView navigationView;
-    AccessToken mAccessToken;
-    String facebookUserName;
-    boolean isUserLogin = false;
-    String loginMenuTitle;
-    String facebookPictureUrl;
+    private Toolbar toolbar;
+    private TabLayout tab;
+    private Button btSearch;
+    private ViewPager viewPager;
+    private ActionBarDrawerToggle drawerToggle;
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
+    private AccessToken mAccessToken;
+    private String facebookUserName;
+    private boolean isUserLogin = false;
+    private String loginMenuTitle;
+    private String facebookPictureUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

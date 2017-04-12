@@ -2,6 +2,7 @@ package com.example.trungnguyen.newsapp.fragment;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
@@ -15,13 +16,17 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
+import com.example.trungnguyen.newsapp.CommentDialog;
 import com.example.trungnguyen.newsapp.MainActivity;
 import com.example.trungnguyen.newsapp.OnLoadMoreDataListener;
 import com.example.trungnguyen.newsapp.R;
 import com.example.trungnguyen.newsapp.adapter.NewsAdapter;
+import com.example.trungnguyen.newsapp.helper.CheckForNetworkState;
 import com.example.trungnguyen.newsapp.helper.SimpleDividerItemDecoration;
+import com.example.trungnguyen.newsapp.model.Comment;
 import com.example.trungnguyen.newsapp.model.News;
 
+import com.example.trungnguyen.newsapp.model.User;
 import com.thaonguyen.MongoDBConnectorClient.MongoDBConnectorClient;
 
 import org.java_websocket.handshake.ServerHandshake;
@@ -44,6 +49,7 @@ public class FragmentTheGioi extends Fragment implements
     public static final String NEWS_URL = "news_url";
     public static final String TOPIC = "Thế giới";
     public static final String CHECK_NETWORK = "check_network";
+    public static final String TAG = "FragmentTheGioi";
     public static final int GET_NEWS_COUNT = 15;
     private ArrayList<News> mNewsList;
     private LinearLayout llBackground;
@@ -85,7 +91,7 @@ public class FragmentTheGioi extends Fragment implements
 
                 @Override
                 public void onError(Exception e) {
-
+                    e.printStackTrace();
                 }
 
                 @Override
@@ -110,12 +116,13 @@ public class FragmentTheGioi extends Fragment implements
                                 String source = object.getString("SOURCE");
                                 News news = new News(id, title, fullDes, url, topic, imageUrl, source);
                                 mNewsList.add(news);
-                                Log.d("GOI", "123");
+                                Log.d(TAG, id + " " + title);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
                         }
                         updateCurrentNewsPosition();
+                        Log.d(TAG, "update current " + mCurrentNews + mNewsList.size());
                         if (mIsLoading) {
                             mIsLoading = false;
                             mAdapter.loadingfinish();
@@ -185,10 +192,47 @@ public class FragmentTheGioi extends Fragment implements
 //              index+=1;
 //                mNewsList.add(null);
 //                mAdapter.notifyItemInserted(mNewsList.size() - 1);
-                mIsLoading = true;
-                mAdapter.addProgressItem(null); // add null news item for checking progress bar visibility
-                mClient.GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
+                try {
+                    mIsLoading = true;
+                    mAdapter.addProgressItem(null); // add null news item for checking progress bar visibility
+                    mClient.GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
+            }
+
+            @Override
+            public void onCommentClick(int position) {
+                List<Comment> comments = new ArrayList<>();
+                String url = "https://scontent.xx.fbcdn.net/v/t1.0-1/p50x50/16427427_590536551139263_444919452715704300_n.jpg?oh=12843c9c03620ffd91e9febaf2a7add8&oe=596DC86E";
+                User user = new User(url, "Duy Trung", "", "");
+                String content = "Bố anh hút rất nhiều thuốc, mẹ anh chửi ổng quá trời";
+                Comment comment = new Comment(user, content);
+                comments.add(comment);
+                comments.add(comment);
+                comments.add(comment);
+                comments.add(comment);
+                comments.add(comment);
+                comments.add(comment);
+                comments.add(comment);
+                comments.add(comment);
+                comments.add(comment);
+                comments.add(comment);
+                comments.add(comment);
+                comments.add(comment);
+                comments.add(comment);
+                comments.add(comment);
+                comments.add(comment);
+                comments.add(comment);
+                comments.add(comment);
+                CommentDialog dialogFragment = new CommentDialog();
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList(COMMENT, (ArrayList<? extends Parcelable>) comments);
+                bundle.putBoolean(MainActivity.IS_LOGIN, isLogin);
+                dialogFragment.setArguments(bundle);
+                if (CheckForNetworkState.isNetworkAvailable())
+                    dialogFragment.show(getActivity().getSupportFragmentManager(), "COMMENT_DIALOG");
             }
         });
 
@@ -196,14 +240,14 @@ public class FragmentTheGioi extends Fragment implements
         mAdapter.setOnRefreshCompleted(new NewsAdapter.OnRefreshCompleted() {
             @Override
             public void oneRefreshCompleted() {
-                Log.d("FragmentTheGioi", "HIHI truoc " + mSwipeLayout.isRefreshing());
+                Log.d(TAG, "HIHI truoc " + mSwipeLayout.isRefreshing());
                 mSwipeLayout.post(new Runnable() {
                     @Override
                     public void run() {
                         mSwipeLayout.setRefreshing(false);
                     }
                 });
-                Log.d("FragmentTheGioi", "HIHI sau " + mSwipeLayout.isRefreshing());
+                Log.d(TAG, "HIHI sau " + mSwipeLayout.isRefreshing());
             }
         });
 
@@ -282,39 +326,6 @@ public class FragmentTheGioi extends Fragment implements
 //    }
 
 //    @Override
-//    public void onCommentsClick(int position) {
-//        List<Comment> comments = new ArrayList<>();
-//        String url = "https://scontent.xx.fbcdn.net/v/t1.0-1/p50x50/16427427_590536551139263_444919452715704300_n.jpg?oh=12843c9c03620ffd91e9febaf2a7add8&oe=596DC86E";
-//        User user = new User(url, "Duy Trung", "", "");
-//        String content = "Bố anh hút rất nhiều thuốc, mẹ anh chửi ổng quá trời";
-//        Comment comment = new Comment(user, content);
-//        comments.add(comment);
-//        comments.add(comment);
-//        comments.add(comment);
-//        comments.add(comment);
-//        comments.add(comment);
-//        comments.add(comment);
-//        comments.add(comment);
-//        comments.add(comment);
-//        comments.add(comment);
-//        comments.add(comment);
-//        comments.add(comment);
-//        comments.add(comment);
-//        comments.add(comment);
-//        comments.add(comment);
-//        comments.add(comment);
-//        comments.add(comment);
-//        comments.add(comment);
-//        CommentDialog dialogFragment = new CommentDialog();
-//        Bundle bundle = new Bundle();
-//        bundle.putParcelableArrayList(COMMENT, (ArrayList<? extends Parcelable>) comments);
-//        bundle.putBoolean(MainActivity.IS_LOGIN, isLogin);
-//        dialogFragment.setArguments(bundle);
-//        if (checker.isNetworkAvailable())
-//            dialogFragment.show(getActivity().getSupportFragmentManager(), "COMMENT_DIALOG");
-//    }
-
-//    @Override
 //    public boolean onGroupClick(ExpandableListView expandableListView, View view, int position, long l) {
 //        Log.d("KIEMTRA", "group clicked");
 //        if (checker.isNetworkAvailable()) {
@@ -345,14 +356,21 @@ public class FragmentTheGioi extends Fragment implements
 
     @Override
     public void onRefresh() {
-        Log.d("GOI", "REFRESH");
+        Log.d(TAG, "REFRESH");
         mSwipeLayout.setRefreshing(true);
         mCurrentNews = 0;
-//        if (mAdapter.getItemCount() > 0)
-//            mAdapter.clearData();
-        mClient.GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
+        if (mAdapter.getItemCount() > 0) {
+            Log.d(TAG, "clear data");
+            mAdapter.clearData();
+        }
+        try {
+            mClient.GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
+    // // TODO: interface is used, dot not delete
     public interface LoadingMore {
         void loadingStart();
 
@@ -361,29 +379,33 @@ public class FragmentTheGioi extends Fragment implements
 
     @Override
     public void onStart() {
-        Log.d("FRAG", "onStart");
+        Log.d(TAG, "onStart");
         super.onStart();
     }
 
     @Override
     public void onResume() {
-        Log.d("FRAG", "onResume " + mCurrentNews);
+        Log.d(TAG, "onResume " + mCurrentNews);
         super.onResume();
-        if (mIsFirstTime) {
+        if (mIsFirstTime && CheckForNetworkState.isNetworkAvailable()) {
             mIsFirstTime = false;
-            mClient.GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
+            try {
+                mClient.GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
     @Override
     public void onPause() {
-        Log.d("FRAG", "onPause " + mCurrentNews);
+        Log.d(TAG, "onPause " + mCurrentNews);
         super.onPause();
     }
 
     @Override
     public void onStop() {
-        Log.d("FRAG", "onStop " + mCurrentNews);
+        Log.d(TAG, "onStop " + mCurrentNews);
         super.onStop();
     }
 }

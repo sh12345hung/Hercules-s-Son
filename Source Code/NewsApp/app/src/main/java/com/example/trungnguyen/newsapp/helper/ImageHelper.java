@@ -13,14 +13,14 @@ import java.util.concurrent.ExecutionException;
  */
 public class ImageHelper {
     private Context mContext;
-    static Bitmap mImage;
-    List<Bitmap> list;
+    private static Bitmap mImage;
+//    List<Bitmap> list;
 
     public ImageHelper(Context context) {
         mContext = context;
     }
 
-    public Bitmap getBitmapFromUrl(String url, LoadSuccess loadSuccess) {
+//    public Bitmap getBitmapFromUrl(String url, LoadSuccess loadSuccess) {
 //        Thread thread = new Thread(new Runnable() {
 //            @Override
 //            public void run() {
@@ -54,21 +54,21 @@ public class ImageHelper {
 //
 //        Picasso.with(mContext).load(mUrl).resize(126, 126).into(mTarget);
 //
-        DownLoadImageTask task = new DownLoadImageTask();
-        task.execute(url);
-        try {
-            mImage = task.get();
-            if (mImage != null)
-                loadSuccess.onLoadSuccess();
-        } catch (InterruptedException e) {
-//            Log.d("HELP", e.toString());
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-//            Log.d("HELP", e.toString());
-            e.printStackTrace();
-        }
-        return mImage;
-    }
+//        DownLoadImageTask task = new DownLoadImageTask();
+//        task.execute(url);
+//        try {
+//            mImage = task.get();
+//            if (mImage != null)
+//                loadSuccess.onLoadSuccess();
+//        } catch (InterruptedException e) {
+////            Log.d("HELP", e.toString());
+//            e.printStackTrace();
+//        } catch (ExecutionException e) {
+////            Log.d("HELP", e.toString());
+//            e.printStackTrace();
+//        }
+//        return mImage;
+//    }
 
     public Bitmap getBitmapFromUrl(String url) {
 //        Thread thread = new Thread(new Runnable() {
@@ -125,20 +125,20 @@ public class ImageHelper {
         else return bitmap;
     }
 
-    public List<Bitmap> getListBitmap(ArrayList<String> stringArrayAvatar) {
-        DownloadListImageTask task = new DownloadListImageTask();
-        task.execute(stringArrayAvatar);
-        try {
-            list = task.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
+//    public List<Bitmap> getListBitmap(ArrayList<String> stringArrayAvatar) {
+//        DownloadListImageTask task = new DownloadListImageTask();
+//        task.execute(stringArrayAvatar);
+//        try {
+//            list = task.get();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
+//        }
+//        return list;
+//    }
 
-    public interface LoadSuccess {
-        void onLoadSuccess();
-    }
+//    public interface LoadSuccess {
+//        void onLoadSuccess();
+//    }
 }

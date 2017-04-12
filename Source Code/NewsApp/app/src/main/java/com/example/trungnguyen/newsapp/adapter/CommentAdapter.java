@@ -13,6 +13,11 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.example.trungnguyen.newsapp.R;
 import com.example.trungnguyen.newsapp.helper.ImageHelper;
 import com.example.trungnguyen.newsapp.model.Comment;
@@ -26,21 +31,21 @@ import java.util.List;
  */
 public class CommentAdapter extends ArrayAdapter<Comment> {
 
-    List<Comment> mCommentList;
-    Context mContext;
-    CommentViewHolder holder;
-    ImageHelper imageHelper;
-    List<Bitmap> avatarList;
-    ArrayList<String> avatars;
-    ArrayList<String> names;
-    ArrayList<String> contents;
-    boolean isLogin = false;
+    private List<Comment> mCommentList;
+    private Context mContext;
+    private CommentViewHolder holder;
+//    private ImageHelper imageHelper;
+//    private List<Bitmap> avatarList;
+    private ArrayList<String> avatars;
+    private ArrayList<String> names;
+    private ArrayList<String> contents;
+    private boolean isLogin = false;
 
     public CommentAdapter(Context context, int resource, List<Comment> objects) {
         super(context, resource, objects);
         mCommentList = objects;
         mContext = context;
-        imageHelper = new ImageHelper(mContext);
+//        imageHelper = new ImageHelper(mContext);
     }
 
 
@@ -63,13 +68,31 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
 //        );
 //        holder.tvCmtUserName.setText(mCommentList.get(position).getmCmtUser().getmUserName());
 //        holder.tvCmtContent.setText(mCommentList.get(position).getmCmtContent());
-        holder.imgCmtUserAvatar.setImageBitmap(imageHelper.getBitmapFromUrl(avatars.get(position), new ImageHelper.LoadSuccess() {
-            @Override
-            public void onLoadSuccess() {
-                Log.d("CMTADAP", "CALLBACK");
-                holder.progressBar.setVisibility(View.GONE);
-            }
-        }));
+//        holder.imgCmtUserAvatar.setImageBitmap(imageHelper.getBitmapFromUrl(avatars.get(position), new ImageHelper.LoadSuccess() {
+//            @Override
+//            public void onLoadSuccess() {
+//                Log.d("CMTADAP", "CALLBACK");
+//                holder.progressBar.setVisibility(View.GONE);
+//            }
+//        }));
+
+        Glide.with(mContext)
+                .load(avatars.get(position))
+                .listener(new RequestListener<String, GlideDrawable>() {
+                    @Override
+                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                        holder.progressBar.setVisibility(View.GONE);
+                        return false;
+                    }
+                }).diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .fitCenter()
+                .centerCrop()
+                .into(holder.imgCmtUserAvatar);
         holder.tvCmtUserName.setText(names.get(position));
         holder.tvCmtContent.setText(contents.get(position));
 

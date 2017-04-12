@@ -32,16 +32,16 @@ import java.util.Arrays;
 public class WelcomeActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = WelcomeActivity.class.getSimpleName();
     public static final String IS_LOGIN = "is_login";
-    TextView tvSkip;
-    ProgressBar progressBar;
+    private TextView tvSkip;
+    private ProgressBar progressBar;
 
-    CallbackManager callbackManager;
+    private CallbackManager callbackManager;
 
-    CheckForNetworkState checker;
+    private CheckForNetworkState checker;
 
-    LoginButton loginButton;
+    private LoginButton loginButton;
 
-    AccessToken accessToken;
+    private AccessToken accessToken;
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
@@ -62,7 +62,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onSuccess(LoginResult loginResult) {
                 Log.d("TEST", "THANH CONG");
-                if (checker.isNetworkAvailable())
+                if (CheckForNetworkState.isNetworkAvailable())
                     moveToMainActivity(true);
             }
 
@@ -95,11 +95,11 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
 //
 //        }
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-            }
-        }, 3000);
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//            }
+//        }, 3000);
     }
 
     BroadcastReceiver updateUIReceiver = new BroadcastReceiver() {
@@ -138,7 +138,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
                 NetworkStateReceiver.UPDATE_UI_FROM_BROADCAST_CHANGE_NETWORK_STATE)
         );
         if (accessToken != null) {
-            if (checker.isNetworkAvailable())
+            if (CheckForNetworkState.isNetworkAvailable())
                 moveToMainActivity(true);
             else {
                 Toast.makeText(WelcomeActivity.this, "Thiết bị chưa được kết nối Internet", Toast.LENGTH_LONG).show();
@@ -169,7 +169,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onClick(View view) {
-        if (!checker.isNetworkAvailable())
+        if (!CheckForNetworkState.isNetworkAvailable())
             Toast.makeText(WelcomeActivity.this, "Thiết bị chưa được kết nối Internet", Toast.LENGTH_SHORT).show();
         else
             moveToMainActivity(false);

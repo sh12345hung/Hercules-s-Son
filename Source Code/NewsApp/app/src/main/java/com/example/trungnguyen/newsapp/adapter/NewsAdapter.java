@@ -50,7 +50,7 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     private Context mContext;
     private static final int TYPE_LOADING_MORE = -1;
     private static final int NOMAL_ITEM = 1;
-    boolean showLoadingMore;
+    private boolean showLoadingMore;
     private OnRefreshCompleted mListener;
     private OnLoadMoreDataListener mLoadMoreListener;
 
@@ -107,6 +107,8 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
             holder.tvSource.setText(news.getSource());
             holder.tvTitle.setText(news.getTitle());
+
+            // TODO: set text for comment count
 
             Glide.with(mContext)
                     .load(news.getMainPicture())
@@ -190,9 +192,10 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
     public void addNewList(ArrayList<News> list) {
         try {
-            if (mNewsList.size() > 0)
-                mNewsList.clear();
             mNewsList.addAll(list);
+            notifyItemRangeChanged(0, mNewsList.size() - 1); // must notify range of adapter to load new data
+            // if do not notify range of adapter, the results will be incorrect, 0 is start
+            // position mNewsList.size() - 1 is end position, that is a new range if u refresh and load new data
             notifyDataSetChanged();
             mListener.oneRefreshCompleted();
         } catch (Exception e) {
@@ -288,26 +291,35 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         ImageView imageView;
         TextView tvTitle;
         TextView tvSource;
+        TextView tvComment;
+        LinearLayout llComment;
 
         NewsViewHolder(View itemView) {
             super(itemView);
             imageView = (ImageView) itemView.findViewById(R.id.news_item_img);
             tvTitle = (TextView) itemView.findViewById(R.id.news_item_des);
             tvSource = (TextView) itemView.findViewById(R.id.news_item_source);
+            tvComment = (TextView) itemView.findViewById(R.id.news_item_comment);
+            llComment = (LinearLayout) itemView.findViewById(R.id.ll_comment);
+            llComment.setOnClickListener(this);
             itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-            try {
-                if (CheckForNetworkState.isNetworkAvailable()) {
-                    Intent intent = new Intent(mContext, DetailActivity.class);
-                    intent.putExtra(FragmentTheGioi.NEWS_URL, mNewsList.get(getAdapterPosition()).getUrl());
-                    intent.putExtra(FragmentTheGioi.CHECK_NETWORK, CheckForNetworkState.isNetworkAvailable());
-                    mContext.startActivity(intent);
+            if (view == llComment) {
+                mLoadMoreListener.onCommentClick(getAdapterPosition());
+            } else {
+                try {
+                    if (CheckForNetworkState.isNetworkAvailable()) {
+                        Intent intent = new Intent(mContext, DetailActivity.class);
+                        intent.putExtra(FragmentTheGioi.NEWS_URL, mNewsList.get(getAdapterPosition()).getUrl());
+                        intent.putExtra(FragmentTheGioi.CHECK_NETWORK, CheckForNetworkState.isNetworkAvailable());
+                        mContext.startActivity(intent);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         }
     }
