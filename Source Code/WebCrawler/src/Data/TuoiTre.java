@@ -45,7 +45,6 @@ public class TuoiTre {
                         Elements links2 = doc1.select("ul[class=clearfix]").select("li:eq("+i+")").select("div[class=mega-menu]").select("li");
                         i++;
                         for(Element link1: links2){
-                            //System.out.println(link1.select("a").attr("href"));
                             if(!link1.select("a").attr("href").equals(link.select("a").attr("href"))){
                                 String url = link1.select("a").attr("href");
                                 title = link1.text();
@@ -75,20 +74,7 @@ public class TuoiTre {
                             }
                         }
                     }
-                    
-                    //Document doc1 = Jsoup.connect(link.select("a").attr("href")).get();
-                    //Elements links2 = doc1.select("div[class=mega-menu]").select("ul[class=list-bc]").select("li");   
-                    //for(Element link1: links2){
-                    //        String url = links1.select("a").attr("href");
-                    //        if(!(url.substring(0, url.indexOf("/")).equals("http:"))){
-                     //               url = "http://tuoitre.vn" + url;      
-                                    
-                                //}
-                    //        title = links1.text();
-                    //        System.out.println("        Link child: " + url);
-                     //       System.out.println("        Title child: "+ title);
-                       // }
-                 }
+                }
             }
         }
     

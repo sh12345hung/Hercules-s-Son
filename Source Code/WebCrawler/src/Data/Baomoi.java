@@ -23,17 +23,21 @@ public class Baomoi {
     private String _title;
     private String _image;
     private String _description;
+    public String _topic;
     
     public void Execution (String url) throws IOException {
         System.out.println ("*********************Báo mới*******************");
         Document doc = Jsoup.connect(url).get();
         Elements baoMoi = doc.select("div[class=header-wrap]").select("li[class=parent]");
         for (Element _baoMoi : baoMoi){
-                Elements test = _baoMoi.select("ul[class=child]");
-                if(!test.isEmpty()){
-                    test = test.select("li").select("a");
-                    for (Element test1 : test) {
-                            String _newUrl = url + test1.attr("href");
+                Elements temp = _baoMoi.select("ul[class=child]");
+                if(!temp.isEmpty()){
+                    temp = temp.select("li").select("a");
+
+                    for (Element temp1 : temp) {
+                            _topic = temp1.select("a").text();
+                            System.out.println("Topic: " + _topic);
+                            String _newUrl = url + temp1.attr("href");
                             System.out.println(_newUrl);
                             hotNews(_newUrl);
                             mainNews(_newUrl);
@@ -41,12 +45,12 @@ public class Baomoi {
                         }
                         System.out.println();
                 }else{
-                    System.out.println("else");
+                    _topic = _baoMoi.text();
+                    System.out.println("Topic: " + _topic);
                     String _newUrl = url + _baoMoi.select("a").attr("href");
                     System.out.println(_newUrl);
                     hotNews(_newUrl);
                     mainNews_2(_newUrl);
-                    System.out.println("else");
                     System.out.println();
                 }
                     
@@ -89,7 +93,6 @@ public class Baomoi {
         _image = _mainNews.select("img").attr("src");
         _title = _mainNews.select("h2").text();
         _description = _mainNews.select("p[class=summary]").text();
-        //System.out.println(_mainNews.select("p[class=summary]").text());
         System.out.println("Address: " + _address);
         System.out.println("Title: " + _title);
         System.out.println("Image: " + _image);

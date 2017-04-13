@@ -16,10 +16,10 @@ public class vnexpress {
     private String _image;
     private String _content;
     
-    public void vnExpress(String url) throws IOException{                                                   
-        System.out.println("*********************VNExpress Crawler*****************: ");
+    public void vnExpress(String url) throws IOException{ 
         System.setProperty("http.proxyHost", "127.0.0.1");
         System.setProperty("http.proxyPort", "8182");
+        System.out.println("*********************VNExpress Crawler*****************: ");
         try {
                 Document doc = Jsoup.connect(url).get();
                 Elements links = doc.select("ul[class=list_menu_header]").select("li");
@@ -32,7 +32,6 @@ public class vnexpress {
                         Elements links2 = doc1.select("div[class=mid_header width_common]").select("ul[id=breakumb_web]").select("li");
                         for(Element link1: links2){
                                 url = link1.select("a").attr("href");
-                                System.out.println("------------" + url);
                                 if(!(url.substring(0,url.indexOf('p')+1).equals("http"))){
                                         url = link.select("a").attr("href") + url;
                                         System.out.println();
@@ -90,11 +89,11 @@ public class vnexpress {
         Document doc = Jsoup.connect(url).method(Method.POST)
                 .method(Method.POST)
                 .userAgent("Mozilla/5.0 (Windows NT 6.0) Chrome/19.0.1084.46 Safari/536.5")
-                .timeout(100 * 1000)
+                .timeout(500 * 1000)
                 .ignoreHttpErrors(true)
                 .cookies(cookies)
                 .get();
-        
+        //Document doc = Jsoup.connect(url).get();
         Elements hotNews = doc.select("div[class=box_hot_news]");
         for(Element hot:hotNews){
             _address = hot.select(".block_news_big").select("a").attr("href");
@@ -124,11 +123,11 @@ public class vnexpress {
         Document doc = Jsoup.connect(url).method(Method.POST)
                 .method(Method.POST)
                 .userAgent("Mozilla/5.0 (Windows NT 6.0) Chrome/19.0.1084.46 Safari/536.5")
-                .timeout(100 * 1000)
+                .timeout(500 * 1000)
                 .ignoreHttpErrors(true)
                 .cookies(cookies)
                 .get();
-        
+        //Document doc = Jsoup.connect(url).get();
         Elements medias = doc.select("div[class=block_mid_new]").select ("li");
         for(Element media:medias){
             _address = media.select("a").attr("href");
@@ -144,6 +143,8 @@ public class vnexpress {
     }
   
     public static void main (String[] args) throws IOException {
+        System.setProperty("http.proxyHost", "127.0.0.1");
+        System.setProperty("http.proxyPort", "8182");
     	vnexpress news = new vnexpress();
         news.vnExpress("http://vnexpress.net");
 	}
