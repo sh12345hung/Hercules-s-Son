@@ -128,8 +128,9 @@ public class MongoDBConnectorForCrawler {
 				doc.put("TITLE", TitleTrim(Title));
 				doc.put("IMAGEURL", ImageURL);
 				doc.put("TOPIC", Topic);
-				doc.put("DESC", Description.substring(0, NUM_CHAR_IN_DESC) + ((Description.length() > NUM_CHAR_IN_DESC)?"...":""));
+				doc.put("DESC", Description.substring(0, ((Description.length() < NUM_CHAR_IN_DESC)?Description.length():NUM_CHAR_IN_DESC)) + ((Description.length() > NUM_CHAR_IN_DESC)?"...":""));
 				doc.put("SOURCE", Source);
+				doc.put("COMMENTCOUNT", 0);
 				doc.put("TIME", this.getCurrentDateTime());
 				
 				/* Add to collection */

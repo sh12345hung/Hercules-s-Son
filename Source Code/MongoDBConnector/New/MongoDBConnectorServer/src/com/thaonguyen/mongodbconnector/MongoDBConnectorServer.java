@@ -226,6 +226,7 @@ public class MongoDBConnectorServer extends WebSocketServer {
 		
 		/* Get data */
 		String UserID = me.getId();
+		String UserName = me.getName();
 		
 		/* Find UserID in database */
 		long count = _user.count(eq("UserID", UserID)); /* Check if UserID existed in database */
@@ -245,7 +246,7 @@ public class MongoDBConnectorServer extends WebSocketServer {
 		json.put("UserID", UserID);
 		json.put("IsNewUser", state);
 		
-		log("Loged in with " + state + " UserID " + UserID);
+		log(UserName + " loged in with " + (state?"new":"old") + " UserID " + UserID);
 		
 		return json.toJson();
 	}
@@ -346,6 +347,10 @@ public class MongoDBConnectorServer extends WebSocketServer {
 		Document updateQuery = new Document("$push", item);
 		_news.updateOne(findQuery, updateQuery);
 		
+		/* Increase count */
+		item = new Document("COMMENTCOUNT", 1);
+		updateQuery = new Document("$inc", item);
+		_news.updateOne(findQuery, updateQuery);
 		log("Add comment with UserID " + UserID + " NewsID " + NewsID + " Comment " + Comment);
 	}
 	
