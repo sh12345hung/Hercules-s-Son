@@ -23,7 +23,7 @@
     </style>
 
     <style name="navigationTextCustom" parent="Widget.Design.NavigationView">
-        <item name="android:textColor">@color/backgroundSearch</item>
+        <item name="android:textColor">@color/black</item>
         <item name="android:textSize">17sp</item>
     </style>
 

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.example.trungnguyen.newsapp.fragment.FragmentCongNghe;
 import com.example.trungnguyen.newsapp.fragment.FragmentDuLich;
@@ -19,7 +20,7 @@ import java.util.List;
 /**
  * Created by Trung Nguyen on 2/21/2017.
  */
-public class ViewPagerAdapter extends FragmentPagerAdapter{
+public class ViewPagerAdapter extends FragmentPagerAdapter {
     List<Fragment> fragments = new ArrayList<Fragment>();
     List<String> titleFragment = new ArrayList<String>();
 

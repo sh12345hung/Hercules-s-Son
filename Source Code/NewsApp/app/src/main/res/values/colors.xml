@@ -5,7 +5,12 @@
     <color name="colorAccent">#3F51B5</color>
     <color name="backgroundAppBarLayout">#37474F</color>
     <color name="backgroundSearch">#fff</color>
+    <color name="teal">#4DB6AC</color>
     <color name="backgroundColor">#80DEEA</color>
     <color name="colorGrey">#CCC</color>
+    <color name="teal_trans">#CC00695C</color>
+    <color name="black">#000</color>
     <color name="background_list">#eae6e6</color>
+    <color name="indigo">#3F51B5</color>
+    <color name="indigo_trans">#CC283593</color>
 </resources>

@@ -4,43 +4,55 @@ package com.example.trungnguyen.newsapp.model;
  * Created by Trung Nguyen on 2/27/2017.
  */
 public class News {
-    String id;
-    String title;
-    String content;
-    String mainPicture;
-    String des;
-    String url;
-    String topic;
+    private String id;
+    private String title;
+    private String content;
+    private String mainPicture;
+    private String des;
+    private String url;
+    private String topic;
     public boolean hasFadedIn = false;
-    String source;
+    private String source;
+    private String commentCount;
 
-    public News(){
+    public News() {
 
     }
 
-    public News(String id, String title, String content, String url, String topic, String mainPicture, String source) {
+    public News(String id, String title, String commentCount, String url, String topic, String mainPicture, String source) {
         this.id = id;
         this.title = title;
-        this.content = content;
+        this.commentCount = commentCount;
         this.url = url;
         this.topic = topic;
         this.mainPicture = mainPicture;
         this.source = source;
     }
 
-    public String getSource(){
+    public String getCommentCount() {
+        return this.commentCount;
+    }
+
+    public void setCommentCount(String commentCount) {
+        this.commentCount = commentCount;
+    }
+
+    public String getSource() {
         return source;
     }
-    public void setSource(String source){
+
+    public void setSource(String source) {
         this.source = source;
     }
 
-    public String getTopic(){
+    public String getTopic() {
         return topic;
     }
-    public void setTopic(String topic){
+
+    public void setTopic(String topic) {
         this.topic = topic;
     }
+
     public String getUrl() {
         return url;
     }

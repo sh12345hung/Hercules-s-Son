@@ -5,9 +5,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -21,7 +25,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.example.trungnguyen.newsapp.adapter.ViewPagerAdapter;
 import com.example.trungnguyen.newsapp.helper.ImageHelper;
 import com.example.trungnguyen.newsapp.helper.NetworkStateReceiver;
@@ -43,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements
     private Toolbar toolbar;
     private TabLayout tab;
     private Button btSearch;
+//    private ImageView navAvatar;
     private ViewPager viewPager;
     private ActionBarDrawerToggle drawerToggle;
     private DrawerLayout drawerLayout;
@@ -93,8 +101,17 @@ public class MainActivity extends AppCompatActivity implements
             request.executeAsync();
         }
         addControls();
+//        Glide.with(this).load(facebookPictureUrl).asBitmap().centerCrop().into(new BitmapImageViewTarget(navAvatar) {
+//            @Override
+//            protected void setResource(Bitmap resource) {
+//                RoundedBitmapDrawable circularBitmapDrawable =
+//                        RoundedBitmapDrawableFactory.create(getResources(), resource);
+//                circularBitmapDrawable.setCircular(true);
+//                navAvatar.setImageDrawable(circularBitmapDrawable);
+//            }
+//        });
         setSupportActionBar(toolbar); // Because we are using AppCompat, that is support library
-        toolbar.setTitle("");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         Bundle bundle = new Bundle();
         bundle.putBoolean(IS_LOGIN, isUserLogin);
         ViewPagerAdapter pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), bundle);
@@ -168,6 +185,7 @@ public class MainActivity extends AppCompatActivity implements
     private void addControls() {
         toolbar = (Toolbar) findViewById(R.id.toolbarID);
         tab = (TabLayout) findViewById(R.id.tab);
+//        navAvatar = (ImageView) findViewById(R.id.nav_avatar);
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);

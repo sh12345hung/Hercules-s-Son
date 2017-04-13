@@ -18,19 +18,27 @@
             android:id="@+id/appBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/backgroundAppBarLayout"
+            android:background="@drawable/second_color"
             android:fitsSystemWindows="true">
+
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbarID"
-                android:title=""
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
                 app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
                 app:theme="@style/colorMenuItem"
-                app:layout_collapseMode="pin"
                 app:titleTextColor="@color/backgroundSearch">
                 <!--nếu sử dụng enterAlways khi scroll lên mà chưa tới top, toolbar vẫn hiện ra-->
                 <!--sử dụng enterAlwaysCollapsed thì khi scroll tới top mới hiện toolbar-->
+                <TextView
+                    android:id="@+id/toolbar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="NEWS"
+                    android:textColor="#fff"
+                    android:textSize="17sp" />
             </android.support.v7.widget.Toolbar>
 
             <LinearLayout
@@ -85,9 +93,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="#CC37474F"
+        android:background="@drawable/nav_background"
         android:choiceMode="singleChoice"
         android:groupIndicator="@null"
+        app:headerLayout="@layout/nav_header_main"
         app:itemTextAppearance="@style/navigationTextCustom"
         app:menu="@menu/activity_main_drawer">
     </android.support.design.widget.NavigationView>

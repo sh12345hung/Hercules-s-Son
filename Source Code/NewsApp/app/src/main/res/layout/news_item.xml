@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
-    android:paddingBottom="7dp"
-    android:paddingTop="7dp"
-    android:paddingLeft="7dp"
-    android:paddingRight="7dp"
+    android:padding="4dp"
     android:background="@color/backgroundSearch"
     android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/news_item_img"
-        android:layout_width="95dp"
-        android:layout_height="95dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:background="@color/colorGrey"/>
 
     <LinearLayout
@@ -23,11 +20,11 @@
         android:orientation="vertical">
         <TextView
             android:textColor="#000"
-            android:textSize="14.5sp"
+            android:textSize="15sp"
             android:text="Công Vinh lên tiếng trước tin đồn 'săn' Berbatov, Kiatisak chỉ trích liên đoàn bóng đá Thái Lan"
             android:id="@+id/news_item_des"
             android:layout_width="match_parent"
-            android:layout_height="72dp" />
+            android:layout_height="79dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -36,7 +33,8 @@
             android:layout_height="wrap_content">
             <TextView
                 android:text="Báo mới"
-                android:textColor="@color/colorPrimary"
+                android:textSize="11sp"
+                android:textColor="@color/indigo"
                 android:id="@+id/news_item_source"
                 android:layout_width="match_parent"
                 android:layout_weight="3"
@@ -53,6 +51,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent" />
                 <TextView
+                    android:textSize="11sp"
                     android:textColor="@color/backgroundAppBarLayout"
                     android:id="@+id/news_item_time"
                     android:layout_width="wrap_content"
@@ -73,6 +72,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent" />
                 <TextView
+                    android:textSize="11sp"
                     android:textColor="@color/backgroundAppBarLayout"
                     android:id="@+id/news_item_comment"
                     android:layout_width="wrap_content"

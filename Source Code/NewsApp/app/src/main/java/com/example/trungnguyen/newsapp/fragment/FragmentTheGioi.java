@@ -1,10 +1,12 @@
 package com.example.trungnguyen.newsapp.fragment;
 
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +15,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
@@ -44,20 +48,22 @@ import static com.facebook.FacebookSdk.getApplicationContext;
  * Created by Trung Nguyen on 2/21/2017.
  */
 public class FragmentTheGioi extends Fragment implements
-        SwipeRefreshLayout.OnRefreshListener {
+        SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
     public static final String COMMENT = "comment";
     public static final String NEWS_URL = "news_url";
     public static final String TOPIC = "Thế giới";
     public static final String CHECK_NETWORK = "check_network";
     public static final String TAG = "FragmentTheGioi";
     public static final int GET_NEWS_COUNT = 15;
+    private static final String COMMENT_DIALOG = "comment_dialog";
     private ArrayList<News> mNewsList;
     private LinearLayout llBackground;
     private RecyclerView mRecyclerView;
     private SwipeRefreshLayout mSwipeLayout;
-    private AppBarLayout appBarLayout;
+    //    private AppBarLayout appBarLayout;
     private ProgressBar mProgressBar;
     private NewsAdapter mAdapter;
+    private FloatingActionButton fabScrollTop;
     private MongoDBConnectorClient mClient;
     private int mCurrentNews;
     private RecyclerView.OnScrollListener mLoadingMore;
@@ -65,6 +71,9 @@ public class FragmentTheGioi extends Fragment implements
     private LinearLayoutManager mLayoutManager;
     private boolean mIsLoading;
     private boolean mIsFirstTime;
+
+    Animation mAnimBottomIn;
+    Animation mAnimBottomOut;
 
     @Nullable
     @Override
@@ -112,17 +121,17 @@ public class FragmentTheGioi extends Fragment implements
                                 String url = object.getString("URL");
                                 String imageUrl = object.getString("IMAGEURL");
                                 String topic = object.getString("TOPIC");
-                                String fullDes = object.getString("DESC");
+                                String commentCount = object.getString("COMMENTCOUNT");
                                 String source = object.getString("SOURCE");
-                                News news = new News(id, title, fullDes, url, topic, imageUrl, source);
+                                News news = new News(id, title, commentCount, url, topic, imageUrl, source);
                                 mNewsList.add(news);
-                                Log.d(TAG, id + " " + title);
+//                                Log.d(TAG, id + " " + title);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
                         }
                         updateCurrentNewsPosition();
-                        Log.d(TAG, "update current " + mCurrentNews + mNewsList.size());
+//                        Log.d(TAG, "update current " + mCurrentNews + mNewsList.size());
                         if (mIsLoading) {
                             mIsLoading = false;
                             mAdapter.loadingfinish();
@@ -232,7 +241,7 @@ public class FragmentTheGioi extends Fragment implements
                 bundle.putBoolean(MainActivity.IS_LOGIN, isLogin);
                 dialogFragment.setArguments(bundle);
                 if (CheckForNetworkState.isNetworkAvailable())
-                    dialogFragment.show(getActivity().getSupportFragmentManager(), "COMMENT_DIALOG");
+                    dialogFragment.show(getActivity().getSupportFragmentManager(), COMMENT_DIALOG);
             }
         });
 
@@ -240,14 +249,14 @@ public class FragmentTheGioi extends Fragment implements
         mAdapter.setOnRefreshCompleted(new NewsAdapter.OnRefreshCompleted() {
             @Override
             public void oneRefreshCompleted() {
-                Log.d(TAG, "HIHI truoc " + mSwipeLayout.isRefreshing());
+//                Log.d(TAG, "HIHI truoc " + mSwipeLayout.isRefreshing());
                 mSwipeLayout.post(new Runnable() {
                     @Override
                     public void run() {
                         mSwipeLayout.setRefreshing(false);
                     }
                 });
-                Log.d(TAG, "HIHI sau " + mSwipeLayout.isRefreshing());
+//                Log.d(TAG, "HIHI sau " + mSwipeLayout.isRefreshing());
             }
         });
 
@@ -266,16 +275,23 @@ public class FragmentTheGioi extends Fragment implements
     private void addControls(View mReturnView) {
         mSwipeLayout = (SwipeRefreshLayout) mReturnView.findViewById(R.id.swipeToRefresh);
         mSwipeLayout.setOnRefreshListener(this);
-
+        mSwipeLayout.setColorSchemeColors(Color.BLUE);
         mProgressBar = (ProgressBar) mReturnView.findViewById(R.id.progressBarTheGioi);
-
+        fabScrollTop = (FloatingActionButton) mReturnView.findViewById(R.id.fab_scroll_top);
+        fabScrollTop.setVisibility(View.INVISIBLE);
+        fabScrollTop.setOnClickListener(this);
         mRecyclerView = (RecyclerView) mReturnView.findViewById(R.id.expTheGioi);
 //        mRecyclerView.setOnGroupClickListener(this);
         intialListener();
-        appBarLayout = (AppBarLayout) mReturnView.findViewById(R.id.appBar);
+//        appBarLayout = (AppBarLayout) mReturnView.findViewById(R.id.appBar);
 
         llBackground = (LinearLayout) mReturnView.findViewById(R.id.ll_loading);
+
+
+        mAnimBottomIn = AnimationUtils.loadAnimation(getActivity(), R.anim.bottom_in);
+        mAnimBottomOut = AnimationUtils.loadAnimation(getActivity(), R.anim.bottom_out);
     }
+
 
     private void intialListener() {
 
@@ -283,14 +299,19 @@ public class FragmentTheGioi extends Fragment implements
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
+
             }
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 //                Log.d("KAKA", "scroll " + dy);
                 super.onScrolled(recyclerView, dx, dy);
+//                Log.d("KAKA", "scroll " + dy);
                 if (dy > 0) {
-//                    Log.d("KAKA", "dy>0 roi " + dy);
+                    if (fabScrollTop.getVisibility() == View.VISIBLE && dy > 20) {
+                        fabScrollTop.startAnimation(mAnimBottomOut);
+                        fabScrollTop.setVisibility(View.INVISIBLE);
+                    }
                     int visibleItemCount = mLayoutManager.getChildCount();
                     int totalItemCount = mLayoutManager.getItemCount();
                     int pastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
@@ -311,6 +332,11 @@ public class FragmentTheGioi extends Fragment implements
                     }
 //                    mClient.GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
 //                    updateCurrentNews();
+                } else {
+                    if (fabScrollTop.getVisibility() == View.INVISIBLE && dy < - 10 && dy != 0) {
+                        fabScrollTop.setVisibility(View.VISIBLE);
+                        fabScrollTop.startAnimation(mAnimBottomIn);
+                    }
                 }
             }
         };
@@ -356,11 +382,11 @@ public class FragmentTheGioi extends Fragment implements
 
     @Override
     public void onRefresh() {
-        Log.d(TAG, "REFRESH");
+//        Log.d(TAG, "REFRESH");
         mSwipeLayout.setRefreshing(true);
         mCurrentNews = 0;
         if (mAdapter.getItemCount() > 0) {
-            Log.d(TAG, "clear data");
+//            Log.d(TAG, "clear data");
             mAdapter.clearData();
         }
         try {
@@ -369,6 +395,14 @@ public class FragmentTheGioi extends Fragment implements
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.fab_scroll_top) {
+            mRecyclerView.smoothScrollToPosition(0); // jump to top of recycler view
+        }
+    }
+
 
     // // TODO: interface is used, dot not delete
     public interface LoadingMore {
@@ -379,13 +413,13 @@ public class FragmentTheGioi extends Fragment implements
 
     @Override
     public void onStart() {
-        Log.d(TAG, "onStart");
+//        Log.d(TAG, "onStart");
         super.onStart();
     }
 
     @Override
     public void onResume() {
-        Log.d(TAG, "onResume " + mCurrentNews);
+//        Log.d(TAG, "onResume " + mCurrentNews);
         super.onResume();
         if (mIsFirstTime && CheckForNetworkState.isNetworkAvailable()) {
             mIsFirstTime = false;
@@ -399,13 +433,13 @@ public class FragmentTheGioi extends Fragment implements
 
     @Override
     public void onPause() {
-        Log.d(TAG, "onPause " + mCurrentNews);
+//        Log.d(TAG, "onPause " + mCurrentNews);
         super.onPause();
     }
 
     @Override
     public void onStop() {
-        Log.d(TAG, "onStop " + mCurrentNews);
+//        Log.d(TAG, "onStop " + mCurrentNews);
         super.onStop();
     }
 }

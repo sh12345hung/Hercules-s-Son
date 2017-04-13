@@ -107,7 +107,7 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
             holder.tvSource.setText(news.getSource());
             holder.tvTitle.setText(news.getTitle());
-
+            holder.tvComment.setText(news.getCommentCount());
             // TODO: set text for comment count
 
             Glide.with(mContext)
@@ -215,8 +215,12 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
 
     public void clearData() {
-        mNewsList.clear();
-        notifyDataSetChanged();
+        try {
+            mNewsList.clear();
+            notifyDataSetChanged();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -266,8 +270,12 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         if (!showLoadingMore) return;
         final int removePosition = getLoadingMoreItemPosition();
         showLoadingMore = false;
-        mNewsList.remove(removePosition);
-        notifyItemRemoved(removePosition);
+        try {
+            mNewsList.remove(removePosition);
+            notifyItemRemoved(removePosition);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         //add items one by one
         //When you've added the items call the setLoaded()
 //        notifyItemRemoved(pos);

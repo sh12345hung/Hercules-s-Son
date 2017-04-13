@@ -23,11 +23,11 @@
         android:orientation="vertical">
         <TextView
             android:textColor="#000"
-            android:textSize="12sp"
+            android:textSize="11.5sp"
             android:text="Công Vinh lên tiếng trước tin đồn 'săn' Berbatov, Kiatisak chỉ trích liên đoàn bóng đá Thái Lan"
             android:id="@+id/news_item_des"
             android:layout_width="match_parent"
-            android:layout_height="52dp" />
+            android:layout_height="53dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -36,11 +36,11 @@
             android:layout_height="wrap_content">
             <TextView
                 android:text="Báo mới"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/teal"
                 android:id="@+id/news_item_source"
                 android:layout_width="match_parent"
                 android:layout_weight="1"
-                android:textSize="12sp"
+                android:textSize="10sp"
                 android:layout_height="wrap_content" />
             <LinearLayout
                 android:orientation="horizontal"
@@ -53,7 +53,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent" />
                 <TextView
-                    android:textSize="12sp"
+                    android:textSize="10sp"
                     android:textColor="@color/backgroundAppBarLayout"
                     android:id="@+id/news_item_time"
                     android:layout_width="wrap_content"
