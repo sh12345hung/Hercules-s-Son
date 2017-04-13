@@ -26,19 +26,25 @@ public class Baomoi {
     public String _topic;
     
     public void Execution (String url) throws IOException {
+        System.setProperty("http.proxyHost", "127.0.0.1");
+        System.setProperty("http.proxyPort", "8182");
         System.out.println ("*********************Báo mới*******************");
         Document doc = Jsoup.connect(url).get();
         Elements baoMoi = doc.select("div[class=header-wrap]").select("li[class=parent]");
-        for (Element _baoMoi : baoMoi){
+        for (int i = 1;  i <= 100; i++) {
+            for (Element _baoMoi : baoMoi){
                 Elements temp = _baoMoi.select("ul[class=child]");
                 if(!temp.isEmpty()){
                     temp = temp.select("li").select("a");
-
-                    for (Element temp1 : temp) {
+                        for (Element temp1 : temp) {
+                            
                             _topic = temp1.select("a").text();
                             System.out.println("Topic: " + _topic);
-                            String _newUrl = url + temp1.attr("href");
+                            String _newUrl = temp1.select("a").attr("href");
+                            _newUrl = _newUrl.substring(0,_newUrl.indexOf('.'));
+                            _newUrl = url + _newUrl + "/trang" + i + ".epi";
                             System.out.println(_newUrl);
+                            
                             hotNews(_newUrl);
                             mainNews(_newUrl);
                             System.out.println();
@@ -47,13 +53,15 @@ public class Baomoi {
                 }else{
                     _topic = _baoMoi.text();
                     System.out.println("Topic: " + _topic);
-                    String _newUrl = url + _baoMoi.select("a").attr("href");
+                    String _newUrl = _baoMoi.select("a").attr("href");
+                    _newUrl = _newUrl.substring(0,_newUrl.indexOf('.'));
+                    _newUrl = url + _newUrl + "/trang" + i + ".epi";
                     System.out.println(_newUrl);
                     hotNews(_newUrl);
                     mainNews_2(_newUrl);
                     System.out.println();
                 }
-                    
+            }        
         }
     }
     
