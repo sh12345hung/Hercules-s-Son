@@ -70,17 +70,18 @@ public abstract class MongoDBConnectorClient extends WebSocketClient {
 			JSONParser parser = new JSONParser();
 			JSONObject obj = (JSONObject) parser.parse(message);
 			
-			boolean isNewUser;
+			boolean isNewUser, TokenAvailable;
 			String UserID;
 			long count;
 			List<String> contain;
 			
 			switch ((String)obj.get("TYPE")) {
 			case "LOGIN":
+				TokenAvailable = (boolean) obj.get("AVAILABLE");
 				UserID = (String) obj.get("UserID");
 				isNewUser = (boolean) obj.get("IsNewUser");
 				logedInFlag = true;
-				this.Login_Callback(UserID, isNewUser);
+				this.Login_Callback(TokenAvailable, UserID, isNewUser);
 				break;
 			case "GETNEWS":
 				count = (long)obj.get("Count");
@@ -111,7 +112,7 @@ public abstract class MongoDBConnectorClient extends WebSocketClient {
 		this.send(json.toJSONString());
 	}
 	
-	public abstract void Login_Callback(String UserID, boolean IsNewUser);
+	public abstract void Login_Callback(boolean TokenAvailable, String UserID, boolean IsNewUser);
 	
 	public void Logout() {
 		JSONObject json = new JSONObject();

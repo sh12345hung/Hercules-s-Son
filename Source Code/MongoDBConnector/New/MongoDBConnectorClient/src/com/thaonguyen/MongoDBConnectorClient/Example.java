@@ -8,12 +8,13 @@ import java.util.List;
 import org.java_websocket.handshake.ServerHandshake;
 
 public class Example {
+	private static final String fbToken = "EAACEdEose0cBAEQtMIkfSYPGtYZB3worWRA4cilhrbzs2LA6xj5R83UojqCqjKSP3hEJn5no0wOssc9o9yGXnh9gKG787MBZAqyFOZC7M6lysEZA0v0xZAdIaZB1KE2puaSOs1kp9fmdjcagNE2jVjJ5hmvT3PXAocFmzPFqc1NNBaAiKa1DI7y78Xv2AQSRUZD";
 	static boolean connected = false, logedin = false;
 	static String userID = "";
 	public static void main(String[] args) {
-		//String defaultServer = "ws://ec2-54-250-240-202.ap-northeast-1.compute.amazonaws.com";
-		String defaultServer = "ws://127.0.0.1";
-		int defaultPort = 7777;
+		String defaultServer = "ws://ec2-54-250-240-202.ap-northeast-1.compute.amazonaws.com";
+		//String defaultServer = "ws://127.0.0.1";
+		int defaultPort = 7778;
 		
 		if (args.length > 0) {
 			defaultServer = args[0];
@@ -53,14 +54,19 @@ public class Example {
 				}
 
 				@Override
-				public void Login_Callback(String UserID, boolean IsNewUser) {
-					if (IsNewUser) {
-						MongoDBConnectorClient.log("Loged in: New");
+				public void Login_Callback(boolean TokenAvailable, String UserID, boolean IsNewUser) {
+					if (TokenAvailable) {
+						if (IsNewUser) {
+							MongoDBConnectorClient.log("Loged in: New");
+						}
+						else {
+							MongoDBConnectorClient.log("Loged in: Old");
+						}
+						userID = UserID;
 					}
 					else {
-						MongoDBConnectorClient.log("Loged in: Old");
+						MongoDBConnectorClient.log("Token is expired or not available");
 					}
-					userID = UserID;
 				}
 
 				@Override
@@ -78,7 +84,7 @@ public class Example {
 				Thread.sleep(50);
 			}
 			
-			client.Login("EAACEdEose0cBALcoZATO0kBZAS4BBUhYO1rxLTU0tE09HMbPdZCZBYqqSJWtsVslDhlERuaBviAIhn20feNvHRgvIWxgEjYSaTyVLStjkonfZArlBkdWZBjfB3WTHkY0JZBeZChByY9oA3oT2MYeCdKNA1eiEHLriCRkK35VBEvjEZCOwf4PSoVZCNJQ5whmpjlGUZD");
+			client.Login(fbToken);
 			MongoDBConnectorClient.log("Login OK");
 			
 			client.waitForLogin();
@@ -86,16 +92,16 @@ public class Example {
 			
 			client.GetTopic();
 			
-//			client.GetNews("Cười", 0, 100);
+//			client.GetNews("Thế giới", 0, 15);
 //			MongoDBConnectorClient.log("Get news OK");
 			
-//			client.GetComment("58ea7285543715147ae13773");
+//			client.GetComment("58eef119a3396479e9207f21");
 //			MongoDBConnectorClient.log("Get comment OK");
-			
-//			client.AddComment("58ea7285543715147ae13773", "Bố anh hút rất nhiều thuốc, mẹ anh chửi ổng quá trời!");
+//			
+//			client.AddComment("58eef119a3396479e9207f21", "Bố anh hút rất nhiều thuốc, mẹ anh chửi ổng quá trời!");
 //			MongoDBConnectorClient.log("Add comment OK");
 //			
-//			client.GetComment("58ea7285543715147ae13773");
+//			client.GetComment("58eef119a3396479e9207f21");
 //			MongoDBConnectorClient.log("Get comment OK");
 			
 			BufferedReader sysin = new BufferedReader( new InputStreamReader( System.in ) );

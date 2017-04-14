@@ -62,6 +62,7 @@ import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
 import com.restfb.Parameter;
 import com.restfb.Version;
+import com.restfb.exception.FacebookException;
 import com.restfb.types.User;
 
 import static com.mongodb.client.model.Filters.*;
@@ -221,8 +222,20 @@ public class MongoDBConnectorServer extends WebSocketServer {
 	
 	private String Login(String Token) {
 		/* Check access token */
-		FacebookClient client = new DefaultFacebookClient(Token, Version.LATEST);
-		User me = client.fetchObject("me", User.class, Parameter.with("fields", "id,name,email,birthday"));
+		FacebookClient client = null;
+		User me = null;
+		try {
+			client = new DefaultFacebookClient(Token, Version.LATEST);
+			me = client.fetchObject("me", User.class, Parameter.with("fields", "id,name,email,birthday"));
+		}
+		catch (FacebookException e) { /* Token is not available or expired */
+			Document json = new Document();
+			json.put("TYPE", "LOGIN");
+			json.put("AVAILABLE", false); /* Inform client that Token is not available */
+			json.put("UserID", "");
+			json.put("IsNewUser", false);
+			return (json.toJson());
+		}
 		
 		/* Get data */
 		String UserID = me.getId();
@@ -243,6 +256,7 @@ public class MongoDBConnectorServer extends WebSocketServer {
 		
 		Document json = new Document();
 		json.put("TYPE", "LOGIN");
+		json.put("AVAILABLE", true);
 		json.put("UserID", UserID);
 		json.put("IsNewUser", state);
 		
