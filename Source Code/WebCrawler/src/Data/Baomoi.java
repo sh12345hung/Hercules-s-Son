@@ -24,6 +24,7 @@ public class Baomoi {
     private String _image;
     private String _description;
     public String _topic;
+    public String _topicNews;   //name of newspaper
     
     public void Execution (String url) throws IOException {
         System.setProperty("http.proxyHost", "127.0.0.1");
@@ -31,32 +32,34 @@ public class Baomoi {
         System.out.println ("*********************Báo mới*******************");
         Document doc = Jsoup.connect(url).get();
         Elements baoMoi = doc.select("div[class=header-wrap]").select("li[class=parent]");
-        for (int i = 1;  i <= 100; i++) {
             for (Element _baoMoi : baoMoi){
                 Elements temp = _baoMoi.select("ul[class=child]");
                 if(!temp.isEmpty()){
                     temp = temp.select("li").select("a");
-                        for (Element temp1 : temp) {
-                            
-                            _topic = temp1.select("a").text();
-                            System.out.println("Topic: " + _topic);
+                    _baoMoi.select("ul[class=child").remove();
+                    _topic = _baoMoi.select("li[class=parent").select("a").text();
+                    for (Element temp1 : temp) {
+                        for (int i = 1; i <= 1; i ++){
                             String _newUrl = temp1.select("a").attr("href");
                             _newUrl = _newUrl.substring(0,_newUrl.indexOf('.'));
                             _newUrl = url + _newUrl + "/trang" + i + ".epi";
-                            System.out.println(_newUrl);
+                            System.out.println("Topic: " + _topic);
+                            System.out.println("        " + _newUrl);
                             
                             hotNews(_newUrl);
                             mainNews(_newUrl);
                             System.out.println();
                         }
                         System.out.println();
+                    }
                 }else{
                     _topic = _baoMoi.text();
+                    for (int i = 1; i <= 1; i++){
                     System.out.println("Topic: " + _topic);
                     String _newUrl = _baoMoi.select("a").attr("href");
                     _newUrl = _newUrl.substring(0,_newUrl.indexOf('.'));
                     _newUrl = url + _newUrl + "/trang" + i + ".epi";
-                    System.out.println(_newUrl);
+                    System.out.println("        " +_newUrl);
                     hotNews(_newUrl);
                     mainNews_2(_newUrl);
                     System.out.println();
@@ -67,44 +70,68 @@ public class Baomoi {
     
     public void hotNews (String url) throws IOException {
     Document doc = Jsoup.connect(url).get();
-    Elements link = doc.select("div[class=main]");
+    Elements link = doc.select("div[class=main]").select("article");
+    Elements name;
     for ( Element _hotNews : link){
         _address = url + _hotNews.select("a").attr("href");
         _title = _hotNews.select("a").attr("title");
         _image = _hotNews.select("img").attr("src");
+        
+        name = _hotNews.select("p[class=meta]");
+        name.select("h2,time,span").remove();
+        _topicNews = name.select("a").text();
         System.out.println("        Address: " + _address);
         System.out.println("        Title: " + _title);
         System.out.println("        Image: " + _image);
+        System.out.println("        Address's name: " + _topicNews);
     }
     }
     
     public void mainNews (String url) throws IOException {
     Document doc = Jsoup.connect(url).get();
     Elements link = doc.select("div[class=cat-content]").select("article");
+    Elements name;
+
     for (Element _mainNews : link){
         _address = url + _mainNews.select("a").attr("href");
         _image = _mainNews.select("img").attr("src");
         _title = _mainNews.select("h2").text();
         _description = _mainNews.select("p[class=summary]").text();
+        
+        name = _mainNews.select("p[class=meta]");
+        name.select("time,span").remove();
+        _topicNews = name.select("a").text();
+
+        
+        
         System.out.println("Address: " + _address);
         System.out.println("Title: " + _title);
         System.out.println("Image: " + _image);
         System.out.println("Description: " + _description);
+        System.out.println("Address's name: " + _topicNews);
     }
     }
     
     public void mainNews_2 (String url) throws IOException {
     Document doc = Jsoup.connect(url).get();
     Elements link = doc.select("section[class=content-list]").select("article");
+    Elements name;
     for (Element _mainNews : link){
         _address = url + _mainNews.select("a").attr("href");
         _image = _mainNews.select("img").attr("src");
         _title = _mainNews.select("h2").text();
         _description = _mainNews.select("p[class=summary]").text();
+        
+        name = _mainNews.select("p[class=meta]");
+        name.select("time,span").remove();
+        _topicNews = name.select("a").text();
+
+        
         System.out.println("Address: " + _address);
         System.out.println("Title: " + _title);
         System.out.println("Image: " + _image);
         System.out.println("Description: " + _description);
+        System.out.println("Address's name: " + _topicNews);
     }
     }
     

@@ -16,7 +16,7 @@ public class vnexpress {
     private String _image;
     private String _content;
     
-    public void vnExpress(String url) throws IOException{ 
+    public void Execution(String url) throws IOException{ 
         System.setProperty("http.proxyHost", "127.0.0.1");
         System.setProperty("http.proxyPort", "8182");
         System.out.println("*********************VNExpress Crawler*****************: ");
@@ -146,6 +146,6 @@ public class vnexpress {
         System.setProperty("http.proxyHost", "127.0.0.1");
         System.setProperty("http.proxyPort", "8182");
     	vnexpress news = new vnexpress();
-        news.vnExpress("http://vnexpress.net");
+        news.Execution("http://vnexpress.net");
 	}
 }
