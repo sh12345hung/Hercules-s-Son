@@ -67,6 +67,7 @@ import com.restfb.Version;
 import com.restfb.exception.FacebookException;
 import com.restfb.types.User;
 
+import Data.Baomoi;
 import Data.vnexpress;
 
 import static com.mongodb.client.model.Filters.*;
@@ -420,6 +421,10 @@ public class MongoDBConnectorServer extends WebSocketServer {
 				/* VNExpress */
 				MongoDBConnectorServer.log("VNExpress crawler started");
 				(new vnexpress()).start();
+				
+				/* BaoMoi */
+				MongoDBConnectorServer.log("BaoMoi crawler started");
+				(new Baomoi()).start();
 			}
 		}, CRAWLER_DELAY_TIME, CRAWLER_PERIOD_TIME);
 		
@@ -427,6 +432,17 @@ public class MongoDBConnectorServer extends WebSocketServer {
 		BufferedReader sysin = new BufferedReader( new InputStreamReader( System.in ) );
 		while (true) {
 			String in = sysin.readLine();
+			
+			if (in.equals("crawl")) {
+				/* VNExpress */
+				MongoDBConnectorServer.log("VNExpress crawler started");
+				(new vnexpress()).start();
+				
+				/* BaoMoi */
+				MongoDBConnectorServer.log("BaoMoi crawler started");
+				(new Baomoi()).start();
+			}
+			
 			if(in.equals("exit")) {
 				server.stop();
 				MongoDBConnectorServer.log("Server is stop");
