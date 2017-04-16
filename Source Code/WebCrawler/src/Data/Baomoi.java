@@ -44,25 +44,27 @@ public class Baomoi {
                             _newUrl = _newUrl.substring(0,_newUrl.indexOf('.'));
                             _newUrl = url + _newUrl + "/trang" + i + ".epi";
                             System.out.println("Topic: " + _topic);
-                            System.out.println("        " + _newUrl);
                             
-                            hotNews(_newUrl);
-                            mainNews(_newUrl);
                             System.out.println();
-                        }
-                        System.out.println();
+                            hotNews(_newUrl);
+                            System.out.println();
+                            mainNews(_newUrl);  
+                        }  
                     }
                 }else{
                     _topic = _baoMoi.text();
                     for (int i = 1; i <= 1; i++){
                     System.out.println("Topic: " + _topic);
+                    
                     String _newUrl = _baoMoi.select("a").attr("href");
                     _newUrl = _newUrl.substring(0,_newUrl.indexOf('.'));
                     _newUrl = url + _newUrl + "/trang" + i + ".epi";
-                    System.out.println("        " +_newUrl);
-                    hotNews(_newUrl);
-                    mainNews_2(_newUrl);
+                    
                     System.out.println();
+                    hotNews(_newUrl);
+                    System.out.println();
+                    mainNews_2(_newUrl);
+                    
                 }
             }        
         }
@@ -78,8 +80,8 @@ public class Baomoi {
         _image = _hotNews.select("img").attr("src");
         
         name = _hotNews.select("p[class=meta]");
-        name.select("h2,time,span").remove();
-        _topicNews = name.select("a").text();
+        _topicNews = name.select("a").first().text();
+        
         System.out.println("        Address: " + _address);
         System.out.println("        Title: " + _title);
         System.out.println("        Image: " + _image);
@@ -99,8 +101,7 @@ public class Baomoi {
         _description = _mainNews.select("p[class=summary]").text();
         
         name = _mainNews.select("p[class=meta]");
-        name.select("time,span").remove();
-        _topicNews = name.select("a").text();
+        _topicNews = name.select("a").first().text();
 
         
         
@@ -122,9 +123,8 @@ public class Baomoi {
         _title = _mainNews.select("h2").text();
         _description = _mainNews.select("p[class=summary]").text();
         
-        name = _mainNews.select("p[class=meta]");
-        name.select("time,span").remove();
-        _topicNews = name.select("a").text();
+        name = _mainNews.select("header").select("p[class=meta]");;
+        _topicNews = name.select("a").first().text();
 
         
         System.out.println("Address: " + _address);
