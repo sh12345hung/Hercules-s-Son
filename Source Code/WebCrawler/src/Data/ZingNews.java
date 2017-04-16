@@ -24,7 +24,7 @@ public class ZingNews {
     public void Execution (String url) throws IOException {
         System.out.println ("*********************ZingNews*******************");
         Document doc = Jsoup.connect(url).get();
-        Elements NewsZing = doc.select("nav[class=categories] ").select("li");
+        Elements NewsZing = doc.select("nav[class=categories] ").select("ul").select("li").select("div[class=subcate]").remove().select("li");
         for (Element Zing : NewsZing){
                 Elements temp = Zing.select("ul[class=child]");
                 if(!temp.isEmpty()){
