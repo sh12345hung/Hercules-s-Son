@@ -43,6 +43,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -65,6 +67,8 @@ import com.restfb.Version;
 import com.restfb.exception.FacebookException;
 import com.restfb.types.User;
 
+import Data.vnexpress;
+
 import static com.mongodb.client.model.Filters.*;
 
 public class MongoDBConnectorServer extends WebSocketServer {
@@ -76,6 +80,8 @@ public class MongoDBConnectorServer extends WebSocketServer {
 	private static final String DATABASE_NAME = "test";
 	private static final String NEWS_COLLECTION_NAME = "News";
 	private static final String USER_COLLECTION_NAME = "User";
+	private static final int CRAWLER_PERIOD_TIME = 21600000; /* 6 hours */
+	private static final int CRAWLER_DELAY_TIME = 60000; /* 1 minute */
 	
 	/*----- Variables -----*/
 	private MongoClient     _client = null;
@@ -209,14 +215,14 @@ public class MongoDBConnectorServer extends WebSocketServer {
 		log("error " + ex.getMessage());
 	}
 	
-	private String getCurrentDateTime() {
+	public static String getCurrentDateTime() {
 		DateFormat dateFormat = new SimpleDateFormat(DATEFORMAT);
 		dateFormat.setTimeZone(TimeZone.getTimeZone(TIMEZONE));
 		Date date = new Date();
 		return dateFormat.format(date);
 	}
 	
-	private void log(String message) {
+	public static void log(String message) {
 		System.out.println(getCurrentDateTime() + ": " + message);
    }
 	
@@ -393,27 +399,42 @@ public class MongoDBConnectorServer extends WebSocketServer {
 	}
 	
 	public static void main(String[] args) throws IOException, InterruptedException {
-		String host = "localhost";
-		int port = 7777;
+		String host = "localhost"; /* Default input host */
+		int port = 7777; /* Default input port */
 		
-		if (args.length > 0) {
+		if (args.length > 0) { /* Get host and port from arguments */
 			host = args[0];
 			port = Integer.parseInt(args[1]);
 		}
 		
+		/* Start server instant */
 		MongoDBConnectorServer server = new MongoDBConnectorServer(new InetSocketAddress(host, port));
 		server.start();
+		MongoDBConnectorServer.log("Server is running on port " + server.getPort());
 		
-		server.log("Server is running on port " + server.getPort());
+		/* Set timer for crawler */
+		Timer crawler = new Timer();
+		crawler.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				/* VNExpress */
+				MongoDBConnectorServer.log("VNExpress crawler started");
+				(new vnexpress()).start();
+			}
+		}, CRAWLER_DELAY_TIME, CRAWLER_PERIOD_TIME);
 		
+		/* Commands */
 		BufferedReader sysin = new BufferedReader( new InputStreamReader( System.in ) );
 		while (true) {
 			String in = sysin.readLine();
 			if(in.equals("exit")) {
 				server.stop();
-				server.log("Server is stop");
+				MongoDBConnectorServer.log("Server is stop");
 				break;
 			}
 		}
+		
+		Thread.sleep(1000);
+		System.exit(0);
 	}
 }
