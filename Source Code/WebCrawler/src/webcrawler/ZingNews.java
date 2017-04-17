@@ -1,5 +1,5 @@
 
-package Data;
+package webcrawler;
 
 /**
  *
@@ -15,7 +15,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 public class ZingNews {
     
-	private String _address;
+    private String _address;
     private String _title;
     private String _image;
     private String _description;

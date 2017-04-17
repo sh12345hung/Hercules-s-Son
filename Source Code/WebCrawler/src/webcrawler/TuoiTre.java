@@ -3,17 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Data;
+package webcrawler;
 
+/**
+ *
+ * @author Thai
+ */
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import javax.jws.WebParam;
-import com.mongodb.BasicDBObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -114,8 +112,8 @@ public class TuoiTre {
         }
     }
   
-    public static void main (String[] args) throws IOException {
-    	TuoiTre news = new TuoiTre();
-        news.tuoiTre();
+    public void main (String[] args) throws IOException {
+    	
+        tuoiTre();
 	}
 }
