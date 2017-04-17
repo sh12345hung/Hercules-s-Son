@@ -13,14 +13,18 @@ import java.net.URL;
  */
 public class DownLoadImageTask extends AsyncTask<String, Void, Bitmap> {
     @Override
-    protected Bitmap doInBackground(String... strings) {
-        try {
-            String link = strings[0];
-            Bitmap bitmap = BitmapFactory.decodeStream((InputStream) new URL(link).getContent());
-            return bitmap;
-        } catch (Exception e) {
-            Log.e("ERROR", e.toString());
-        }
+    protected Bitmap doInBackground(String... params) {
         return null;
     }
+//    @Override
+//    protected Bitmap doInBackground(String... strings) {
+//        try {
+//            String link = strings[0];
+//            Bitmap bitmap = BitmapFactory.decodeStream((InputStream) new URL(link).getContent());
+//            return bitmap;
+//        } catch (Exception e) {
+//            Log.e("ERROR", e.toString());
+//        }
+//        return null;
+//    }
 }

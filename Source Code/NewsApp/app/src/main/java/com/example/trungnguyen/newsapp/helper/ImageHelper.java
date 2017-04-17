@@ -70,7 +70,7 @@ public class ImageHelper {
 //        return mImage;
 //    }
 
-    public Bitmap getBitmapFromUrl(String url) {
+//    public Bitmap getBitmapFromUrl(String url) {
 //        Thread thread = new Thread(new Runnable() {
 //            @Override
 //            public void run() {
@@ -104,26 +104,26 @@ public class ImageHelper {
 //
 //        Picasso.with(mContext).load(mUrl).resize(126, 126).into(mTarget);
 //
-        DownLoadImageTask task = new DownLoadImageTask();
-        task.execute(url);
-        try {
-            mImage = task.get();
-        } catch (InterruptedException e) {
-//            Log.d("HELP", e.toString());
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-//            Log.d("HELP", e.toString());
-            e.printStackTrace();
-        }
-        return mImage;
-    }
+//        DownLoadImageTask task = new DownLoadImageTask();
+//        task.execute(url);
+//        try {
+//            mImage = task.get();
+//        } catch (InterruptedException e) {
+////            Log.d("HELP", e.toString());
+//            e.printStackTrace();
+//        } catch (ExecutionException e) {
+////            Log.d("HELP", e.toString());
+//            e.printStackTrace();
+//        }
+//        return mImage;
+//    }
 
-    public Bitmap circleBitmap(Bitmap bitmap) {
-        DrawCircleImage circleImage = new DrawCircleImage(mContext);
-        if (bitmap != null)
-            return circleImage.getCroppedBitmap(bitmap, 400);
-        else return bitmap;
-    }
+//    public Bitmap circleBitmap(Bitmap bitmap) {
+//        DrawCircleImage circleImage = new DrawCircleImage(mContext);
+//        if (bitmap != null)
+//            return circleImage.getCroppedBitmap(bitmap, 400);
+//        else return bitmap;
+//    }
 
 //    public List<Bitmap> getListBitmap(ArrayList<String> stringArrayAvatar) {
 //        DownloadListImageTask task = new DownloadListImageTask();

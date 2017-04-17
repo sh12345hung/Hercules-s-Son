@@ -68,6 +68,17 @@
             android:dividerHeight="5dp"
             android:groupIndicator="@null">
         </android.support.v7.widget.RecyclerView>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_scroll_top_the_thao"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:src="@drawable/arrow_up"
+            android:layout_marginBottom="40dp"
+            android:layout_marginEnd="25dp"
+            app:backgroundTint="@color/indigo_white"
+            android:layout_marginRight="30dp" />
     </FrameLayout>
 </android.support.v4.widget.SwipeRefreshLayout>
 

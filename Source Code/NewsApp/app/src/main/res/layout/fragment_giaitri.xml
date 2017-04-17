@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/swipeToRefresh"
+    android:id="@+id/swipeToRefreshTheThao"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_list"
@@ -16,7 +16,7 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/ll_loading"
+            android:id="@+id/ll_loading_thethao"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="7dp"
@@ -53,33 +53,21 @@
         </LinearLayout>
 
         <ProgressBar
-            android:id="@+id/progressBarTheGioi"
+            android:id="@+id/progressBarTheThao"
             style="@android:style/Widget.Holo.ProgressBar.Large"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_gravity="center" />
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/expTheGioi"
-            android:scrollbars="vertical"
-            android:fadeScrollbars="true"
+            android:id="@+id/rvTheThao"
             android:layout_width="match_parent"
+            android:scrollbars="vertical"
             android:layout_height="match_parent"
+            android:divider="@color/background_list"
+            android:dividerHeight="5dp"
             android:groupIndicator="@null">
         </android.support.v7.widget.RecyclerView>
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_scroll_top"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:src="@drawable/arrow_up"
-            android:layout_marginBottom="40dp"
-            android:layout_marginEnd="25dp"
-            app:backgroundTint="@color/indigo_white"
-            android:layout_marginRight="30dp" />
-
     </FrameLayout>
-
 </android.support.v4.widget.SwipeRefreshLayout>
 

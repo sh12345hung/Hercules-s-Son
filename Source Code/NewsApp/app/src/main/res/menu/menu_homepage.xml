@@ -24,7 +24,7 @@
 
             <item
                 android:id="@+id/menuLogout"
-                android:icon="@drawable/logout"
+                android:icon="@drawable/logout_variant"
                 android:orderInCategory="101"
                 android:title="Log out"
                 android:visible="false"

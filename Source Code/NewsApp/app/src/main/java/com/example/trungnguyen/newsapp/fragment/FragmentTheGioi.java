@@ -25,6 +25,7 @@ import com.example.trungnguyen.newsapp.MainActivity;
 import com.example.trungnguyen.newsapp.OnLoadMoreDataListener;
 import com.example.trungnguyen.newsapp.R;
 import com.example.trungnguyen.newsapp.adapter.NewsAdapter;
+import com.example.trungnguyen.newsapp.helper.CalculateTimesAgo;
 import com.example.trungnguyen.newsapp.helper.CheckForNetworkState;
 import com.example.trungnguyen.newsapp.helper.SimpleDividerItemDecoration;
 import com.example.trungnguyen.newsapp.model.Comment;
@@ -56,7 +57,7 @@ public class FragmentTheGioi extends Fragment implements
     public static final String TAG = "FragmentTheGioi";
     public static final int GET_NEWS_COUNT = 15;
     private static final String COMMENT_DIALOG = "comment_dialog";
-    private ArrayList<News> mNewsList;
+//    private ArrayList<News> mNewsList;
     private LinearLayout llBackground;
     private RecyclerView mRecyclerView;
     private SwipeRefreshLayout mSwipeLayout;
@@ -72,88 +73,91 @@ public class FragmentTheGioi extends Fragment implements
     private boolean mIsLoading;
     private boolean mIsFirstTime;
 
-    Animation mAnimBottomIn;
-    Animation mAnimBottomOut;
+    private Animation mAnimBottomIn;
+    private Animation mAnimBottomOut;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView");
         View mReturnView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_thegioi, container, false);
         isLogin = getArguments().getBoolean(MainActivity.IS_LOGIN);
 //        checker = new CheckForNetworkState(getContext());
-        mNewsList = new ArrayList<News>();
+//        mNewsList = new ArrayList<News>();
         mCurrentNews = 0;
         mIsFirstTime = true;
         mIsLoading = false;
+        mClient = ((MainActivity) getActivity()).getClient();
         addControls(mReturnView);
-        try {
-            mClient = new MongoDBConnectorClient("Duy Trung") {
-                @Override
-                public void onOpen(ServerHandshake serverHandshake) {
+//        try {
+//            mClient = new MongoDBConnectorClient("Duy Trung") {
+//                @Override
+//                public void onOpen(ServerHandshake serverHandshake) {
+//
+//                }
+//
+//                @Override
+//                public void onClose(int i, String s, boolean b) {
+//
+//                }
+//
+//                @Override
+//                public void onError(Exception e) {
+//                    e.printStackTrace();
+//                }
+//
+//                @Override
+//                public void Login_Callback(boolean b) {
+//
+//                }
+//
+//                @Override
+//                public void GetNews_Callback(long l, List<String> list) {
+//                    try {
+//                        mNewsList.clear();
+//                        for (String item : list) {
+//                            try {
+//                                JSONObject itemObj = new JSONObject(item);
+//                                JSONObject idObj = itemObj.getJSONObject("_id");
+//                                String id = idObj.getString("$oid");
+//                                String title = itemObj.getString("TITLE");
+//                                String url = itemObj.getString("URL");
+//                                String imageUrl = itemObj.getString("IMAGEURL");
+//                                String commentCount = itemObj.getString("COMMENTCOUNT");
+//                                String source = itemObj.getString("SOURCE");
+//                                String time = CalculateTimesAgo.calculate(itemObj.getString("TIME"));
+////                                String time = tempTime != null ? tempTime : "Chưa xác định";
+//                                News news = new News(id, title, commentCount, url, imageUrl, source, time);
+//                                mNewsList.add(news);
+////                                Log.d(TAG, id + " " + title);
+//                            } catch (JSONException e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                        updateCurrentNewsPosition();
+////                        Log.d(TAG, "update current " + mCurrentNews + mNewsList.size());
+//                        if (mIsLoading) {
+//                            mIsLoading = false;
+//                            mAdapter.loadingfinish();
+//                            mAdapter.addMoreItems(mNewsList);
+//                        } else {
+//                            mAdapter.addNewList(mNewsList);
+//                            mProgressBar.setVisibility(View.INVISIBLE);
+////                            llBackground.setVisibility(View.INVISIBLE);
+//                        }
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+        // }
 
-                }
-
-                @Override
-                public void onClose(int i, String s, boolean b) {
-
-                }
-
-                @Override
-                public void onError(Exception e) {
-                    e.printStackTrace();
-                }
-
-                @Override
-                public void Login_Callback(boolean b) {
-
-                }
-
-                @Override
-                public void GetNews_Callback(long l, List<String> list) {
-                    try {
-                        mNewsList.clear();
-                        for (String item : list) {
-                            try {
-                                JSONObject object = new JSONObject(item);
-                                JSONObject idObj = object.getJSONObject("_id");
-                                String id = idObj.getString("$oid");
-                                String title = object.getString("TITLE");
-                                String url = object.getString("URL");
-                                String imageUrl = object.getString("IMAGEURL");
-                                String topic = object.getString("TOPIC");
-                                String commentCount = object.getString("COMMENTCOUNT");
-                                String source = object.getString("SOURCE");
-                                News news = new News(id, title, commentCount, url, topic, imageUrl, source);
-                                mNewsList.add(news);
-//                                Log.d(TAG, id + " " + title);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        updateCurrentNewsPosition();
-//                        Log.d(TAG, "update current " + mCurrentNews + mNewsList.size());
-                        if (mIsLoading) {
-                            mIsLoading = false;
-                            mAdapter.loadingfinish();
-                            mAdapter.addMoreItems(mNewsList);
-                        } else {
-                            mAdapter.addNewList(mNewsList);
-                            mProgressBar.setVisibility(View.INVISIBLE);
-                            llBackground.setVisibility(View.INVISIBLE);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void GetComment_Callback(List<String> list) {
-
-                }
-            };
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
+//                @Override
+//                public void GetComment_Callback(List<String> list) {
+//
+//                }
+//            };
+//        } catch (URISyntaxException e) {
+//            e.printStackTrace();
+//        }
 
 //        Thread thread = new Thread(new Runnable() {
 //            @Override
@@ -169,12 +173,11 @@ public class FragmentTheGioi extends Fragment implements
 //        });
 //        thread.start();
 
-        try {
-            mClient.Login();
-        } catch (InterruptedException | NotYetConnectedException e) {
-            e.printStackTrace();
-        }
-
+//        try {
+//            mClient.Login();
+//        } catch (InterruptedException | NotYetConnectedException e) {
+//            e.printStackTrace();
+//        }
         mAdapter = new NewsAdapter(getContext());
         mRecyclerView.setAdapter(mAdapter);
         mLayoutManager = new LinearLayoutManager(getActivity());
@@ -208,7 +211,6 @@ public class FragmentTheGioi extends Fragment implements
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -272,6 +274,29 @@ public class FragmentTheGioi extends Fragment implements
 //    }
 
 
+//    @Override
+//    public void setUserVisibleHint(boolean isVisibleToUser) {
+//        if(isVisibleToUser)
+//            mClient.GetNews();
+//    }
+
+    public void pushData(ArrayList<News> list) {
+//        mNewsList = list;
+        Log.d(TAG, "getData");
+        updateCurrentNewsPosition();
+//                        Log.d(TAG, "update current " + mCurrentNews + mNewsList.size());
+        if (mIsLoading) {
+            mIsLoading = false;
+            mAdapter.loadingfinish();
+            if (list.size() >= 0)
+                mAdapter.addMoreItems(list);
+        } else {
+            mAdapter.addNewList(list);
+            mProgressBar.setVisibility(View.INVISIBLE);
+//          llBackground.setVisibility(View.INVISIBLE);
+        }
+    }
+
     private void addControls(View mReturnView) {
         mSwipeLayout = (SwipeRefreshLayout) mReturnView.findViewById(R.id.swipeToRefresh);
         mSwipeLayout.setOnRefreshListener(this);
@@ -333,7 +358,7 @@ public class FragmentTheGioi extends Fragment implements
 //                    mClient.GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
 //                    updateCurrentNews();
                 } else {
-                    if (fabScrollTop.getVisibility() == View.INVISIBLE && dy < - 10 && dy != 0) {
+                    if (fabScrollTop.getVisibility() == View.INVISIBLE && dy < -10 && dy != 0) {
                         fabScrollTop.setVisibility(View.VISIBLE);
                         fabScrollTop.startAnimation(mAnimBottomIn);
                     }
@@ -413,7 +438,7 @@ public class FragmentTheGioi extends Fragment implements
 
     @Override
     public void onStart() {
-//        Log.d(TAG, "onStart");
+        Log.d(TAG, "onStart");
         super.onStart();
     }
 
@@ -422,6 +447,7 @@ public class FragmentTheGioi extends Fragment implements
 //        Log.d(TAG, "onResume " + mCurrentNews);
         super.onResume();
         if (mIsFirstTime && CheckForNetworkState.isNetworkAvailable()) {
+            Log.d(TAG, "onResume " + mCurrentNews);
             mIsFirstTime = false;
             try {
                 mClient.GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
@@ -431,15 +457,43 @@ public class FragmentTheGioi extends Fragment implements
         }
     }
 
+//    @Override
+//    public void setUserVisibleHint(boolean isVisibleToUser) {
+//        if (isVisibleToUser) {
+//            Log.d(TAG, "setUserVisibleHint");
+//            if (mIsFirstTime && CheckForNetworkState.isNetworkAvailable()) {
+//                mIsFirstTime = false;
+//                try {
+//                    Log.d(TAG, "GetNews");
+//                    mClient.GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+//    }
+
     @Override
     public void onPause() {
-//        Log.d(TAG, "onPause " + mCurrentNews);
+        Log.d(TAG, "onPause " + mCurrentNews);
         super.onPause();
     }
 
     @Override
     public void onStop() {
-//        Log.d(TAG, "onStop " + mCurrentNews);
+        Log.d(TAG, "onStop " + mCurrentNews);
         super.onStop();
+    }
+
+    @Override
+    public void onDestroyView() {
+        Log.d(TAG, "onDestroyView " + mCurrentNews);
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.d(TAG, "onDestroy " + mCurrentNews);
+        super.onDestroy();
     }
 }

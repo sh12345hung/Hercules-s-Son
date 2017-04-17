@@ -4,15 +4,11 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.Color;
 import android.graphics.ColorMatrixColorFilter;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,13 +30,10 @@ import com.example.trungnguyen.newsapp.OnLoadMoreDataListener;
 import com.example.trungnguyen.newsapp.R;
 import com.example.trungnguyen.newsapp.fragment.FragmentTheGioi;
 import com.example.trungnguyen.newsapp.helper.CheckForNetworkState;
-import com.example.trungnguyen.newsapp.helper.Help;
-import com.example.trungnguyen.newsapp.helper.ImageHelper;
 import com.example.trungnguyen.newsapp.helper.ObservableColorMatrix;
 import com.example.trungnguyen.newsapp.model.News;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Trung Nguyen on 2/27/2017.
@@ -62,7 +55,7 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Log.d("ADAPTER", "onCreateViewHolder");
+//        Log.d("ADAPTER", "onCreateViewHolder");
         switch (viewType) {
             case NOMAL_ITEM:
                 return new NewsViewHolder(LayoutInflater.from(mContext).inflate(R.layout.news_item, parent, false));
@@ -76,7 +69,7 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         int type = getItemViewType(position);
-        Log.d("ADAPTER", "onBindViewHolder " + type + " ");
+//        Log.d("ADAPTER", "onBindViewHolder " + type + " ");
         switch (type) {
             case NOMAL_ITEM:
                 bindViewHolderNormal((NewsViewHolder) holder, position);
@@ -105,6 +98,7 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         try {
             final News news = mNewsList.get(position);
 
+            holder.tvTime.setText(news.getTime());
             holder.tvSource.setText(news.getSource());
             holder.tvTitle.setText(news.getTitle());
             holder.tvComment.setText(news.getCommentCount());
@@ -267,9 +261,16 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
     @Override
     public void loadingfinish() {
+        Log.d("MainActivity", "loadingfinish");
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         if (!showLoadingMore) return;
         final int removePosition = getLoadingMoreItemPosition();
         showLoadingMore = false;
+
         try {
             mNewsList.remove(removePosition);
             notifyItemRemoved(removePosition);
@@ -301,6 +302,7 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         TextView tvSource;
         TextView tvComment;
         LinearLayout llComment;
+        TextView tvTime;
 
         NewsViewHolder(View itemView) {
             super(itemView);
@@ -309,6 +311,7 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             tvSource = (TextView) itemView.findViewById(R.id.news_item_source);
             tvComment = (TextView) itemView.findViewById(R.id.news_item_comment);
             llComment = (LinearLayout) itemView.findViewById(R.id.ll_comment);
+            tvTime = (TextView) itemView.findViewById(R.id.news_item_time);
             llComment.setOnClickListener(this);
             itemView.setOnClickListener(this);
         }

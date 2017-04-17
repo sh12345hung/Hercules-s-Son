@@ -14,19 +14,28 @@ public class News {
     public boolean hasFadedIn = false;
     private String source;
     private String commentCount;
+    private String time;
 
     public News() {
 
     }
 
-    public News(String id, String title, String commentCount, String url, String topic, String mainPicture, String source) {
+    public News(String id, String title, String commentCount, String url, String mainPicture, String source, String time) {
         this.id = id;
         this.title = title;
         this.commentCount = commentCount;
         this.url = url;
-        this.topic = topic;
         this.mainPicture = mainPicture;
         this.source = source;
+        this.time = time;
+    }
+
+    public String getTime() {
+        return this.time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public String getCommentCount() {

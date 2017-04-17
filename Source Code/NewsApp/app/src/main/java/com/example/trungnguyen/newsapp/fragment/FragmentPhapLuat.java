@@ -48,11 +48,11 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 /**
  * Created by Trung Nguyen on 2/21/2017.
  */
-public class FragmentCongNghe extends FragmentTheGioi implements
+public class FragmentPhapLuat extends FragmentTheGioi implements
         SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
     public static final String COMMENT = "comment";
     public static final String NEWS_URL = "news_url";
-    public static final String TOPIC = "Khoa học - Công nghệ";
+    public static final String TOPIC = "Pháp luật";
     public static final String CHECK_NETWORK = "check_network";
     public static final String TAG = "FragmentTheThao";
     public static final int GET_NEWS_COUNT = 15;
@@ -72,7 +72,7 @@ public class FragmentCongNghe extends FragmentTheGioi implements
     private LinearLayoutManager mLayoutManager;
     private boolean mIsLoading;
     private boolean mIsFirstTime;
-    private MainActivity mActivity;
+
     private Animation mAnimBottomIn;
     private Animation mAnimBottomOut;
 
@@ -87,9 +87,8 @@ public class FragmentCongNghe extends FragmentTheGioi implements
         mCurrentNews = 0;
         mIsFirstTime = true;
         mIsLoading = false;
-        mActivity = ((MainActivity) getActivity());
+        mClient = ((MainActivity) getActivity()).getClient();
         addControls(mReturnView);
-        mClient = mActivity.getClient();
 
 //        try {
 //            mClient = new MongoDBConnectorClient("Duy Trung") {
@@ -291,7 +290,7 @@ public class FragmentCongNghe extends FragmentTheGioi implements
         if (mIsLoading) {
             mIsLoading = false;
             mAdapter.loadingfinish();
-            if (list.size() > 0)
+            if (list.size() >= 0)
                 mAdapter.addMoreItems(list);
         } else {
             mIsFirstTime = false;
@@ -442,7 +441,7 @@ public class FragmentCongNghe extends FragmentTheGioi implements
 
     @Override
     public void onStart() {
-//        Log.d(TAG, "onStart");
+        Log.d(TAG, "onStart");
         super.onStart();
     }
 
@@ -451,6 +450,7 @@ public class FragmentCongNghe extends FragmentTheGioi implements
         if (isVisibleToUser) {
             Log.d("FragmentTheThao", "setUserVisibleHint");
             if (mIsFirstTime && CheckForNetworkState.isNetworkAvailable()) {
+//                mIsFirstTime = false;
                 try {
                     Log.d("FragmentTheThao", "GetNews");
                     mClient.GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
@@ -463,7 +463,7 @@ public class FragmentCongNghe extends FragmentTheGioi implements
 
     @Override
     public void onResume() {
-//        Log.d(TAG, "onResume " + mCurrentNews);
+        Log.d(TAG, "onResume " + mCurrentNews);
         super.onResume();
 //        if (mIsFirstTime && CheckForNetworkState.isNetworkAvailable()) {
 //            mIsFirstTime = false;
