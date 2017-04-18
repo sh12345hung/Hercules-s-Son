@@ -6,8 +6,9 @@
 package webcrawler;
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+//import java.util.List;
+//import java.util.ArrayList;
+
 
 /**
  *
@@ -16,15 +17,8 @@ import java.util.logging.Logger;
 public class WebCrawler {
         public static void main(String[] args) throws IOException{
         Baomoi bm = new Baomoi();
-        VnExpress vnE = new VnExpress();
-        try {
-            //bm.mainBM();
-            vnE.mainVNE();
-        } catch (IOException ex) {
-            Logger.getLogger(WebCrawler.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-       
-        
+        //VnExpress vnE = new VnExpress();
+        bm.mainBM();
+        //vnE.mainVNE();
     }
 }

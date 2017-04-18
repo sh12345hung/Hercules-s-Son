@@ -13,32 +13,27 @@ public class Data {
     private String _address;
     private String _title;
     private String _image;
-    private String _description;
+    private String _content;
     private String _topic;
     private String _topicNews;
     
-    public Data (String _address, String _title, String _image, String _description, String _topic, String _topicNews) {
+    public Data (String _address, String _title, String _image, String _content, String _topic, String _topicNews) {
         this._address =_address;
         this._title = _title;
         this._image = _image;
-        this._description = _description;
+        this._content = _content;
         this._topic = _topic;
         this._topicNews = _topicNews;
     }
     
-     public Data(String _address, String _title, String _image, String _description, String _topicNews) {
+     public Data(String _address, String _title, String _image, String _content, String _topicNews) {
         this._address =_address;
         this._title = _title;
         this._image = _image;
-        this._description = _description;
+        this._content = _content;
         this._topicNews = _topicNews;
     }
-    public Data(String _address, String _title, String _image, String _description){
-        this._address = _address;
-        this._title = _title;
-        this._image = _image;
-        this._description = _description;
-    }
+
     public String getAddress(){
         return _address;
     }
@@ -63,12 +58,12 @@ public class Data {
         this._image = _image;
     }
     
-    public String getDescription (){
-        return _description;
+    public String getContent (){
+        return _content;
     }
     
-    public void setDescription (String _description){
-        this._description = _description;
+    public void setContent (String _content){
+        this._content = _content;
     }
     
     public String getTopic (){

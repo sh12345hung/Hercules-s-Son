@@ -18,13 +18,13 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-public class Baomoi extends Exe {
+public class Baomoi implements Exe {
 
     private ArrayList<Data> dataList;
     private String _address;
     private String _title;
     private String _image;
-    private String _description;
+    private String _content;
     public String _topic;
     public String _topicNews;   //name of newspaper
 
@@ -73,7 +73,8 @@ public class Baomoi extends Exe {
                     }
                 }
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
+            System.out.println(e);
         }
     }
 
@@ -120,18 +121,18 @@ public class Baomoi extends Exe {
                 _address = url + _mainNews.select("a").attr("href");
                 _image = _mainNews.select("img").attr("src");
                 _title = _mainNews.select("h2").text();
-                _description = _mainNews.select("p[class=summary]").text();
+                _content = _mainNews.select("p[class=summary]").text();
 
                 name = _mainNews.select("p[class=meta]");
                 _topicNews = name.select("a").first().text();
-                Data  data = new Data(_address, _title, _image, _description, _topicNews);
+                Data  data = new Data(_address, _title, _image, _content, _topicNews);
                 dataList.add(data);
             }
             for (Data data: dataList){
                 System.out.println("        Address: " + data.getAddress());
                 System.out.println("        Title: " + data.getTitle());
                 System.out.println("        Image: " + data.getImage());
-                System.out.println("        Description: " + data.getDescription());
+                System.out.println("        Description: " + data.getContent());
                 System.out.println("        Address's name: " + data.getTopicNews());
             }
         } catch (IOException ex) {
@@ -151,19 +152,19 @@ public class Baomoi extends Exe {
                 _address = url + _mainNews.select("a").attr("href");
                 _image = _mainNews.select("img").attr("src");
                 _title = _mainNews.select("h2").text();
-                _description = _mainNews.select("p[class=summary]").text();
+                _content = _mainNews.select("p[class=summary]").text();
 
-                name = _mainNews.select("header").select("p[class=meta]");;
+                name = _mainNews.select("header").select("p[class=meta]");
                 _topicNews = name.select("a").first().text();
             
-                Data data = new Data(_address, _title, _image, _description, _topicNews);
+                Data data = new Data(_address, _title, _image, _content, _topicNews);
                 dataList.add(data);
             }
             for (Data data: dataList){
                 System.out.println("        Address: " + data.getAddress());
                 System.out.println("        Title: " + data.getTitle());
                 System.out.println("        Image: " + data.getImage());
-                System.out.println("        Description: " + data.getDescription());
+                System.out.println("        Description: " + data.getContent());
                 System.out.println("        Address's name: " + data.getTopicNews());
             }
         } catch (IOException ex) {

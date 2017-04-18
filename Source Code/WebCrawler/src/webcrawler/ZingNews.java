@@ -34,8 +34,8 @@ public class ZingNews {
                    CheckTopic(_topic);
                     String _newUrl = temp1.select("a").attr("abs:href");  	              
                     System.out.println(_newUrl);
-                    hotNews(_newUrl);
-                   mainNews(_newUrl); 
+              //      hotNews(_newUrl);
+               //     mainNews(_newUrl); 
                     System.out.println(_topic);
                     }
                 }
