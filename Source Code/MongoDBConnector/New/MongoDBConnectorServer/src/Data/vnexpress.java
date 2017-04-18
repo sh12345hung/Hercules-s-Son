@@ -12,6 +12,7 @@ import com.thaonguyen.mongodbconnector.*;
 
 public class vnexpress extends Thread {
 	private static final String DATABASE_NAME = "test";
+	private static final int DEFAULT_DATABASE_PORT = 6969;
 	
     public String LinkTitle;
     public String Title;
@@ -19,7 +20,7 @@ public class vnexpress extends Thread {
     private MongoDBConnectorForCrawler conn;
     
     public vnexpress() {
-    	conn = new MongoDBConnectorForCrawler("localhost", 27017, DATABASE_NAME);
+    	conn = new MongoDBConnectorForCrawler("localhost", DEFAULT_DATABASE_PORT, DATABASE_NAME);
     }
     
     public void close() {
