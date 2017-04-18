@@ -12,5 +12,6 @@
     <color name="black">#000</color>
     <color name="background_list">#eae6e6</color>
     <color name="indigo">#3F51B5</color>
+    <color name="indigo_white">#7986CB</color>
     <color name="indigo_trans">#CC283593</color>
 </resources>

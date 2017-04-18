@@ -53,14 +53,17 @@ public abstract class MongoDBConnectorClient extends WebSocketClient {
 	
 	public MongoDBConnectorClient() throws URISyntaxException {
 		super(new URI(DEFAULT_SERVER_URI));
+		this.connect();
 	}
 	
 	public MongoDBConnectorClient(URI serverUri, Draft draft) {
 		super(serverUri, draft);
+		this.connect();
 	}
 
 	public MongoDBConnectorClient(URI serverURI) {
 		super(serverURI);
+		this.connect();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -71,7 +74,7 @@ public abstract class MongoDBConnectorClient extends WebSocketClient {
 			JSONObject obj = (JSONObject) parser.parse(message);
 			
 			boolean isNewUser, TokenAvailable;
-			String UserID;
+			String UserID, Topic;
 			long count;
 			List<String> contain;
 			
@@ -84,9 +87,10 @@ public abstract class MongoDBConnectorClient extends WebSocketClient {
 				this.Login_Callback(TokenAvailable, UserID, isNewUser);
 				break;
 			case "GETNEWS":
+				Topic = (String) obj.get("TOPIC");
 				count = (long)obj.get("Count");
 				contain = (List<String>)obj.get("Contain");
-				this.GetNews_Callback(count, contain);
+				this.GetNews_Callback(Topic, count, contain);
 				break;
 			case "GETCOMMENT":
 				contain = (List<String>) obj.get("COMMENT");
@@ -139,7 +143,7 @@ public abstract class MongoDBConnectorClient extends WebSocketClient {
 		this.send(json.toJSONString());
 	}
 	
-	public abstract void GetNews_Callback(long count, List<String> News);
+	public abstract void GetNews_Callback(String TOPIC, long count, List<String> News);
 	
 	public void GetComment(String NewsID) {
 		JSONObject json = new JSONObject();

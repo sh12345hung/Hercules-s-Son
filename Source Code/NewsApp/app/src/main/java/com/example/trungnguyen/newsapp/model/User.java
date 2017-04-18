@@ -6,10 +6,10 @@ import java.io.Serializable;
  * Created by Trung Nguyen on 3/13/2017.
  */
 public class User implements Serializable{
-    String mAvatarUrl;
-    String mUserName;
-    String mUserEmail;
-    String mUserFbLink;
+    private String mAvatarUrl;
+    private String mUserName;
+    private String mUserEmail;
+    private String mUserFbLink;
 
     public User(String mAvatarUrl, String mUserName, String mUserEmail, String mUserFbLink) {
         this.mAvatarUrl = mAvatarUrl;

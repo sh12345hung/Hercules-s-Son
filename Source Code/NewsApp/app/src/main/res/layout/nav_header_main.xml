@@ -2,8 +2,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/nav_header_height"
-    android:background="@drawable/bg"
+    android:background="@drawable/nav_bg"
     android:gravity="center"
     android:orientation="vertical"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
+    <ImageView
+        android:src="@drawable/circle_profile"
+        android:id="@+id/img_nav_header_avatar"
+        android:layout_width="80dp"
+        android:layout_height="80dp" />
+    <TextView
+        android:id="@+id/tv_nav_header_name"
+        android:textSize="17sp"
+        android:textColor="#fff"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Đăng nhập"/>
 </LinearLayout>

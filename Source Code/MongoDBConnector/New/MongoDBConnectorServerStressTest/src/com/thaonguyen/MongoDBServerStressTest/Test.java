@@ -17,7 +17,7 @@ public class Test {
 		List<MongoDBConnectorClient> list = new ArrayList<MongoDBConnectorClient> ();
 		for (int i = 0; i < NUM_OF_USER; i++) {
 			try {
-				MongoDBConnectorClient client = new MongoDBConnectorClient(new URI("ws://127.0.0.1:7777")) {
+				MongoDBConnectorClient client = new MongoDBConnectorClient(new URI("ws://ec2-54-250-240-202.ap-northeast-1.compute.amazonaws.com:7778")) {
 
 					@Override
 					public void GetComment_Callback(List<String> arg0) {
@@ -29,12 +29,6 @@ public class Test {
 					public void GetNews_Callback(long arg0, List<String> arg1) {
 						// TODO Auto-generated method stub
 						System.out.println(++count + " : " + arg1.get(0));
-					}
-
-					@Override
-					public void Login_Callback(String arg0, boolean arg1) {
-						// TODO Auto-generated method stub
-						
 					}
 
 					@Override
@@ -54,6 +48,18 @@ public class Test {
 						// TODO Auto-generated method stub
 						System.out.println("Open");
 					}
+
+					@Override
+					public void GetTopic_Callback(List<String> arg0) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void Login_Callback(boolean arg0, String arg1, boolean arg2) {
+						// TODO Auto-generated method stub
+						
+					}
 				};
 				
 				client.connect();
@@ -65,13 +71,12 @@ public class Test {
 			}
 		}
 		
-		Thread.sleep(5000);
+		Thread.sleep(10000);
 		
-		int index;
 		for (int i = 0; i < NUM_OF_USER; i++) {
-			//index = (int)(Math.random() * NUM_OF_USER);
 			System.out.println(i);
 			list.get(i).GetNews("Thế giới");
+			Thread.sleep(500);
 		}
 	}
 

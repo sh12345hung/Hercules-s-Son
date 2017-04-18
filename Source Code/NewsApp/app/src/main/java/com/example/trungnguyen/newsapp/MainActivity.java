@@ -6,10 +6,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.GravityCompat;
@@ -26,21 +25,37 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.example.trungnguyen.newsapp.adapter.ViewPagerAdapter;
-import com.example.trungnguyen.newsapp.helper.ImageHelper;
+import com.example.trungnguyen.newsapp.fragment.FragmentCongNghe;
+import com.example.trungnguyen.newsapp.fragment.FragmentGiaiTri;
+import com.example.trungnguyen.newsapp.fragment.FragmentKinhTe;
+import com.example.trungnguyen.newsapp.fragment.FragmentPhapLuat;
+import com.example.trungnguyen.newsapp.fragment.FragmentTheGioi;
+import com.example.trungnguyen.newsapp.fragment.FragmentTheThao;
+import com.example.trungnguyen.newsapp.fragment.FragmentXeCo;
+import com.example.trungnguyen.newsapp.helper.CalculateTimesAgo;
 import com.example.trungnguyen.newsapp.helper.NetworkStateReceiver;
+import com.example.trungnguyen.newsapp.model.News;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
+import com.thaonguyen.MongoDBConnectorClient.MongoDBConnectorClient;
 
+import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
@@ -50,7 +65,8 @@ public class MainActivity extends AppCompatActivity implements
     private Toolbar toolbar;
     private TabLayout tab;
     private Button btSearch;
-//    private ImageView navAvatar;
+    private ImageView navAvatar;
+    private TextView navName;
     private ViewPager viewPager;
     private ActionBarDrawerToggle drawerToggle;
     private DrawerLayout drawerLayout;
@@ -60,6 +76,13 @@ public class MainActivity extends AppCompatActivity implements
     private boolean isUserLogin = false;
     private String loginMenuTitle;
     private String facebookPictureUrl;
+    private static int OFFSCREENS_PAGE = 7;
+    private View mHeaderView;
+    MongoDBConnectorClient mClient;
+    //    OnGetNewsCompleted mListener;
+    private ArrayList<News> mNewsList;
+    private String mTopic = null;
+    private ViewPagerAdapter mPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements
 //        Log.d(TAG, "oncreate");
         FacebookSdk.sdkInitialize(this.getApplicationContext());
         setContentView(R.layout.activity_main);
+        addControls();
         isUserLogin = getIntent().getBooleanExtra(WelcomeActivity.IS_LOGIN, false);
         if (isUserLogin) {
             AccessTokenTracker tracker = new AccessTokenTracker() {
@@ -88,6 +112,18 @@ public class MainActivity extends AppCompatActivity implements
                         JSONObject pictureObj = object.getJSONObject("picture");
                         JSONObject dataObj = pictureObj.getJSONObject("data");
                         facebookPictureUrl = dataObj.getString("url");
+
+                        Glide.with(MainActivity.this).load(facebookPictureUrl).asBitmap().centerCrop().into(new BitmapImageViewTarget(navAvatar) {
+                            @Override
+                            protected void setResource(Bitmap resource) {
+                                RoundedBitmapDrawable circularBitmapDrawable =
+                                        RoundedBitmapDrawableFactory.create(getResources(), resource);
+                                circularBitmapDrawable.setCircular(true);
+                                navAvatar.setImageDrawable(circularBitmapDrawable);
+                            }
+                        });
+                        navName.setText(facebookUserName);
+
                         invalidateOptionsMenu();
                         Log.d(TAG, facebookPictureUrl);
                     } catch (JSONException e) {
@@ -100,27 +136,145 @@ public class MainActivity extends AppCompatActivity implements
             request.setParameters(parameters);
             request.executeAsync();
         }
-        addControls();
-//        Glide.with(this).load(facebookPictureUrl).asBitmap().centerCrop().into(new BitmapImageViewTarget(navAvatar) {
-//            @Override
-//            protected void setResource(Bitmap resource) {
-//                RoundedBitmapDrawable circularBitmapDrawable =
-//                        RoundedBitmapDrawableFactory.create(getResources(), resource);
-//                circularBitmapDrawable.setCircular(true);
-//                navAvatar.setImageDrawable(circularBitmapDrawable);
-//            }
-//        });
+
+        try {
+            mClient = new MongoDBConnectorClient("Duy Trung") {
+                @Override
+                public void Login_Callback(boolean b) {
+
+                }
+
+                @Override
+                public void GetNews_Callback(long l, List<String> list) {
+                    Log.d(TAG, list.size() + "");
+                    try {
+                        mNewsList.clear();
+                        for (String item : list) {
+                            try {
+                                JSONObject itemObj = new JSONObject(item);
+                                JSONObject idObj = itemObj.getJSONObject("_id");
+                                String id = idObj.getString("$oid");
+                                String title = itemObj.getString("TITLE");
+                                String url = itemObj.getString("URL");
+                                if (mTopic == null) {
+                                    mTopic = itemObj.getString("TOPIC");
+                                }
+                                String imageUrl = itemObj.getString("IMAGEURL");
+                                String commentCount = itemObj.getString("COMMENTCOUNT");
+                                String source = itemObj.getString("SOURCE");
+                                String time = CalculateTimesAgo.calculate(itemObj.getString("TIME"));
+//                                String time = tempTime != null ? tempTime : "Chưa xác định";
+                                News news = new News(id, title, commentCount, url, imageUrl, source, time);
+                                mNewsList.add(news);
+//                                Log.d(TAG, id + " " + title);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        // TODO: 4/18/2017 : fix bug after GetNews_Callback updated
+                        // TODO: 4/18/2017 bug: list.size = 0 -> mTopic = null -> pushData method do not called -> loading more progress bar still visible
+                        // TODO: 4/18/2017 how to fix: get topic from GetNews_Callback without json data received -> mTopic != null with list.size() = 0 -> pushData() will be called -> loading progress invisible
+
+                        Fragment fragment = mPagerAdapter.getItem(viewPager.getCurrentItem());
+
+                        switch (mTopic) {
+                            case "Thể thao":
+                                mTopic = null;
+                                ((FragmentTheThao) fragment).pushData(mNewsList);
+                                break;
+                            case "Thế giới":
+                                mTopic = null;
+                                ((FragmentTheGioi) fragment).pushData(mNewsList);
+                                break;
+                            case "Khoa học - Công nghệ":
+                                mTopic = null;
+                                ((FragmentCongNghe) fragment).pushData(mNewsList);
+                                break;
+                            case "Giải trí":
+                                mTopic = null;
+                                ((FragmentGiaiTri) fragment).pushData(mNewsList);
+                                break;
+                            case "Xe cộ":
+                                mTopic = null;
+                                ((FragmentXeCo) fragment).pushData(mNewsList);
+                                break;
+                            case "Pháp luật":
+                                mTopic = null;
+                                ((FragmentPhapLuat) fragment).pushData(mNewsList);
+                                break;
+                            case "Kinh tế":
+                                mTopic = null;
+                                ((FragmentKinhTe) fragment).pushData(mNewsList);
+                                break;
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void GetComment_Callback(List<String> list) {
+
+                }
+
+                @Override
+                public void onOpen(ServerHandshake serverHandshake) {
+
+                }
+
+                @Override
+                public void onClose(int i, String s, boolean b) {
+
+                }
+
+                @Override
+                public void onError(Exception e) {
+
+                }
+            };
+        } catch (
+                URISyntaxException e)
+
+        {
+            e.printStackTrace();
+        }
+        try
+
+        {
+            mClient.Login();
+        } catch (
+                Exception e)
+
+        {
+            e.printStackTrace();
+        }
+
+        mNewsList = new ArrayList<>();
+
         setSupportActionBar(toolbar); // Because we are using AppCompat, that is support library
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        Bundle bundle = new Bundle();
-        bundle.putBoolean(IS_LOGIN, isUserLogin);
-        ViewPagerAdapter pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), bundle);
-        viewPager.setAdapter(pagerAdapter);
+
+        getSupportActionBar().
+
+                setDisplayShowTitleEnabled(false);
+
+//        Bundle bundle = new Bundle();
+//        bundle.putBoolean(IS_LOGIN, isUserLogin);
+        mPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(mPagerAdapter);
         tab.setupWithViewPager(viewPager);
-        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close); //drawerToggle phải đc khỏi tạo sau toolbar
+        drawerToggle = new
+
+                ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close); //drawerToggle phải đc khỏi tạo sau toolbar
         drawerLayout.addDrawerListener(drawerToggle);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        getSupportActionBar().
+
+                setHomeButtonEnabled(true);
+
+        getSupportActionBar().
+
+                setDisplayHomeAsUpEnabled(true);
         drawerToggle.syncState();
     }
 
@@ -172,6 +326,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d(TAG, "On Resume");
         IntentFilter filter = new IntentFilter(NetworkStateReceiver.UPDATE_UI_FROM_BROADCAST_CHANGE_NETWORK_STATE);
         registerReceiver(updateUIReceiver, filter);
     }
@@ -182,17 +337,30 @@ public class MainActivity extends AppCompatActivity implements
         unregisterReceiver(updateUIReceiver);
     }
 
+    public MongoDBConnectorClient getClient() {
+        return mClient;
+    }
+
+//    public interface OnGetNewsCompleted {
+//        void onGetNewsCompleted(List<String> list);
+//    }
+
     private void addControls() {
         toolbar = (Toolbar) findViewById(R.id.toolbarID);
         tab = (TabLayout) findViewById(R.id.tab);
-//        navAvatar = (ImageView) findViewById(R.id.nav_avatar);
+
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
+        mHeaderView = navigationView.getHeaderView(0);
+        navAvatar = (ImageView) mHeaderView.findViewById(R.id.img_nav_header_avatar);
+        navName = (TextView) mHeaderView.findViewById(R.id.tv_nav_header_name);
         navigationView.setNavigationItemSelectedListener(MainActivity.this);
         btSearch = (Button) findViewById(R.id.btSearch);
         btSearch.setOnClickListener(this);
         loginMenuTitle = getString(R.string.log_in);
+        viewPager.setOffscreenPageLimit(OFFSCREENS_PAGE);
+        Log.d(TAG, "AddControls");
     }
 
     private void changeViewPagerPage(final int position) {
@@ -273,12 +441,9 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem item;
-        ImageHelper imageHelper = new ImageHelper(this);
         if (isUserLogin) {
             item = menu.findItem(R.id.menuLogin);
             item.setTitle(facebookUserName);
-            item.setIcon(new BitmapDrawable(imageHelper.
-                    circleBitmap(imageHelper.getBitmapFromUrl(facebookPictureUrl))));
             item = menu.findItem(R.id.menuLogout);
             item.setVisible(true);
         } else {
