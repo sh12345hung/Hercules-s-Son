@@ -1,10 +1,11 @@
 package com.thaonguyen.mongodbconnector;
 
 public class Example {
-
+	private static final int DEFAULT_DATABASE_PORT = 6969;
+	
 	public static void main(String[] args) {
 		/* Open connection do database */
-		MongoDBConnectorForCrawler conn = new MongoDBConnectorForCrawler("localhost", 27017, "test");
+		MongoDBConnectorForCrawler conn = new MongoDBConnectorForCrawler("localhost", DEFAULT_DATABASE_PORT, "test");
 		
 		/* Add news 1 */
 		String URL = "http://baotintuc.vn/the-gioi/nguoi-anh-ram-ro-bieu-tinh-phan-doi-chia-tay-chau-au-20170325224125086.htm";

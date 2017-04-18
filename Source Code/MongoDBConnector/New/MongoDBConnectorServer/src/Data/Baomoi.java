@@ -18,6 +18,8 @@ import org.jsoup.select.Elements;
 import com.thaonguyen.mongodbconnector.MongoDBConnectorForCrawler;
 public class Baomoi extends Thread {
 	private static final String DATABASE_NAME = "test";
+	private static final int DEFAULT_DATABASE_PORT = 6969;
+	
     private MongoDBConnectorForCrawler conn;
     private String _address;
     private String _title;
@@ -27,7 +29,7 @@ public class Baomoi extends Thread {
     public String _topicNews;   //name of newspaper
     
     public Baomoi() {
-    	conn = new MongoDBConnectorForCrawler("localhost", 27017, DATABASE_NAME);
+    	conn = new MongoDBConnectorForCrawler("localhost", DEFAULT_DATABASE_PORT, DATABASE_NAME);
     }
     
     public void close() {

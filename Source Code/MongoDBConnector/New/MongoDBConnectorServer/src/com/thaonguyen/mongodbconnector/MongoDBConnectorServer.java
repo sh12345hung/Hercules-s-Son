@@ -75,7 +75,7 @@ import static com.mongodb.client.model.Filters.*;
 public class MongoDBConnectorServer extends WebSocketServer {
 	/*----- Constants -----*/
 	private static final String DEFAULT_DATABASE_HOST_NAME = "localhost";
-	private static final int DEFAULT_DATABASE_PORT = 27017;
+	private static final int DEFAULT_DATABASE_PORT = 6969;
 	private static final String TIMEZONE = "VST"; /* Asia/Ho_Chi_Minh */
 	private static final String DATEFORMAT = "yyyy/MM/dd HH:mm:ss";
 	private static final String DATABASE_NAME = "test";
