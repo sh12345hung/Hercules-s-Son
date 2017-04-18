@@ -6,7 +6,7 @@
 	<classpathentry kind="lib" path="/home/thaonguyen/Downloads/java_websocket.jar"/>
 	<classpathentry kind="lib" path="/home/thaonguyen/Downloads/json-simple-1.1.1.jar"/>
 	<classpathentry kind="lib" path="/home/thaonguyen/Downloads/restfb-2.0.0-rc.2/restfb-2.0.0-rc.2.jar"/>
-	<classpathentry kind="lib" path="/home/thaonguyen/Desktop/MongoDBConnectorForCrawler.jar"/>
 	<classpathentry kind="lib" path="/home/thaonguyen/Downloads/jsoup-1.9.2.jar"/>
+	<classpathentry kind="lib" path="/home/thaonguyen/Desktop/MongoDBConnectorForCrawler.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -302,6 +302,7 @@ public class MongoDBConnectorServer extends WebSocketServer {
 		json.put("TYPE", "GETNEWS");
 		json.put("Count", count);
 		json.put("Contain", contain);
+		json.put("TOPIC", Topic);
 		
 		log("Get news with Topic " + Topic);
 		return json.toJson();
@@ -325,6 +326,7 @@ public class MongoDBConnectorServer extends WebSocketServer {
 		json.put("TYPE", "GETNEWS");
 		json.put("Count", count);
 		json.put("Contain", contain);
+		json.put("TOPIC", Topic);
 		
 		log("Get news with Topic " + Topic);
 		return json.toJson();

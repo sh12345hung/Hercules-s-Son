@@ -8,7 +8,8 @@ import java.util.List;
 import org.java_websocket.handshake.ServerHandshake;
 
 public class Example {
-	private static final String fbToken = "EAACEdEose0cBAEQtMIkfSYPGtYZB3worWRA4cilhrbzs2LA6xj5R83UojqCqjKSP3hEJn5no0wOssc9o9yGXnh9gKG787MBZAqyFOZC7M6lysEZA0v0xZAdIaZB1KE2puaSOs1kp9fmdjcagNE2jVjJ5hmvT3PXAocFmzPFqc1NNBaAiKa1DI7y78Xv2AQSRUZD";
+	//private static final String fbToken = "EAACEdEose0cBAEQtMIkfSYPGtYZB3worWRA4cilhrbzs2LA6xj5R83UojqCqjKSP3hEJn5no0wOssc9o9yGXnh9gKG787MBZAqyFOZC7M6lysEZA0v0xZAdIaZB1KE2puaSOs1kp9fmdjcagNE2jVjJ5hmvT3PXAocFmzPFqc1NNBaAiKa1DI7y78Xv2AQSRUZD";
+	private static final String fbToken = "EAACEdEose0cBAOK4gpFdMK5ZCuNIj29Y1wIY0EZBIoG75CkpF4IUtMPzO7FzLGgwC1TovPoWA61joeqPF0Su22RZA0aPNoUiiHOYb1aqwcOjfv6OYpUfCnRnKmN38zJkrpNaOAgV79w09e7q6N7Dr9pxypncRKSAPkcilByzYji1soCIpVkyCPf8IgbrnQZD";
 	static boolean connected = false, logedin = false;
 	static String userID = "";
 	public static void main(String[] args) {
@@ -41,8 +42,8 @@ public class Example {
 				}
 
 				@Override
-				public void GetNews_Callback(long count, List<String> News) {
-					MongoDBConnectorClient.log("Count: " + count);
+				public void GetNews_Callback(String Topic, long count, List<String> News) {
+					MongoDBConnectorClient.log("Topic: " + Topic + " ,Count: " + count);
 					for (int i = 0; i < News.size(); i++) {
 						MongoDBConnectorClient.log("News: " + News.get(i));
 					}
@@ -77,23 +78,20 @@ public class Example {
 				}
 			};
 			
-			client.connect();
-			MongoDBConnectorClient.log("Conencted OK");
-			
 			while (!connected) {
 				Thread.sleep(50);
 			}
 			
-			client.Login(fbToken);
-			MongoDBConnectorClient.log("Login OK");
+			//client.Login(fbToken);
+			//MongoDBConnectorClient.log("Login OK");
 			
-			client.waitForLogin();
-			client.set_userID(userID);
+			//client.waitForLogin();
+			//client.set_userID(userID);
 			
-			client.GetTopic();
+//			client.GetTopic();
 			
-//			client.GetNews("Thế giới", 0, 15);
-//			MongoDBConnectorClient.log("Get news OK");
+			client.GetNews("Thế giới", 0, 15);
+			MongoDBConnectorClient.log("Get news OK");
 			
 //			client.GetComment("58eef119a3396479e9207f21");
 //			MongoDBConnectorClient.log("Get comment OK");
