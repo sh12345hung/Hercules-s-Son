@@ -12,12 +12,12 @@ import java.util.concurrent.ExecutionException;
  * Created by Trung Nguyen on 3/12/2017.
  */
 public class ImageHelper {
-    private Context mContext;
-    private static Bitmap mImage;
+//    private Context mContext;
+//    private static Bitmap mImage;
 //    List<Bitmap> list;
 
     public ImageHelper(Context context) {
-        mContext = context;
+//        mContext = context;
     }
 
 //    public Bitmap getBitmapFromUrl(String url, LoadSuccess loadSuccess) {

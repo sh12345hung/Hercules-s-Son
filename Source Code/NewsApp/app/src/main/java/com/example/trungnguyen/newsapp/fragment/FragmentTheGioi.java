@@ -57,7 +57,7 @@ public class FragmentTheGioi extends Fragment implements
     public static final String TAG = "FragmentTheGioi";
     public static final int GET_NEWS_COUNT = 15;
     private static final String COMMENT_DIALOG = "comment_dialog";
-//    private ArrayList<News> mNewsList;
+    //    private ArrayList<News> mNewsList;
     private LinearLayout llBackground;
     private RecyclerView mRecyclerView;
     private SwipeRefreshLayout mSwipeLayout;
@@ -68,11 +68,9 @@ public class FragmentTheGioi extends Fragment implements
     private MongoDBConnectorClient mClient;
     private int mCurrentNews;
     private RecyclerView.OnScrollListener mLoadingMore;
-    boolean isLogin = false;
     private LinearLayoutManager mLayoutManager;
     private boolean mIsLoading;
     private boolean mIsFirstTime;
-
     private Animation mAnimBottomIn;
     private Animation mAnimBottomOut;
 
@@ -240,7 +238,7 @@ public class FragmentTheGioi extends Fragment implements
                 CommentDialog dialogFragment = new CommentDialog();
                 Bundle bundle = new Bundle();
                 bundle.putParcelableArrayList(COMMENT, (ArrayList<? extends Parcelable>) comments);
-                bundle.putBoolean(MainActivity.IS_LOGIN, isLogin);
+                bundle.putBoolean(MainActivity.IS_LOGIN, MainActivity.getLoginStatus());
                 dialogFragment.setArguments(bundle);
                 if (CheckForNetworkState.isNetworkAvailable())
                     dialogFragment.show(getActivity().getSupportFragmentManager(), COMMENT_DIALOG);

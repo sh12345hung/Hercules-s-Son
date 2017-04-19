@@ -2,19 +2,16 @@ package com.example.trungnguyen.newsapp;
 
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -22,9 +19,7 @@ import android.widget.TextView;
 import com.example.trungnguyen.newsapp.adapter.CommentAdapter;
 import com.example.trungnguyen.newsapp.fragment.FragmentTheGioi;
 import com.example.trungnguyen.newsapp.model.Comment;
-import com.example.trungnguyen.newsapp.model.User;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

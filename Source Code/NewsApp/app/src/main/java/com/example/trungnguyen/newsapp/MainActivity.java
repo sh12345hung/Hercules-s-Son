@@ -52,7 +52,6 @@ import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements
     private NavigationView navigationView;
     private AccessToken mAccessToken;
     private String facebookUserName;
-    private boolean isUserLogin = false;
+    private static boolean isUserLogin = false;
     private String loginMenuTitle;
     private String facebookPictureUrl;
     private static int OFFSCREENS_PAGE = 7;
@@ -142,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements
                 }
 
                 @Override
-                public void GetNews_Callback(String titleTopic, long l, List<String> list) {
+                public void GetNews_Callback(String topic, long l, List<String> list) {
                     try {
                         mNewsList.clear();
                         for (String item : list) {
@@ -171,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements
 
                         Fragment fragment = mPagerAdapter.getItem(viewPager.getCurrentItem());
 
-                        switch (titleTopic) {
+                        switch (topic) {
                             case "Thể thao":
                                 ((FragmentTheThao) fragment).pushData(mNewsList);
                                 break;
@@ -211,15 +210,13 @@ public class MainActivity extends AppCompatActivity implements
 
                 @Override
                 public void onOpen(ServerHandshake serverHandshake) {
-                    if (isUserLogin) {
-                        try {
-                            if (mAccessToken != null) {
-                                Log.d(TAG, "TOKEN " + mAccessToken.toString());
-                                mClient.Login(mAccessToken.toString());
-                            }
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
+                    try {
+                        if (isUserLogin) {
+                            String sendingToken = (mAccessToken != null) ? mAccessToken.getToken() : null;
+                            mClient.Login(sendingToken);
                         }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
                 }
 
@@ -317,6 +314,10 @@ public class MainActivity extends AppCompatActivity implements
         Log.d(TAG, "On Resume");
         IntentFilter filter = new IntentFilter(NetworkStateReceiver.UPDATE_UI_FROM_BROADCAST_CHANGE_NETWORK_STATE);
         registerReceiver(updateUIReceiver, filter);
+    }
+
+    public static boolean getLoginStatus() {
+        return isUserLogin;
     }
 
     @Override

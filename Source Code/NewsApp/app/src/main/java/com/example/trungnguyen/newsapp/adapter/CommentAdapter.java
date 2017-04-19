@@ -39,7 +39,7 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
     private ArrayList<String> avatars;
     private ArrayList<String> names;
     private ArrayList<String> contents;
-    private boolean isLogin = false;
+//    private boolean isLogin = false;
 
     public CommentAdapter(Context context, int resource, List<Comment> objects) {
         super(context, resource, objects);
