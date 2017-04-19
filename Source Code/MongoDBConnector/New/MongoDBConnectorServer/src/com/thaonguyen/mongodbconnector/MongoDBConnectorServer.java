@@ -75,28 +75,31 @@ public class MongoDBConnectorServer extends WebSocketServer {
 	class MessageProcessThread extends Thread {
 		WebSocket _conn = null;
 		String _message = "";
-		
+
 		public MessageProcessThread(WebSocket conn, String message) {
 			super();
 			this._conn = conn;
 			this._message = message;
 		}
-		
+
 		@Override
 		public void run() {
 			try {
 				/* Parse message to JSON Object */
 				JSONParser parser = new JSONParser();
 				JSONObject obj = (JSONObject) parser.parse(_message);
-				String UserID, Topic, NewsID, Comment, Token;
+				String UserID, Topic, NewsID, Comment, Token, Keyword;
 				long Count, Start;
-				switch ((String)obj.get("TYPE")) { /* Get TYPE in JSON Object to identify type of message */
+				switch ((String) obj
+						.get("TYPE")) { /*
+										 * Get TYPE in JSON Object to identify
+										 * type of message
+										 */
 				case "LOGIN":
 					Token = (String) obj.get("Token");
 					if (Token != null) {
 						_conn.send(Login(Token));
-					}
-					else {
+					} else {
 						CloseConnection(_conn);
 					}
 					break;
@@ -104,8 +107,7 @@ public class MongoDBConnectorServer extends WebSocketServer {
 					UserID = (String) obj.get("UserID");
 					if (UserID != null) {
 						Logout(_conn, UserID);
-					}
-					else {
+					} else {
 						CloseConnection(_conn);
 					}
 					break;
@@ -113,8 +115,7 @@ public class MongoDBConnectorServer extends WebSocketServer {
 					Topic = (String) obj.get("Topic");
 					if (Topic != null) {
 						_conn.send(GetNews(Topic));
-					}
-					else {
+					} else {
 						CloseConnection(_conn);
 					}
 					break;
@@ -124,8 +125,17 @@ public class MongoDBConnectorServer extends WebSocketServer {
 					Start = (long) obj.get("Start");
 					if (Topic != null) {
 						_conn.send(GetNews(Topic, Start, Count));
+					} else {
+						CloseConnection(_conn);
 					}
-					else {
+					break;
+				case "SEARCH":
+					Keyword = (String) obj.get("KEYWORD");
+					Count = (long) obj.get("Count");
+					Start = (long) obj.get("Start");
+					if (Keyword != null) {
+						_conn.send(Search(Keyword, Start, Count));
+					} else {
 						CloseConnection(_conn);
 					}
 					break;
@@ -133,8 +143,7 @@ public class MongoDBConnectorServer extends WebSocketServer {
 					NewsID = (String) obj.get("NewsID");
 					if (NewsID != null) {
 						_conn.send(GetComments(NewsID));
-					}
-					else {
+					} else {
 						CloseConnection(_conn);
 					}
 					break;
@@ -144,8 +153,7 @@ public class MongoDBConnectorServer extends WebSocketServer {
 					Comment = (String) obj.get("Comment");
 					if ((UserID != null) && (NewsID != null) && (Comment != null)) {
 						AddComments(UserID, NewsID, Comment);
-					}
-					else {
+					} else {
 						CloseConnection(_conn);
 					}
 					break;
@@ -154,8 +162,7 @@ public class MongoDBConnectorServer extends WebSocketServer {
 					NewsID = (String) obj.get("NewsID");
 					if ((UserID != null) && (NewsID != null)) {
 						Read(UserID, NewsID);
-					}
-					else {
+					} else {
 						CloseConnection(_conn);
 					}
 					break;
@@ -164,15 +171,17 @@ public class MongoDBConnectorServer extends WebSocketServer {
 					break;
 				default:
 					CloseConnection(_conn);
-					break;	
+					break;
 				}
-			}
-			catch (Exception e) { /* Close connection if message has wrong format */
+			} catch (Exception e) { /*
+									 * Close connection if message has wrong
+									 * format
+									 */
 				CloseConnection(_conn);
 			}
 		}
 	}
-	
+
 	/*----- Constants -----*/
 	private static final String DEFAULT_DATABASE_HOST_NAME = "localhost";
 	private static final int DEFAULT_DATABASE_PORT = 27017;
@@ -183,17 +192,17 @@ public class MongoDBConnectorServer extends WebSocketServer {
 	private static final String USER_COLLECTION_NAME = "User";
 	private static final int CRAWLER_PERIOD_TIME = 21600000; /* 6 hours */
 	private static final int CRAWLER_DELAY_TIME = 60000; /* 1 minute */
-	
+
 	/*----- Variables -----*/
-	private MongoClient     _client = null;
-	private MongoDatabase   _db = null;
+	private MongoClient _client = null;
+	private MongoDatabase _db = null;
 	private MongoCollection<Document> _news = null, _user = null;
 	private static List<News> newsList = new ArrayList<News>();
-	
+
 	/*----- Constructors -----*/
 	public MongoDBConnectorServer(int port) {
 		super(new InetSocketAddress(port)); /* Listening on port */
-		
+
 		/* Initialize connection to database */
 		_client = new MongoClient(DEFAULT_DATABASE_HOST_NAME, DEFAULT_DATABASE_PORT);
 		_db = _client.getDatabase(DATABASE_NAME);
@@ -203,7 +212,7 @@ public class MongoDBConnectorServer extends WebSocketServer {
 
 	public MongoDBConnectorServer(InetSocketAddress address) {
 		super(address); /* Listening */
-		
+
 		/* Initialize connection to database */
 		_client = new MongoClient(DEFAULT_DATABASE_HOST_NAME, DEFAULT_DATABASE_PORT);
 		_db = _client.getDatabase(DATABASE_NAME);
@@ -216,33 +225,33 @@ public class MongoDBConnectorServer extends WebSocketServer {
 	public final void onOpen(WebSocket conn, ClientHandshake handshake) {
 		log("New connection from " + conn.getRemoteSocketAddress());
 	}
-	
+
 	@Override
 	public final void onClose(WebSocket conn, int code, String reason, boolean remote) {
 		log("Connection from " + conn.getRemoteSocketAddress() + " is closed");
 	}
-	
+
 	@Override
 	public final void onMessage(WebSocket conn, String message) {
 		(new MessageProcessThread(conn, message)).start();
 	}
-	
+
 	@Override
 	public final void onError(WebSocket conn, Exception ex) {
 		log("error " + ex.getMessage());
 	}
-	
+
 	public static String getCurrentDateTime() {
 		DateFormat dateFormat = new SimpleDateFormat(DATEFORMAT);
 		dateFormat.setTimeZone(TimeZone.getTimeZone(TIMEZONE));
 		Date date = new Date();
 		return dateFormat.format(date);
 	}
-	
+
 	public static void log(String message) {
 		System.out.println(getCurrentDateTime() + ": " + message);
-   }
-	
+	}
+
 	private String Login(String Token) {
 		/* Check access token */
 		FacebookClient client = null;
@@ -250,22 +259,23 @@ public class MongoDBConnectorServer extends WebSocketServer {
 		try {
 			client = new DefaultFacebookClient(Token, Version.LATEST);
 			me = client.fetchObject("me", User.class, Parameter.with("fields", "id,name,email,birthday"));
-		}
-		catch (FacebookException e) { /* Token is not available or expired */
+		} catch (FacebookException e) { /* Token is not available or expired */
 			Document json = new Document();
 			json.put("TYPE", "LOGIN");
-			json.put("AVAILABLE", false); /* Inform client that Token is not available */
+			json.put("AVAILABLE",
+					false); /* Inform client that Token is not available */
 			json.put("UserID", "");
 			json.put("IsNewUser", false);
 			return (json.toJson());
 		}
-		
+
 		/* Get data */
 		String UserID = me.getId();
 		String UserName = me.getName();
-		
+
 		/* Find UserID in database */
-		long count = _user.count(eq("UserID", UserID)); /* Check if UserID existed in database */
+		long count = _user.count(
+				eq("UserID", UserID)); /* Check if UserID existed in database */
 		boolean state = (count == 0);
 		if (state) {
 			/* Insert new UserID to database */
@@ -273,37 +283,36 @@ public class MongoDBConnectorServer extends WebSocketServer {
 			user.append("Name", me.getName());
 			user.append("Birthday", me.getBirthday());
 			user.append("Email", me.getEmail());
-			
+
 			_user.insertOne(user);
 		}
-		
+
 		Document json = new Document();
 		json.put("TYPE", "LOGIN");
 		json.put("AVAILABLE", true);
 		json.put("UserID", UserID);
 		json.put("IsNewUser", state);
-		
-		log(UserName + " loged in with " + (state?"new":"old") + " UserID " + UserID);
-		
+
+		log(UserName + " loged in with " + (state ? "new" : "old") + " UserID " + UserID);
+
 		return json.toJson();
 	}
-	
+
 	private void Logout(WebSocket conn, String UserID) throws Exception {
 		if (_user.count(eq("UserID", UserID)) == 0) {
 			throw (new Exception("UserID is not available"));
-		}
-		else {
+		} else {
 			conn.close(1002);
 		}
-		
+
 		/* Add history */
 		log("Loged out with UserID " + UserID);
 	}
-	
+
 	private String GetNews(String Topic) {
 		/* Query to database */
 		FindIterable<Document> doc = _news.find(eq("TOPIC", Topic)).sort(new Document("TIME", -1));
-		
+
 		/* Get information */
 		List<String> contain = new ArrayList<String>();
 		int count = 0;
@@ -319,15 +328,16 @@ public class MongoDBConnectorServer extends WebSocketServer {
 		json.put("Count", count);
 		json.put("Contain", contain);
 		json.put("TOPIC", Topic);
-		
+
 		log("Get news with Topic " + Topic);
 		return json.toJson();
 	}
-	
+
 	private String GetNews(String Topic, long Start, long Count) {
 		/* Query to database */
-		FindIterable<Document> doc = _news.find(eq("TOPIC", Topic)).sort(new Document("TIME", -1)).skip((int)Start).limit((int)Count).projection(Projections.exclude("COMMENT"));
-		
+		FindIterable<Document> doc = _news.find(eq("TOPIC", Topic)).sort(new Document("TIME", -1)).skip((int) Start)
+				.limit((int) Count).projection(Projections.exclude("COMMENT", "FULLTITLE"));
+
 		/* Get information */
 		List<String> contain = new ArrayList<String>();
 		int count = 0;
@@ -343,35 +353,60 @@ public class MongoDBConnectorServer extends WebSocketServer {
 		json.put("Count", count);
 		json.put("Contain", contain);
 		json.put("TOPIC", Topic);
-		
+
 		log("Get news with Topic " + Topic);
 		return json.toJson();
 	}
-	
+
+	private String Search(String Keyword, long Start, long Count) {
+		/* Query to the database */
+		String pattern = ".*" + Keyword + ".*";
+		FindIterable<Document> docs = _news.find(regex("FULLTITLE", pattern, "i")).skip((int) Start).limit((int) Count)
+				.projection(Projections.exclude("COMMENT", "FULLTITLE"));
+
+		/* Get information */
+		List<String> contain = new ArrayList<String>();
+		for (Document doc : docs) {
+			contain.add(doc.toJson());
+		}
+
+		/* Generate JSON string */
+		Document json = new Document();
+		json.put("TYPE", "SEARCH");
+		json.put("Keyword", Keyword);
+		json.put("Contain", contain);
+		log("Search news with keyword " + Keyword);
+		return json.toJson();
+	}
+
 	private String GetComments(String NewsID) throws Exception {
 		try {
 			/* Query to database */
-			FindIterable<Document> doc = _news.find(eq("_id", new ObjectId(NewsID))).projection(Projections.include("COMMENT.Name", "COMMENT.Comment"));
+			FindIterable<Document> doc = _news.find(eq("_id", new ObjectId(NewsID)))
+					.projection(Projections.include("COMMENT.Name", "COMMENT.Comment"));
 			Document json;
-			
+
 			/* Check if NewsID is exists */
 			if (doc.first() != null) {
 				json = doc.first();
 				json.put("TYPE", "GETCOMMENT");
-				
+
 				log("Get comment with NewsID " + NewsID);
-				
+
 				return json.toJson();
+			} else {
+				throw (new Exception(
+						"News id is not available")); /*
+														 * Throw an exception to
+														 * close the connection
+														 * if NewsID not exists
+														 */
 			}
-			else {
-				throw (new Exception("News id is not available")); /* Throw an exception to close the connection if NewsID not exists */
-			}
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			throw (new Exception(e.getMessage()));
 		}
 	}
-	
+
 	private void AddComments(String UserID, String NewsID, String Comment) throws Exception {
 		/* Find user name */
 		Document user = _user.find(eq("UserID", UserID)).first();
@@ -379,63 +414,64 @@ public class MongoDBConnectorServer extends WebSocketServer {
 			throw (new Exception("User is NOT EXIST"));
 		}
 		String name = user.getString("Name");
-		
+
 		/* Add comment */
 		Document findQuery = new Document("_id", new ObjectId(NewsID));
-		Document item = new Document("COMMENT", new Document("UserID", UserID).append("Name", name).append("Comment", Comment));
+		Document item = new Document("COMMENT",
+				new Document("UserID", UserID).append("Name", name).append("Comment", Comment));
 		Document updateQuery = new Document("$push", item);
 		_news.updateOne(findQuery, updateQuery);
-		
+
 		/* Increase count */
 		item = new Document("COMMENTCOUNT", 1);
 		updateQuery = new Document("$inc", item);
 		_news.updateOne(findQuery, updateQuery);
 		log("Add comment with UserID " + UserID + " NewsID " + NewsID + " Comment " + Comment);
 	}
-	
+
 	private void Read(String UserID, String NewsID) {
 		/* Not implement yet */
 		log("Read with UserID " + UserID + " NewsID " + NewsID);
 	}
-	
+
 	private String GetTopic() {
 		Document json = new Document("TYPE", "GETTOPIC");
-		
+
 		/* Querry to database */
 		DistinctIterable<String> result = _news.distinct("TOPIC", String.class);
 		List<String> list = new ArrayList<String>();
-		for (String str:result) {
+		for (String str : result) {
 			list.add(str);
 		}
-		
+
 		json.put("Contain", list);
 		return json.toJson();
 	}
-	
+
 	private void CloseConnection(WebSocket conn) {
 		log("Wrong format from" + conn.getRemoteSocketAddress());
 		conn.close(1002, "TYPE is not available.");
 	}
-	
+
 	public static void main(String[] args) throws IOException, InterruptedException {
 		String host = "localhost"; /* Default input host */
 		int port = 7777; /* Default input port */
-		
+
 		/* Add news */
 		newsList.add(new Baomoi());
 		newsList.add(new VNExpress());
 		newsList.add(new ZingNews());
-		
+
 		if (args.length > 0) { /* Get host and port from arguments */
 			host = args[0];
 			port = Integer.parseInt(args[1]);
 		}
-		
+
 		/* Start server instant */
 		MongoDBConnectorServer server = new MongoDBConnectorServer(new InetSocketAddress(host, port));
 		server.start();
 		MongoDBConnectorServer.log("Server is running on port " + server.getPort());
-		
+
 		/* Set timer for crawler */
 		Timer crawlerTimer = new Timer();
 		crawlerTimer.schedule(new TimerTask() {
@@ -444,28 +480,28 @@ public class MongoDBConnectorServer extends WebSocketServer {
 				crawl_news();
 			}
 		}, CRAWLER_DELAY_TIME, CRAWLER_PERIOD_TIME);
-		
+
 		/* Commands */
-		BufferedReader sysin = new BufferedReader( new InputStreamReader( System.in ) );
+		BufferedReader sysin = new BufferedReader(new InputStreamReader(System.in));
 		while (true) {
 			String in = sysin.readLine();
-			
+
 			if (in.equals("crawl")) {
 				crawl_news();
 			}
-			
-			if(in.equals("exit")) {
+
+			if (in.equals("exit")) {
 				server.stop();
 				MongoDBConnectorServer.log("Server is stop");
 				break;
 			}
 		}
-		
-		crawlerTimer.cancel();
+
+		 crawlerTimer.cancel();
 		Thread.sleep(1000);
 		System.exit(0);
 	}
-	
+
 	private static void crawl_news() {
 		new Thread() {
 			@Override
