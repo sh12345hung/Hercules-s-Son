@@ -57,7 +57,7 @@ public class FragmentPhapLuat extends FragmentTheGioi implements
     public static final String TAG = "FragmentTheThao";
     public static final int GET_NEWS_COUNT = 15;
     private static final String COMMENT_DIALOG = "comment_dialog";
-//    private ArrayList<News> mNewsList;
+    //    private ArrayList<News> mNewsList;
     private LinearLayout llBackground;
     private RecyclerView mRecyclerView;
     private SwipeRefreshLayout mSwipeLayout;
@@ -289,12 +289,14 @@ public class FragmentPhapLuat extends FragmentTheGioi implements
         if (mIsLoading) {
             mIsLoading = false;
             mAdapter.loadingfinish();
-            if (list.size() >= 0)
+            if (list.size() >= 0) {
                 mAdapter.addMoreItems(list);
+                mAdapter.notifyItemRangeChanged(0, mCurrentNews - 1);
+            }
         } else {
             mIsFirstTime = false;
             mAdapter.addNewList(list);
-            mProgressBar.setVisibility(View.INVISIBLE);
+//            mProgressBar.setVisibility(View.INVISIBLE);
 //          llBackground.setVisibility(View.INVISIBLE);
         }
     }
@@ -446,12 +448,16 @@ public class FragmentPhapLuat extends FragmentTheGioi implements
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
+
+
         if (isVisibleToUser) {
             Log.d("FragmentTheThao", "setUserVisibleHint");
             if (mIsFirstTime && CheckForNetworkState.isNetworkAvailable()) {
+                mProgressBar.setVisibility(View.INVISIBLE);
 //                mIsFirstTime = false;
                 try {
-                    Log.d("FragmentTheThao", "GetNews");
+//                    Thread.sleep(300);
+//                    Log.d("FragmentTheThao", "GetNews");
                     mClient.GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
                 } catch (Exception e) {
                     e.printStackTrace();

@@ -133,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements
             request.setParameters(parameters);
             request.executeAsync();
         }
+        Log.d("TESTING", "onCreate - main");
         try {
             mClient = new MongoDBConnectorClient() {
                 @Override

@@ -290,12 +290,14 @@ public class FragmentCongNghe extends FragmentTheGioi implements
         if (mIsLoading) {
             mIsLoading = false;
             mAdapter.loadingfinish();
-            if (list.size() > 0)
+            if (list.size() >= 0) {
                 mAdapter.addMoreItems(list);
+                mAdapter.notifyItemRangeChanged(0, mCurrentNews - 1);
+            }
         } else {
             mIsFirstTime = false;
             mAdapter.addNewList(list);
-            mProgressBar.setVisibility(View.INVISIBLE);
+//            mProgressBar.setVisibility(View.INVISIBLE);
 //          llBackground.setVisibility(View.INVISIBLE);
         }
     }
@@ -447,11 +449,14 @@ public class FragmentCongNghe extends FragmentTheGioi implements
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
+
         if (isVisibleToUser) {
             Log.d("FragmentTheThao", "setUserVisibleHint");
             if (mIsFirstTime && CheckForNetworkState.isNetworkAvailable()) {
+                mProgressBar.setVisibility(View.INVISIBLE);
                 try {
-                    Log.d("FragmentTheThao", "GetNews");
+//                    Thread.sleep(300);
+//                    Log.d("FragmentTheThao", "GetNews");
                     mClient.GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
                 } catch (Exception e) {
                     e.printStackTrace();

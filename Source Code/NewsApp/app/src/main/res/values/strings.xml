@@ -1,10 +1,8 @@
 <resources>
-    <string name="app_name">News App</string>
+    <string name="app_name">News Reader</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
     <string name="tim_tin_tuc">Tìm kiếm tin tức...</string>
     <string name="facebook_app_id">261074514343564</string>
-    <string name="title">UAV mang lựu đạn của IS bị bắn hạ</string>
-    <string name="des">Một chiếc UAV gắn lựu đạn của phiến quân Nhà nước Hồi giáo tự xưng (IS) đã bị quân đội Iraq bắn hạ gần Mosul.</string>
     <string name="log_in">Log in</string>
 </resources>

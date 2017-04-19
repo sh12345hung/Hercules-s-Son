@@ -289,12 +289,14 @@ public class FragmentTheThao extends FragmentTheGioi implements
         if (mIsLoading) {
             mIsLoading = false;
             mAdapter.loadingfinish();
-            if (list.size() >= 0)
+            if (list.size() >= 0) {
                 mAdapter.addMoreItems(list);
+                mAdapter.notifyItemRangeChanged(0, mCurrentNews - 1);
+            }
         } else {
             mIsFirstTime = false;
             mAdapter.addNewList(list);
-            mProgressBar.setVisibility(View.INVISIBLE);
+//            mProgressBar.setVisibility(View.INVISIBLE);
 //          llBackground.setVisibility(View.INVISIBLE);
         }
     }
@@ -446,12 +448,18 @@ public class FragmentTheThao extends FragmentTheGioi implements
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
+
+//        Log.d(TAG, "GetNews");
+
+
+
         if (isVisibleToUser) {
-            Log.d("FragmentTheThao", "setUserVisibleHint");
+//            Log.d(TAG, "setUserVisibleHint");
             if (mIsFirstTime && CheckForNetworkState.isNetworkAvailable()) {
 //                mIsFirstTime = false;
+                mProgressBar.setVisibility(View.INVISIBLE);
                 try {
-                    Log.d("FragmentTheThao", "GetNews");
+//                    Thread.sleep(300);
                     mClient.GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
                 } catch (Exception e) {
                     e.printStackTrace();

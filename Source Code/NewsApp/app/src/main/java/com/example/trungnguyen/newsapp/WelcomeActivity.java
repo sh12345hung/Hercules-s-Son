@@ -56,6 +56,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         callbackManager = CallbackManager.Factory.create();
 
         accessToken = AccessToken.getCurrentAccessToken();
+
         loginButton.setReadPermissions(Arrays.asList("public_profile", "email"));
 
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
@@ -74,7 +75,8 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onError(FacebookException error) {
                 Toast.makeText(WelcomeActivity.this, "Thiết bị chưa được kết nối Internet", Toast.LENGTH_SHORT).show();
-                Log.d("TEST", "LOI ROI: ");
+                //Log.d("TEST", "LOI ROI: " + error.toString());
+                error.printStackTrace();
             }
         });
 

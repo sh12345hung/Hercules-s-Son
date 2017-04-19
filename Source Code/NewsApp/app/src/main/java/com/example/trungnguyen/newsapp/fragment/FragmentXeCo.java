@@ -283,18 +283,20 @@ public class FragmentXeCo extends FragmentTheGioi implements
 
     public void pushData(ArrayList<News> list) {
 //        mNewsList = list;
-        Log.d(TAG, "getData");
+//        Log.d(TAG, "getData");
         updateCurrentNewsPosition();
 //                        Log.d(TAG, "update current " + mCurrentNews + mNewsList.size());
         if (mIsLoading) {
             mIsLoading = false;
             mAdapter.loadingfinish();
-            if (list.size() >= 0)
+            if (list.size() >= 0) {
                 mAdapter.addMoreItems(list);
+                mAdapter.notifyItemRangeChanged(0, mCurrentNews - 1);
+            }
         } else {
             mIsFirstTime = false;
             mAdapter.addNewList(list);
-            mProgressBar.setVisibility(View.INVISIBLE);
+//            mProgressBar.setVisibility(View.INVISIBLE);
 //          llBackground.setVisibility(View.INVISIBLE);
         }
     }
@@ -445,11 +447,15 @@ public class FragmentXeCo extends FragmentTheGioi implements
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
+
+
         if (isVisibleToUser) {
 //            Log.d("FragmentTheThao", "setUserVisibleHint");
             if (mIsFirstTime && CheckForNetworkState.isNetworkAvailable()) {
 //                mIsFirstTime = false;
+                mProgressBar.setVisibility(View.INVISIBLE);
                 try {
+//                    Thread.sleep(300);
 //                    Log.d("FragmentTheThao", "GetNews");
                     mClient.GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
                 } catch (Exception e) {

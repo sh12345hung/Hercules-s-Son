@@ -286,11 +286,14 @@ public class FragmentTheGioi extends Fragment implements
         if (mIsLoading) {
             mIsLoading = false;
             mAdapter.loadingfinish();
-            if (list.size() >= 0)
+            if (list.size() >= 0) {
                 mAdapter.addMoreItems(list);
+                mAdapter.notifyItemRangeChanged(0, mCurrentNews - 1);
+            }
         } else {
+            mIsFirstTime = false;
             mAdapter.addNewList(list);
-            mProgressBar.setVisibility(View.INVISIBLE);
+//            mProgressBar.setVisibility(View.INVISIBLE);
 //          llBackground.setVisibility(View.INVISIBLE);
         }
     }
@@ -445,7 +448,7 @@ public class FragmentTheGioi extends Fragment implements
     }
 
 
-    // // TODO: interface is used, dot not delete
+    // TODO: interface is used, dot not delete
     public interface LoadingMore {
         void loadingStart();
 
@@ -460,25 +463,33 @@ public class FragmentTheGioi extends Fragment implements
 
     @Override
     public void onResume() {
-//        Log.d(TAG, "onResume " + mCurrentNews);
         super.onResume();
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+//        Log.d("TESTING", "onResume - the gioi" + mCurrentNews);
+
+
         if (mIsFirstTime && CheckForNetworkState.isNetworkAvailable()) {
-            Log.d(TAG, "onResume " + mCurrentNews);
-            mIsFirstTime = false;
+            mProgressBar.setVisibility(View.INVISIBLE);
+//            Log.d("TESTING", "onResume " + mCurrentNews);
             try {
+//                Thread.sleep(300);
                 mClient.GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+        super.onViewCreated(view, savedInstanceState);
     }
 
-//    @Override
+    //    @Override
 //    public void setUserVisibleHint(boolean isVisibleToUser) {
 //        if (isVisibleToUser) {
 //            Log.d(TAG, "setUserVisibleHint");
 //            if (mIsFirstTime && CheckForNetworkState.isNetworkAvailable()) {
-//                mIsFirstTime = false;
+////                mIsFirstTime = false;
 //                try {
 //                    Log.d(TAG, "GetNews");
 //                    mClient.GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
