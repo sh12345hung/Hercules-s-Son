@@ -80,8 +80,8 @@ public class FragmentTheGioi extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView");
-        View mReturnView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_thegioi, container, false);
-        isLogin = getArguments().getBoolean(MainActivity.IS_LOGIN);
+        View mReturnView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_thethao, container, false);
+//        isLogin = getArguments().getBoolean(MainActivity.IS_LOGIN);
 //        checker = new CheckForNetworkState(getContext());
 //        mNewsList = new ArrayList<News>();
         mCurrentNews = 0;
@@ -298,19 +298,37 @@ public class FragmentTheGioi extends Fragment implements
     }
 
     private void addControls(View mReturnView) {
-        mSwipeLayout = (SwipeRefreshLayout) mReturnView.findViewById(R.id.swipeToRefresh);
+//        mSwipeLayout = (SwipeRefreshLayout) mReturnView.findViewById(R.id.swipeToRefresh);
+//        mSwipeLayout.setOnRefreshListener(this);
+//        mSwipeLayout.setColorSchemeColors(Color.BLUE);
+//        mProgressBar = (ProgressBar) mReturnView.findViewById(R.id.progressBarTheGioi);
+//        fabScrollTop = (FloatingActionButton) mReturnView.findViewById(R.id.fab_scroll_top);
+//        fabScrollTop.setVisibility(View.INVISIBLE);
+//        fabScrollTop.setOnClickListener(this);
+//        mRecyclerView = (RecyclerView) mReturnView.findViewById(R.id.expTheGioi);
+////        mRecyclerView.setOnGroupClickListener(this);
+//        intialListener();
+////        appBarLayout = (AppBarLayout) mReturnView.findViewById(R.id.appBar);
+//
+//        llBackground = (LinearLayout) mReturnView.findViewById(R.id.ll_loading);
+
+
+//        mAnimBottomIn = AnimationUtils.loadAnimation(getActivity(), R.anim.bottom_in);
+//        mAnimBottomOut = AnimationUtils.loadAnimation(getActivity(), R.anim.bottom_out);
+
+        mSwipeLayout = (SwipeRefreshLayout) mReturnView.findViewById(R.id.swipeToRefreshTheThao);
         mSwipeLayout.setOnRefreshListener(this);
         mSwipeLayout.setColorSchemeColors(Color.BLUE);
-        mProgressBar = (ProgressBar) mReturnView.findViewById(R.id.progressBarTheGioi);
-        fabScrollTop = (FloatingActionButton) mReturnView.findViewById(R.id.fab_scroll_top);
+        mProgressBar = (ProgressBar) mReturnView.findViewById(R.id.progressBarTheThao);
+        fabScrollTop = (FloatingActionButton) mReturnView.findViewById(R.id.fab_scroll_top_the_thao);
         fabScrollTop.setVisibility(View.INVISIBLE);
         fabScrollTop.setOnClickListener(this);
-        mRecyclerView = (RecyclerView) mReturnView.findViewById(R.id.expTheGioi);
+        mRecyclerView = (RecyclerView) mReturnView.findViewById(R.id.rvTheThao);
 //        mRecyclerView.setOnGroupClickListener(this);
         intialListener();
 //        appBarLayout = (AppBarLayout) mReturnView.findViewById(R.id.appBar);
 
-        llBackground = (LinearLayout) mReturnView.findViewById(R.id.ll_loading);
+        llBackground = (LinearLayout) mReturnView.findViewById(R.id.ll_loading_thethao);
 
 
         mAnimBottomIn = AnimationUtils.loadAnimation(getActivity(), R.anim.bottom_in);
@@ -423,7 +441,7 @@ public class FragmentTheGioi extends Fragment implements
 
     @Override
     public void onClick(View view) {
-        if (view.getId() == R.id.fab_scroll_top) {
+        if (view.getId() == R.id.fab_scroll_top_the_thao) {
             mRecyclerView.smoothScrollToPosition(0); // jump to top of recycler view
         }
     }

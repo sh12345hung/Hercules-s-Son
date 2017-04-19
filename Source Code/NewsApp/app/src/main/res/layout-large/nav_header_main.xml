@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/nav_header_height"
+    android:layout_height="240dp"
     android:background="@drawable/nav_bg"
     android:gravity="center"
     android:orientation="vertical"
@@ -9,15 +9,15 @@
 
     <ImageView
         android:id="@+id/img_nav_header_avatar"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:src="@drawable/circle_profile" />
 
     <TextView
         android:id="@+id/tv_nav_header_name"
-        android:textSize="17sp"
+        android:textSize="19sp"
         android:textColor="#fff"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Đăng nhập"/>

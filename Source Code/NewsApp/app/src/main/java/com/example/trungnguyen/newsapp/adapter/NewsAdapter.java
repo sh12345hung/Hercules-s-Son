@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.ColorMatrixColorFilter;
 import android.os.Build;
+import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -102,47 +103,47 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             holder.tvSource.setText(news.getSource());
             holder.tvTitle.setText(news.getTitle());
             holder.tvComment.setText(news.getCommentCount());
-            // TODO: set text for comment count
+//             TODO: set text for comment count
 
             Glide.with(mContext)
                     .load(news.getMainPicture())
-                    .listener(new RequestListener<String, GlideDrawable>() {
-                        @Override
-                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                            return false;
-                        }
+//                    .listener(new RequestListener<String, GlideDrawable>() {
+//                        @Override
+//                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+//                            return false;
+//                        }
+//
+//                        @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+//                        @Override
+//                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+//                            if (!news.hasFadedIn) {
+//                                holder.imageView.setHasTransientState(true);
+//                                final ObservableColorMatrix cm = new ObservableColorMatrix();
+//                                final ObjectAnimator animator = ObjectAnimator.ofFloat(cm, ObservableColorMatrix.SATURATION, 0f, 1f);
+//                                animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+//                                    @Override
+//                                    public void onAnimationUpdate(ValueAnimator valueAnimator) {
+//                                        holder.imageView.setColorFilter(new ColorMatrixColorFilter(cm));
+//                                    }
+//                                });
+//                                animator.setDuration(2000L);
+//                                animator.setInterpolator(new AccelerateInterpolator());
+//                                animator.addListener(new AnimatorListenerAdapter() {
+//                                    @Override
+//                                    public void onAnimationEnd(Animator animation) {
+//                                        super.onAnimationEnd(animation);
+//                                        holder.imageView.clearColorFilter();
+//                                        holder.imageView.setHasTransientState(false);
+//                                        animator.start();
+//                                        news.hasFadedIn = true;
+//
+//                                    }
+//                                });
+//                            }
 
-                        @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-                        @Override
-                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                            if (!news.hasFadedIn) {
-                                holder.imageView.setHasTransientState(true);
-                                final ObservableColorMatrix cm = new ObservableColorMatrix();
-                                final ObjectAnimator animator = ObjectAnimator.ofFloat(cm, ObservableColorMatrix.SATURATION, 0f, 1f);
-                                animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                                    @Override
-                                    public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                                        holder.imageView.setColorFilter(new ColorMatrixColorFilter(cm));
-                                    }
-                                });
-                                animator.setDuration(2000L);
-                                animator.setInterpolator(new AccelerateInterpolator());
-                                animator.addListener(new AnimatorListenerAdapter() {
-                                    @Override
-                                    public void onAnimationEnd(Animator animation) {
-                                        super.onAnimationEnd(animation);
-                                        holder.imageView.clearColorFilter();
-                                        holder.imageView.setHasTransientState(false);
-                                        animator.start();
-                                        news.hasFadedIn = true;
-
-                                    }
-                                });
-                            }
-
-                            return false;
-                        }
-                    }).diskCacheStrategy(DiskCacheStrategy.SOURCE)
+//                            return false;
+//                        }
+                    /*})*/.diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .fitCenter()
                     .centerCrop()
                     .into(holder.imageView);
@@ -175,7 +176,7 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
     public void addMoreItems(ArrayList<News> list) {
         try {
-            Log.d("ADAP", "addItems");
+//            Log.d("ADAP", "addItems");
             mNewsList.addAll(list);
             notifyDataSetChanged();
 //            mListener.oneRefreshCompleted();
@@ -261,12 +262,14 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
     @Override
     public void loadingfinish() {
-        Log.d("MainActivity", "loadingfinish");
+//        Log.d("MainActivity", "loadingfinish");
+
         try {
-            Thread.sleep(500);
+            Thread.sleep(300);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
         if (!showLoadingMore) return;
         final int removePosition = getLoadingMoreItemPosition();
         showLoadingMore = false;
@@ -277,6 +280,7 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         //add items one by one
         //When you've added the items call the setLoaded()
 //        notifyItemRemoved(pos);

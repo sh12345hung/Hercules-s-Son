@@ -26,7 +26,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
@@ -81,7 +80,6 @@ public class MainActivity extends AppCompatActivity implements
     MongoDBConnectorClient mClient;
     //    OnGetNewsCompleted mListener;
     private ArrayList<News> mNewsList;
-    private String mTopic = null;
     private ViewPagerAdapter mPagerAdapter;
 
     @Override
@@ -125,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements
                         navName.setText(facebookUserName);
 
                         invalidateOptionsMenu();
-                        Log.d(TAG, facebookPictureUrl);
+//                        Log.d(TAG, facebookPictureUrl);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -136,17 +134,15 @@ public class MainActivity extends AppCompatActivity implements
             request.setParameters(parameters);
             request.executeAsync();
         }
-
         try {
-            mClient = new MongoDBConnectorClient("Duy Trung") {
+            mClient = new MongoDBConnectorClient() {
                 @Override
-                public void Login_Callback(boolean b) {
+                public void Login_Callback(boolean b, String s, boolean b1) {
 
                 }
 
                 @Override
-                public void GetNews_Callback(long l, List<String> list) {
-                    Log.d(TAG, list.size() + "");
+                public void GetNews_Callback(String titleTopic, long l, List<String> list) {
                     try {
                         mNewsList.clear();
                         for (String item : list) {
@@ -156,14 +152,11 @@ public class MainActivity extends AppCompatActivity implements
                                 String id = idObj.getString("$oid");
                                 String title = itemObj.getString("TITLE");
                                 String url = itemObj.getString("URL");
-                                if (mTopic == null) {
-                                    mTopic = itemObj.getString("TOPIC");
-                                }
                                 String imageUrl = itemObj.getString("IMAGEURL");
                                 String commentCount = itemObj.getString("COMMENTCOUNT");
                                 String source = itemObj.getString("SOURCE");
                                 String time = CalculateTimesAgo.calculate(itemObj.getString("TIME"));
-//                                String time = tempTime != null ? tempTime : "Chưa xác định";
+//                                String time = tempTime != null ? tempTime : "Chua xác d?nh";
                                 News news = new News(id, title, commentCount, url, imageUrl, source, time);
                                 mNewsList.add(news);
 //                                Log.d(TAG, id + " " + title);
@@ -178,33 +171,26 @@ public class MainActivity extends AppCompatActivity implements
 
                         Fragment fragment = mPagerAdapter.getItem(viewPager.getCurrentItem());
 
-                        switch (mTopic) {
+                        switch (titleTopic) {
                             case "Thể thao":
-                                mTopic = null;
                                 ((FragmentTheThao) fragment).pushData(mNewsList);
                                 break;
                             case "Thế giới":
-                                mTopic = null;
                                 ((FragmentTheGioi) fragment).pushData(mNewsList);
                                 break;
                             case "Khoa học - Công nghệ":
-                                mTopic = null;
                                 ((FragmentCongNghe) fragment).pushData(mNewsList);
                                 break;
                             case "Giải trí":
-                                mTopic = null;
                                 ((FragmentGiaiTri) fragment).pushData(mNewsList);
                                 break;
                             case "Xe cộ":
-                                mTopic = null;
                                 ((FragmentXeCo) fragment).pushData(mNewsList);
                                 break;
                             case "Pháp luật":
-                                mTopic = null;
                                 ((FragmentPhapLuat) fragment).pushData(mNewsList);
                                 break;
                             case "Kinh tế":
-                                mTopic = null;
                                 ((FragmentKinhTe) fragment).pushData(mNewsList);
                                 break;
                         }
@@ -219,8 +205,22 @@ public class MainActivity extends AppCompatActivity implements
                 }
 
                 @Override
-                public void onOpen(ServerHandshake serverHandshake) {
+                public void GetTopic_Callback(List<String> list) {
 
+                }
+
+                @Override
+                public void onOpen(ServerHandshake serverHandshake) {
+                    if (isUserLogin) {
+                        try {
+                            if (mAccessToken != null) {
+                                Log.d(TAG, "TOKEN " + mAccessToken.toString());
+                                mClient.Login(mAccessToken.toString());
+                            }
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
 
                 @Override
@@ -233,22 +233,10 @@ public class MainActivity extends AppCompatActivity implements
 
                 }
             };
-        } catch (
-                URISyntaxException e)
-
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        try
 
-        {
-            mClient.Login();
-        } catch (
-                Exception e)
-
-        {
-            e.printStackTrace();
-        }
 
         mNewsList = new ArrayList<>();
 
@@ -360,7 +348,7 @@ public class MainActivity extends AppCompatActivity implements
         btSearch.setOnClickListener(this);
         loginMenuTitle = getString(R.string.log_in);
         viewPager.setOffscreenPageLimit(OFFSCREENS_PAGE);
-        Log.d(TAG, "AddControls");
+//        Log.d(TAG, "AddControls");
     }
 
     private void changeViewPagerPage(final int position) {

@@ -55,8 +55,8 @@
         <ProgressBar
             android:id="@+id/progressBarTheThao"
             style="@android:style/Widget.Holo.ProgressBar.Large"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center" />
 
         <android.support.v7.widget.RecyclerView
@@ -75,8 +75,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:src="@drawable/arrow_up"
-            android:layout_marginBottom="40dp"
-            android:layout_marginEnd="25dp"
+            android:layout_marginBottom="@dimen/fab_margin_bottom"
+            android:layout_marginEnd="@dimen/fab_margin_end"
             app:backgroundTint="@color/indigo_white"
             android:layout_marginRight="30dp" />
     </FrameLayout>

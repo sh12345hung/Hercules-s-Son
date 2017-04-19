@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
-    android:paddingBottom="7dp"
-    android:paddingTop="7dp"
-    android:paddingLeft="7dp"
-    android:paddingRight="7dp"
+    android:padding="4dp"
     android:background="@color/backgroundSearch"
     android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/news_item_img"
-        android:layout_width="170dp"
-        android:layout_height="170dp"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
         android:background="@color/colorGrey"/>
 
     <LinearLayout
@@ -23,29 +20,30 @@
         android:orientation="vertical">
         <TextView
             android:textColor="#000"
-            android:textSize="26sp"
+            android:textSize="25sp"
             android:text="Công Vinh lên tiếng trước tin đồn 'săn' Berbatov, Kiatisak chỉ trích liên đoàn bóng đá Thái Lan"
             android:id="@+id/news_item_des"
             android:layout_width="match_parent"
-            android:layout_height="130dp" />
+            android:layout_height="125dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:orientation="horizontal"
-            android:layout_gravity="center"
+            android:layout_gravity="center_horizontal"
             android:layout_height="wrap_content">
             <TextView
                 android:text="Báo mới"
-                android:textColor="@color/teal"
+                android:textSize="22sp"
+                android:textColor="@color/indigo"
                 android:id="@+id/news_item_source"
                 android:layout_width="match_parent"
-                android:layout_weight="1"
-                android:textSize="25sp"
+                android:layout_weight="3"
                 android:layout_height="wrap_content" />
             <LinearLayout
+                android:gravity="center_horizontal"
                 android:orientation="horizontal"
-                android:layout_gravity="center"
-                android:layout_weight="1"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <ImageView
@@ -53,11 +51,33 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent" />
                 <TextView
-                    android:textSize="25sp"
+                    android:textSize="22sp"
                     android:textColor="@color/backgroundAppBarLayout"
                     android:id="@+id/news_item_time"
                     android:layout_width="wrap_content"
                     android:text="10 minutes ago"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_comment"
+                android:orientation="horizontal"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="3"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:src="@drawable/comment_text_outline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+                <TextView
+                    android:textSize="22sp"
+                    android:textColor="@color/backgroundAppBarLayout"
+                    android:id="@+id/news_item_comment"
+                    android:layout_width="wrap_content"
+                    android:text="10"
+                    android:layout_marginBottom="0.5dp"
                     android:layout_height="wrap_content" />
             </LinearLayout>
         </LinearLayout>
