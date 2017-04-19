@@ -1,7 +1,7 @@
 package com.thaonguyen.mongodbconnector;
 
 public class Example {
-	private static final int DEFAULT_DATABASE_PORT = 6969;
+	private static final int DEFAULT_DATABASE_PORT = 27017;
 	
 	public static void main(String[] args) {
 		/* Open connection do database */

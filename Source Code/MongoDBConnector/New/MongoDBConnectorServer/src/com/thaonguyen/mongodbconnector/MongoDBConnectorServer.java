@@ -67,15 +67,14 @@ import com.restfb.Version;
 import com.restfb.exception.FacebookException;
 import com.restfb.types.User;
 
-import Data.Baomoi;
-import Data.vnexpress;
+import NewsCrawler.*;
 
 import static com.mongodb.client.model.Filters.*;
 
 public class MongoDBConnectorServer extends WebSocketServer {
 	/*----- Constants -----*/
 	private static final String DEFAULT_DATABASE_HOST_NAME = "localhost";
-	private static final int DEFAULT_DATABASE_PORT = 6969;
+	private static final int DEFAULT_DATABASE_PORT = 27017;
 	private static final String TIMEZONE = "VST"; /* Asia/Ho_Chi_Minh */
 	private static final String DATEFORMAT = "yyyy/MM/dd HH:mm:ss";
 	private static final String DATABASE_NAME = "test";
@@ -88,6 +87,7 @@ public class MongoDBConnectorServer extends WebSocketServer {
 	private MongoClient     _client = null;
 	private MongoDatabase   _db = null;
 	private MongoCollection<Document> _news = null, _user = null;
+	private static List<News> newsList = new ArrayList<News>();
 	
 	/*----- Constructors -----*/
 	public MongoDBConnectorServer(int port) {
@@ -405,6 +405,11 @@ public class MongoDBConnectorServer extends WebSocketServer {
 		String host = "localhost"; /* Default input host */
 		int port = 7777; /* Default input port */
 		
+		/* Add news */
+		newsList.add(new Baomoi());
+		newsList.add(new VNExpress());
+		newsList.add(new ZingNews());
+		
 		if (args.length > 0) { /* Get host and port from arguments */
 			host = args[0];
 			port = Integer.parseInt(args[1]);
@@ -416,17 +421,11 @@ public class MongoDBConnectorServer extends WebSocketServer {
 		MongoDBConnectorServer.log("Server is running on port " + server.getPort());
 		
 		/* Set timer for crawler */
-		Timer crawler = new Timer();
-		crawler.schedule(new TimerTask() {
+		Timer crawlerTimer = new Timer();
+		crawlerTimer.schedule(new TimerTask() {
 			@Override
 			public void run() {
-				/* VNExpress */
-				MongoDBConnectorServer.log("VNExpress crawler started");
-				(new vnexpress()).start();
-				
-				/* BaoMoi */
-				MongoDBConnectorServer.log("BaoMoi crawler started");
-				(new Baomoi()).start();
+				crawl_news();
 			}
 		}, CRAWLER_DELAY_TIME, CRAWLER_PERIOD_TIME);
 		
@@ -436,13 +435,7 @@ public class MongoDBConnectorServer extends WebSocketServer {
 			String in = sysin.readLine();
 			
 			if (in.equals("crawl")) {
-				/* VNExpress */
-				MongoDBConnectorServer.log("VNExpress crawler started");
-				(new vnexpress()).start();
-				
-				/* BaoMoi */
-				MongoDBConnectorServer.log("BaoMoi crawler started");
-				(new Baomoi()).start();
+				crawl_news();
 			}
 			
 			if(in.equals("exit")) {
@@ -452,7 +445,19 @@ public class MongoDBConnectorServer extends WebSocketServer {
 			}
 		}
 		
+		crawlerTimer.cancel();
 		Thread.sleep(1000);
 		System.exit(0);
+	}
+	
+	private static void crawl_news() {
+		new Thread() {
+			@Override
+			public void run() {
+				for (News news : newsList) {
+					news.Execution();
+				}
+			}
+		}.start();
 	}
 }
