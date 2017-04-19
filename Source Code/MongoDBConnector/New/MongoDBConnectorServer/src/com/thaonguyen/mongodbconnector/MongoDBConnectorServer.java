@@ -72,6 +72,107 @@ import NewsCrawler.*;
 import static com.mongodb.client.model.Filters.*;
 
 public class MongoDBConnectorServer extends WebSocketServer {
+	class MessageProcessThread extends Thread {
+		WebSocket _conn = null;
+		String _message = "";
+		
+		public MessageProcessThread(WebSocket conn, String message) {
+			super();
+			this._conn = conn;
+			this._message = message;
+		}
+		
+		@Override
+		public void run() {
+			try {
+				/* Parse message to JSON Object */
+				JSONParser parser = new JSONParser();
+				JSONObject obj = (JSONObject) parser.parse(_message);
+				String UserID, Topic, NewsID, Comment, Token;
+				long Count, Start;
+				switch ((String)obj.get("TYPE")) { /* Get TYPE in JSON Object to identify type of message */
+				case "LOGIN":
+					Token = (String) obj.get("Token");
+					if (Token != null) {
+						_conn.send(Login(Token));
+					}
+					else {
+						CloseConnection(_conn);
+					}
+					break;
+				case "LOGOUT":
+					UserID = (String) obj.get("UserID");
+					if (UserID != null) {
+						Logout(_conn, UserID);
+					}
+					else {
+						CloseConnection(_conn);
+					}
+					break;
+				case "GETNEWS":
+					Topic = (String) obj.get("Topic");
+					if (Topic != null) {
+						_conn.send(GetNews(Topic));
+					}
+					else {
+						CloseConnection(_conn);
+					}
+					break;
+				case "GETNEWS2":
+					Topic = (String) obj.get("Topic");
+					Count = (long) obj.get("Count");
+					Start = (long) obj.get("Start");
+					if (Topic != null) {
+						_conn.send(GetNews(Topic, Start, Count));
+					}
+					else {
+						CloseConnection(_conn);
+					}
+					break;
+				case "GETCOMMENT":
+					NewsID = (String) obj.get("NewsID");
+					if (NewsID != null) {
+						_conn.send(GetComments(NewsID));
+					}
+					else {
+						CloseConnection(_conn);
+					}
+					break;
+				case "ADDCOMMENT":
+					UserID = (String) obj.get("UserID");
+					NewsID = (String) obj.get("NewsID");
+					Comment = (String) obj.get("Comment");
+					if ((UserID != null) && (NewsID != null) && (Comment != null)) {
+						AddComments(UserID, NewsID, Comment);
+					}
+					else {
+						CloseConnection(_conn);
+					}
+					break;
+				case "READ":
+					UserID = (String) obj.get("UserID");
+					NewsID = (String) obj.get("NewsID");
+					if ((UserID != null) && (NewsID != null)) {
+						Read(UserID, NewsID);
+					}
+					else {
+						CloseConnection(_conn);
+					}
+					break;
+				case "GETTOPIC":
+					_conn.send(GetTopic());
+					break;
+				default:
+					CloseConnection(_conn);
+					break;	
+				}
+			}
+			catch (Exception e) { /* Close connection if message has wrong format */
+				CloseConnection(_conn);
+			}
+		}
+	}
+	
 	/*----- Constants -----*/
 	private static final String DEFAULT_DATABASE_HOST_NAME = "localhost";
 	private static final int DEFAULT_DATABASE_PORT = 27017;
@@ -123,92 +224,7 @@ public class MongoDBConnectorServer extends WebSocketServer {
 	
 	@Override
 	public final void onMessage(WebSocket conn, String message) {
-		try {
-			/* Parse message to JSON Object */
-			JSONParser parser = new JSONParser();
-			JSONObject obj = (JSONObject) parser.parse(message);
-			String UserID, Topic, NewsID, Comment, Token;
-			long Count, Start;
-			switch ((String)obj.get("TYPE")) { /* Get TYPE in JSON Object to identify type of message */
-			case "LOGIN":
-				Token = (String) obj.get("Token");
-				if (Token != null) {
-					conn.send(Login(Token));
-				}
-				else {
-					CloseConnection(conn);
-				}
-				break;
-			case "LOGOUT":
-				UserID = (String) obj.get("UserID");
-				if (UserID != null) {
-					Logout(conn, UserID);
-				}
-				else {
-					CloseConnection(conn);
-				}
-				break;
-			case "GETNEWS":
-				Topic = (String) obj.get("Topic");
-				if (Topic != null) {
-					conn.send(GetNews(Topic));
-				}
-				else {
-					CloseConnection(conn);
-				}
-				break;
-			case "GETNEWS2":
-				Topic = (String) obj.get("Topic");
-				Count = (long) obj.get("Count");
-				Start = (long) obj.get("Start");
-				if (Topic != null) {
-					conn.send(GetNews(Topic, Start, Count));
-				}
-				else {
-					CloseConnection(conn);
-				}
-				break;
-			case "GETCOMMENT":
-				NewsID = (String) obj.get("NewsID");
-				if (NewsID != null) {
-					conn.send(GetComments(NewsID));
-				}
-				else {
-					CloseConnection(conn);
-				}
-				break;
-			case "ADDCOMMENT":
-				UserID = (String) obj.get("UserID");
-				NewsID = (String) obj.get("NewsID");
-				Comment = (String) obj.get("Comment");
-				if ((UserID != null) && (NewsID != null) && (Comment != null)) {
-					AddComments(UserID, NewsID, Comment);
-				}
-				else {
-					CloseConnection(conn);
-				}
-				break;
-			case "READ":
-				UserID = (String) obj.get("UserID");
-				NewsID = (String) obj.get("NewsID");
-				if ((UserID != null) && (NewsID != null)) {
-					Read(UserID, NewsID);
-				}
-				else {
-					CloseConnection(conn);
-				}
-				break;
-			case "GETTOPIC":
-				conn.send(GetTopic());
-				break;
-			default:
-				CloseConnection(conn);
-				break;	
-			}
-		}
-		catch (Exception e) { /* Close connection if message has wrong format */
-			CloseConnection(conn);
-		}
+		(new MessageProcessThread(conn, message)).start();
 	}
 	
 	@Override
