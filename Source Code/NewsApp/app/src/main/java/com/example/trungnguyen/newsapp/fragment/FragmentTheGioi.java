@@ -463,6 +463,16 @@ public class FragmentTheGioi extends Fragment implements
 
     @Override
     public void onResume() {
+        if (mIsFirstTime && CheckForNetworkState.isNetworkAvailable()) {
+            mProgressBar.setVisibility(View.INVISIBLE);
+//            Log.d("TESTING", "onResume " + mCurrentNews);
+            try {
+                Thread.sleep(800);
+                mClient.GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         super.onResume();
     }
 
@@ -470,17 +480,6 @@ public class FragmentTheGioi extends Fragment implements
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 //        Log.d("TESTING", "onResume - the gioi" + mCurrentNews);
 
-
-        if (mIsFirstTime && CheckForNetworkState.isNetworkAvailable()) {
-            mProgressBar.setVisibility(View.INVISIBLE);
-//            Log.d("TESTING", "onResume " + mCurrentNews);
-            try {
-//                Thread.sleep(300);
-                mClient.GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
         super.onViewCreated(view, savedInstanceState);
     }
 
