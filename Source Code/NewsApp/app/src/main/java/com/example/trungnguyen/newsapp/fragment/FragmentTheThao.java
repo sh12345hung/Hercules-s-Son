@@ -86,7 +86,7 @@ public class FragmentTheThao extends FragmentTheGioi implements
         mCurrentNews = 0;
         mIsFirstTime = true;
         mIsLoading = false;
-        mClient = ((MainActivity) getActivity()).getClient();
+//        mClient = ((MainActivity) getActivity()).getClient();
         addControls(mReturnView);
 
 //        try {
@@ -208,7 +208,7 @@ public class FragmentTheThao extends FragmentTheGioi implements
                 try {
                     mIsLoading = true;
                     mAdapter.addProgressItem(null); // add null news item for checking progress bar visibility
-                    mClient.GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
+                    ((MainActivity) getActivity()).getClient().GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -419,7 +419,7 @@ public class FragmentTheThao extends FragmentTheGioi implements
             mAdapter.clearData();
         }
         try {
-            mClient.GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
+            ((MainActivity) getActivity()).getClient().GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -460,7 +460,7 @@ public class FragmentTheThao extends FragmentTheGioi implements
                 mProgressBar.setVisibility(View.INVISIBLE);
                 try {
 //                    Thread.sleep(300);
-                    mClient.GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
+                    ((MainActivity) getActivity()).getClient().GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -85,7 +85,7 @@ public class FragmentTheGioi extends Fragment implements
         mCurrentNews = 0;
         mIsFirstTime = true;
         mIsLoading = false;
-        mClient = ((MainActivity) getActivity()).getClient();
+//        mClient = ((MainActivity) getActivity()).getClient();
         addControls(mReturnView);
 //        try {
 //            mClient = new MongoDBConnectorClient("Duy Trung") {
@@ -205,7 +205,7 @@ public class FragmentTheGioi extends Fragment implements
                 try {
                     mIsLoading = true;
                     mAdapter.addProgressItem(null); // add null news item for checking progress bar visibility
-                    mClient.GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
+                    ((MainActivity) getActivity()).getClient().GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -434,7 +434,7 @@ public class FragmentTheGioi extends Fragment implements
             mAdapter.clearData();
         }
         try {
-            mClient.GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
+            ((MainActivity) getActivity()).getClient().GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -468,7 +468,7 @@ public class FragmentTheGioi extends Fragment implements
 //            Log.d("TESTING", "onResume " + mCurrentNews);
             try {
                 Thread.sleep(800);
-                mClient.GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
+                ((MainActivity) getActivity()).getClient().GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -1,5 +1,6 @@
 package com.example.trungnguyen.newsapp.fragment;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -88,7 +89,7 @@ public class FragmentCongNghe extends FragmentTheGioi implements
         mIsLoading = false;
         mActivity = ((MainActivity) getActivity());
         addControls(mReturnView);
-        mClient = mActivity.getClient();
+//        mClient = mActivity.getClient();
 
 //        try {
 //            mClient = new MongoDBConnectorClient("Duy Trung") {
@@ -209,7 +210,7 @@ public class FragmentCongNghe extends FragmentTheGioi implements
                 try {
                     mIsLoading = true;
                     mAdapter.addProgressItem(null); // add null news item for checking progress bar visibility
-                    mClient.GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
+                    mActivity.getClient().GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -420,7 +421,7 @@ public class FragmentCongNghe extends FragmentTheGioi implements
             mAdapter.clearData();
         }
         try {
-            mClient.GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
+            mActivity.getClient().GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -457,7 +458,7 @@ public class FragmentCongNghe extends FragmentTheGioi implements
                 try {
 //                    Thread.sleep(300);
 //                    Log.d("FragmentTheThao", "GetNews");
-                    mClient.GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
+                    mActivity.getClient().GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

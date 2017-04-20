@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -37,6 +38,7 @@ import com.example.trungnguyen.newsapp.fragment.FragmentPhapLuat;
 import com.example.trungnguyen.newsapp.fragment.FragmentTheGioi;
 import com.example.trungnguyen.newsapp.fragment.FragmentTheThao;
 import com.example.trungnguyen.newsapp.fragment.FragmentXeCo;
+import com.example.trungnguyen.newsapp.helper.AppNewsPreference;
 import com.example.trungnguyen.newsapp.helper.CalculateTimesAgo;
 import com.example.trungnguyen.newsapp.helper.NetworkStateReceiver;
 import com.example.trungnguyen.newsapp.model.News;
@@ -315,6 +317,12 @@ public class MainActivity extends AppCompatActivity implements
         Log.d(TAG, "On Resume");
         IntentFilter filter = new IntentFilter(NetworkStateReceiver.UPDATE_UI_FROM_BROADCAST_CHANGE_NETWORK_STATE);
         registerReceiver(updateUIReceiver, filter);
+        try {
+            if (mClient == null)
+                mClient = AppNewsPreference.getCurrentClient(this);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public static boolean getLoginStatus() {
@@ -325,6 +333,7 @@ public class MainActivity extends AppCompatActivity implements
     protected void onStop() {
         super.onStop();
         unregisterReceiver(updateUIReceiver);
+        AppNewsPreference.saveLastClient(this, mClient);
     }
 
     public MongoDBConnectorClient getClient() {
