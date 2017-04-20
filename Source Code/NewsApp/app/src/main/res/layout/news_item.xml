@@ -34,7 +34,7 @@
             <TextView
                 android:text="Báo mới"
                 android:textSize="11sp"
-                android:textColor="@color/indigo"
+                android:textColor="@color/deep_purple"
                 android:id="@+id/news_item_source"
                 android:layout_width="match_parent"
                 android:layout_weight="3"

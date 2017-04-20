@@ -18,7 +18,7 @@
             android:id="@+id/appBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/second_color"
+            android:background="@drawable/deep_purple"
             android:fitsSystemWindows="true">
 
             <android.support.v7.widget.Toolbar
@@ -70,7 +70,7 @@
                 android:id="@+id/tab"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:tabIndicatorColor="@color/backgroundColor"
+                app:tabIndicatorColor="@color/colorGrey"
                 app:tabMode="scrollable"
                 app:tabSelectedTextColor="@color/backgroundSearch"
                 app:tabTextAppearance="@style/capfalse"

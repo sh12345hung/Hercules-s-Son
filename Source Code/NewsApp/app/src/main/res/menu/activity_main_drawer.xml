@@ -37,25 +37,24 @@
             <!-- Divider will appear above this item -->
             <item
                 android:id="@+id/drawMenuThoiTrang"
-                android:icon="@drawable/tshirt_crew"
-                android:title="Thời trang" />
+                android:icon="@drawable/car"
+                android:title="Xe cộ" />
         </group>
 
         <group android:id="@+id/my_id_5">
             <!-- Divider will appear above this item -->
             <item
                 android:id="@+id/drawMenuSucKhoe"
-                android:icon="@drawable/heart"
-                android:title="Sức khỏe" />
+                android:icon="@drawable/scale_balance"
+                android:title="Pháp luật" />
         </group>
 
         <group android:id="@+id/my_id_6">
             <!-- Divider will appear above this item -->
             <item
                 android:id="@+id/drawMenuDuLich"
-                android:icon="@drawable/bike"
-                android:title="Du lịch" />
+                android:icon="@drawable/currency_btc"
+                android:title="Kinh tế" />
         </group>
-
     </group>
 </menu>

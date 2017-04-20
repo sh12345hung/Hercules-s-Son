@@ -18,8 +18,8 @@
             android:gravity="center"
             android:layout_height="wrap_content">
             <ProgressBar
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:id="@+id/wv_progress_bar"
                 android:layout_gravity="center"
                 style="@android:style/Widget.Holo.ProgressBar.Large"
@@ -27,8 +27,8 @@
             <TextView
                 android:id="@+id/wv_loading_text"
                 android:layout_width="wrap_content"
-                android:text="Page Loading...."
-                android:textSize="28sp"
+                android:text="Loading...."
+                android:textSize="20sp"
                 android:textColor="#000"
                 android:layout_height="wrap_content" />
         </LinearLayout>

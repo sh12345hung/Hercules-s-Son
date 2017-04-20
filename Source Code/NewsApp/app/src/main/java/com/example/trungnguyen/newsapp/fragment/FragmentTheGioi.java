@@ -319,7 +319,7 @@ public class FragmentTheGioi extends Fragment implements
 
         mSwipeLayout = (SwipeRefreshLayout) mReturnView.findViewById(R.id.swipeToRefreshTheThao);
         mSwipeLayout.setOnRefreshListener(this);
-        mSwipeLayout.setColorSchemeColors(Color.BLUE);
+        mSwipeLayout.setColorSchemeColors(Color.parseColor("#5E35B1"));
         mProgressBar = (ProgressBar) mReturnView.findViewById(R.id.progressBarTheThao);
         fabScrollTop = (FloatingActionButton) mReturnView.findViewById(R.id.fab_scroll_top_the_thao);
         fabScrollTop.setVisibility(View.INVISIBLE);

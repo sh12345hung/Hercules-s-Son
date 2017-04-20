@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimaryDark">#673AB7</color>
     <color name="colorAccent">#3F51B5</color>
     <color name="backgroundAppBarLayout">#37474F</color>
     <color name="backgroundSearch">#fff</color>
@@ -14,4 +14,8 @@
     <color name="indigo">#3F51B5</color>
     <color name="indigo_white">#7986CB</color>
     <color name="indigo_trans">#CC283593</color>
+    <color name="purple">#AB47BC</color>
+    <color name="purple_white">#BA68C8</color>
+    <color name="deep_purple">#4527A0</color>
+    <color name="deep_purple_white">#B39DDB</color>
 </resources>
