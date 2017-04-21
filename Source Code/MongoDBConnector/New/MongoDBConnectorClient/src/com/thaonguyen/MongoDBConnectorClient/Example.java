@@ -10,13 +10,13 @@ import org.java_websocket.handshake.ServerHandshake;
 public class Example {
 	// private static final String fbToken =
 	// "EAACEdEose0cBAEQtMIkfSYPGtYZB3worWRA4cilhrbzs2LA6xj5R83UojqCqjKSP3hEJn5no0wOssc9o9yGXnh9gKG787MBZAqyFOZC7M6lysEZA0v0xZAdIaZB1KE2puaSOs1kp9fmdjcagNE2jVjJ5hmvT3PXAocFmzPFqc1NNBaAiKa1DI7y78Xv2AQSRUZD";
-	private static final String fbToken = "EAACEdEose0cBAGFTtFEuid63RYbkbiIsLXbhItfP3uB9M6spcnsFETgPGGaTsm5AOvVeiA4ZBsAKG982EZAdGyMrQ9gObBCTphyysmlWu9QQknWGRfs4y34uOqxEHkSX7aOuID4HXQ9k9ZBfzqxixtsYMBZBI3ZBwgCZCydK3PNHwhNn6lgM9RKcfTMkRMELoZD";
+	private static final String fbToken = "EAACEdEose0cBAKpESZCM0bXAijpHsODNao5jKaFkDfrXPTLnJ3rCpR3KyZAEuh5PmXdmNNvaagWClAyKXZAt9QAWO8m65LeUZC2Q1ZAFFyegEi6WoGNCnO2heOJDTMzWARSKu6it21ngZAXQZCGVqoUi0E5NPRyUVHYLbdJmKko44F2QTrUB2FGU9luPfq4jUgZD";
 	static boolean connected = false, logedin = false;
 	static String userID = "";
 
 	public static void main(String[] args) {
-		 String defaultServer = "ws://ec2-54-250-240-202.ap-northeast-1.compute.amazonaws.com";
-		//String defaultServer = "ws://127.0.0.1";
+		String defaultServer = "ws://ec2-54-250-240-202.ap-northeast-1.compute.amazonaws.com";
+		// String defaultServer = "ws://127.0.0.1";
 		// String defaultServer = "ws://192.168.14.128";
 		int defaultPort = 7778;
 
@@ -84,6 +84,11 @@ public class Example {
 					for (int i = 0; i < News.size(); i++) {
 						MongoDBConnectorClient.log("News: " + News.get(i));
 					}
+				}
+
+				@Override
+				public void Notification_Callback(String message) {
+					MongoDBConnectorClient.log("Message: " + message);
 				}
 			};
 

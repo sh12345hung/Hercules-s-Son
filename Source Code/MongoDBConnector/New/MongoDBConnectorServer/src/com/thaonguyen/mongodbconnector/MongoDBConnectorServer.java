@@ -39,6 +39,7 @@ import java.net.InetSocketAddress;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -256,6 +257,7 @@ public class MongoDBConnectorServer extends WebSocketServer {
 		/* Check access token */
 		FacebookClient client = null;
 		User me = null;
+
 		try {
 			client = new DefaultFacebookClient(Token, Version.LATEST);
 			me = client.fetchObject("me", User.class, Parameter.with("fields", "id,name,email,birthday"));
@@ -453,6 +455,33 @@ public class MongoDBConnectorServer extends WebSocketServer {
 		conn.close(1002, "TYPE is not available.");
 	}
 
+	public void notifyToAll(String text) {
+		/* Generate notification json string */
+		Document doc = new Document("TYPE", "NOTIFY");
+		doc.put("Message", text);
+		String json = doc.toJson();
+
+		/* Send notification */
+		Collection<WebSocket> con = connections();
+		synchronized (con) {
+			for (WebSocket c : con) {
+				c.send(json);
+			}
+		}
+	}
+
+	private static void crawl_news() {
+		new Thread() {
+			@Override
+			public void run() {
+				for (News news : newsList) {
+					news.Execution();
+				}
+			}
+		}.start();
+	}
+
+	/********************* MAIN *********************/
 	public static void main(String[] args) throws IOException, InterruptedException {
 		String host = "localhost"; /* Default input host */
 		int port = 7777; /* Default input port */
@@ -486,8 +515,18 @@ public class MongoDBConnectorServer extends WebSocketServer {
 		while (true) {
 			String in = sysin.readLine();
 
+			if (in.equals("notify")) {
+				System.out.print("Enter the message: ");
+				String message = sysin.readLine();
+				server.notifyToAll(message);
+			}
+
 			if (in.equals("crawl")) {
 				crawl_news();
+			}
+
+			if (in.equals("status")) {
+				MongoDBConnectorServer.log("Number of connection: " + server.connections().size());
 			}
 
 			if (in.equals("exit")) {
@@ -497,19 +536,8 @@ public class MongoDBConnectorServer extends WebSocketServer {
 			}
 		}
 
-		 crawlerTimer.cancel();
+		crawlerTimer.cancel();
 		Thread.sleep(1000);
 		System.exit(0);
-	}
-
-	private static void crawl_news() {
-		new Thread() {
-			@Override
-			public void run() {
-				for (News news : newsList) {
-					news.Execution();
-				}
-			}
-		}.start();
 	}
 }

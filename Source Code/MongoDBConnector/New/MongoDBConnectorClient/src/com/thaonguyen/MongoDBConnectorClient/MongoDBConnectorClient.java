@@ -74,7 +74,7 @@ public abstract class MongoDBConnectorClient extends WebSocketClient {
 			JSONObject obj = (JSONObject) parser.parse(message);
 
 			boolean isNewUser, TokenAvailable;
-			String UserID, Topic, Keyword;
+			String UserID, Topic, Keyword, Message;
 			long count;
 			List<String> contain;
 
@@ -104,6 +104,10 @@ public abstract class MongoDBConnectorClient extends WebSocketClient {
 			case "GETTOPIC":
 				contain = (List<String>) obj.get("Contain");
 				this.GetTopic_Callback(contain);
+				break;
+			case "NOTIFY":
+				Message = (String) obj.get("Message");
+				this.Notification_Callback(Message);
 				break;
 			default:
 				break;
@@ -197,6 +201,8 @@ public abstract class MongoDBConnectorClient extends WebSocketClient {
 	}
 
 	public abstract void GetTopic_Callback(List<String> Comment);
+
+	public abstract void Notification_Callback(String message);
 
 	private static String getCurrentDateTime() {
 		DateFormat dateFormat = new SimpleDateFormat(DATEFORMAT);
