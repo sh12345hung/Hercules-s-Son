@@ -1,6 +1,8 @@
 package NewsCrawler;
 
+import static NewsCrawler.News.Size;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -12,6 +14,7 @@ public class VNExpress implements News {
     private String _address;
     private String _title;
     private String _image;
+    private String _bigImage;
     private String _content;
     public String _topic;
     
@@ -22,7 +25,7 @@ public class VNExpress implements News {
         System.setProperty("http.proxyHost", "127.0.0.1");
 	System.setProperty("http.proxyPort", "8182");
 	try {
-            Document doc = Jsoup.connect(url).get();
+            Document doc = Jsoup.connect(url).timeout(20000).get();
             Elements links = doc.select("ul[class=list_menu_header]").select("li");
             Element links1 = links.first();
             for (Element link : links) {
@@ -90,7 +93,8 @@ public class VNExpress implements News {
                 System.out.println("Title: " + _title);
                 System.out.println("Image: " + _image);
                 System.out.println("Content: " + _content);
-                System.out.println("Topic: " + _topic);
+                System.out.println("Topic: " + _topic); 
+                Size(_image); 
             }
         } catch (IOException e) {
                 System.out.println(e);
@@ -100,7 +104,7 @@ public class VNExpress implements News {
     @Override
     public void mainNews(String url) {
 	try {
-            Document doc = Jsoup.connect(url).get();
+            Document doc = Jsoup.connect(url).timeout(10000).get();
             Elements medias = doc.select("div[class=block_mid_new]").select("li");
             for (Element media : medias) {
 		_address = media.select("a").attr("href");
@@ -113,9 +117,27 @@ public class VNExpress implements News {
 		System.out.println("                Image: " + _image);
 		System.out.println("                Content: " + _content);
 		System.out.println("                Topic: " + _topic);
+                getImage(_address);
             }
 	} catch (IOException e) {
             System.out.println(e);
         }
     }
+
+    @Override
+    public void getImage(String url) {
+        try{
+            Document doc = Jsoup.connect(url).get();
+            Elements image = doc.select("div[id=detail_page],div[class=main_content_detail width_common]")
+                    .select("div[class=fck_detail width_common block_ads_connect],div[class=block_thumb_slide_show],div[class=fck_detail width_common]");
+            _bigImage = image.select("img").attr("src");
+            
+            System.out.println("------Big image: " + _bigImage);
+            Size(_bigImage);
+        }
+        catch(IOException e){
+            System.out.println(e);
+        }    
+    }
+
 }

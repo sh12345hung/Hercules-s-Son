@@ -150,4 +150,9 @@ public class Baomoi implements News {
             Logger.getLogger(Baomoi.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    @Override
+    public void getImage(String url) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
