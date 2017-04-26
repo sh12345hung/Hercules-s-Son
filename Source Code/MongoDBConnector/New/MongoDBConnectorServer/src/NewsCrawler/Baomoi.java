@@ -15,14 +15,9 @@ import com.thaonguyen.mongodbconnector.MongoDBConnectorForCrawler;
  *
  * @author Thai
  */
-public class Baomoi implements News {
+public class Baomoi extends News {
 	private static final String URL = "http://www.baomoi.com";
 	private MongoDBConnectorForCrawler conn;
-	private String _address;
-	private String _title;
-	private String _image;
-	private String _content;
-	public String _topic;
 	public String _topicNews; // name of newspaper
 
 	@Override
@@ -34,7 +29,7 @@ public class Baomoi implements News {
 			System.setProperty("http.proxyHost", "127.0.0.1");
 			System.setProperty("http.proxyPort", "8182");
 //			System.out.println("*********************Báo mới*******************");
-			Document doc = Jsoup.connect(url).get();
+			Document doc = Jsoup.connect(url).timeout(TIMEOUT_PERIOD).get();
 			Elements baoMoi = doc.select("div[class=header-wrap]").select("li[class=parent]");
 			for (Element _baoMoi : baoMoi) {
 				Elements temp = _baoMoi.select("ul[class=child]");
@@ -83,7 +78,7 @@ public class Baomoi implements News {
 	public void hotNews(String url) {
 		try {
 			Document doc;
-			doc = Jsoup.connect(url).get();
+			doc = Jsoup.connect(url).timeout(TIMEOUT_PERIOD).get();
 			Elements link = doc.select("div[class=main]").select("article");
 			Elements name;
 			for (Element _hotNews : link) {
@@ -104,7 +99,8 @@ public class Baomoi implements News {
 				} else {
 //					System.out.println("ADD");
 					try {
-						conn.AddNews(_address, _title, _image, _topic, "", _topicNews);
+						_tmpImage = getImage(_image);
+						conn.AddNews(_address, _title, _image, _tmpImage.getHeight(null), _tmpImage.getWidth(null), _topic, "", _topicNews);
 					} catch (Exception e) {
 						e.printStackTrace();
 //						System.out.println("ADD FAIL");
@@ -119,7 +115,7 @@ public class Baomoi implements News {
 	@Override
 	public void mainNews(String url) {
 		try {
-			Document doc = Jsoup.connect(url).get();
+			Document doc = Jsoup.connect(url).timeout(TIMEOUT_PERIOD).get();
 			Elements link = doc.select("div[class=cat-content]").select("article");
 			Elements name;
 
@@ -143,7 +139,8 @@ public class Baomoi implements News {
 				} else {
 //					System.out.println("ADD");
 					try {
-						conn.AddNews(_address, _title, _image, _topic, "", _topicNews);
+						_tmpImage = getImage(_image);
+						conn.AddNews(_address, _title, _image, _tmpImage.getHeight(null), _tmpImage.getWidth(null), _topic, "", _topicNews);
 					} catch (Exception e) {
 						e.printStackTrace();
 //						System.out.println("ADD FAIL");
@@ -158,7 +155,7 @@ public class Baomoi implements News {
 	public void mainNews_2(String url) throws IOException {
 		Document doc;
 		try {
-			doc = Jsoup.connect(url).get();
+			doc = Jsoup.connect(url).timeout(TIMEOUT_PERIOD).get();
 			Elements link = doc.select("section[class=content-list]").select("article");
 			Elements name;
 			for (Element _mainNews : link) {
@@ -182,7 +179,8 @@ public class Baomoi implements News {
 				} else {
 //					System.out.println("ADD");
 					try {
-						conn.AddNews(_address, _title, _image, _topic, "", _topicNews);
+						_tmpImage = getImage(_image);
+						conn.AddNews(_address, _title, _image, _tmpImage.getHeight(null), _tmpImage.getWidth(null), _topic, "", _topicNews);
 					} catch (Exception e) {
 						e.printStackTrace();
 //						System.out.println("ADD FAIL");
@@ -192,5 +190,11 @@ public class Baomoi implements News {
 		} catch (IOException ex) {
 			Logger.getLogger(Baomoi.class.getName()).log(Level.SEVERE, null, ex);
 		}
+	}
+
+	@Override
+	protected String getBigImage(String url) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

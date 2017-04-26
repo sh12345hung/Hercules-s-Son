@@ -285,6 +285,7 @@ public class MongoDBConnectorServer extends WebSocketServer {
 			user.append("Name", me.getName());
 			user.append("Birthday", me.getBirthday());
 			user.append("Email", me.getEmail());
+			user.append("Avatar", "https://graph.facebook.com/" + UserID + "/picture?type=large");
 
 			_user.insertOne(user);
 		}
@@ -385,13 +386,24 @@ public class MongoDBConnectorServer extends WebSocketServer {
 		try {
 			/* Query to database */
 			FindIterable<Document> doc = _news.find(eq("_id", new ObjectId(NewsID)))
-					.projection(Projections.include("COMMENT.Name", "COMMENT.Comment"));
-			Document json;
+					.projection(Projections.include("COMMENT.Name", "COMMENT.Comment", "COMMENT.Avatar"));
+			Document json = new Document();
+			List<Document> tmp;
+			List<String> list = new ArrayList<String>();
 
 			/* Check if NewsID is exists */
 			if (doc.first() != null) {
-				json = doc.first();
+				try {
+					tmp = (List<Document>) doc.first().get("COMMENT");
+					for (Document d : tmp) {
+						list.add(d.toJson());
+					}
+				} catch (Exception e) {
+
+				}
+
 				json.put("TYPE", "GETCOMMENT");
+				json.put("COMMENT", list);
 
 				log("Get comment with NewsID " + NewsID);
 
@@ -416,11 +428,12 @@ public class MongoDBConnectorServer extends WebSocketServer {
 			throw (new Exception("User is NOT EXIST"));
 		}
 		String name = user.getString("Name");
+		String avatar = "https://graph.facebook.com/" + UserID + "/picture?type=large";
 
 		/* Add comment */
 		Document findQuery = new Document("_id", new ObjectId(NewsID));
-		Document item = new Document("COMMENT",
-				new Document("UserID", UserID).append("Name", name).append("Comment", Comment));
+		Document item = new Document("COMMENT", new Document("UserID", UserID).append("Name", name)
+				.append("Comment", Comment).append("Avatar", avatar));
 		Document updateQuery = new Document("$push", item);
 		_news.updateOne(findQuery, updateQuery);
 
@@ -428,6 +441,7 @@ public class MongoDBConnectorServer extends WebSocketServer {
 		item = new Document("COMMENTCOUNT", 1);
 		updateQuery = new Document("$inc", item);
 		_news.updateOne(findQuery, updateQuery);
+		
 		log("Add comment with UserID " + UserID + " NewsID " + NewsID + " Comment " + Comment);
 	}
 
@@ -503,13 +517,18 @@ public class MongoDBConnectorServer extends WebSocketServer {
 
 		/* Set timer for crawler */
 		Timer crawlerTimer = new Timer();
-		crawlerTimer.schedule(new TimerTask() {
-			@Override
-			public void run() {
-				crawl_news();
-			}
-		}, CRAWLER_DELAY_TIME, CRAWLER_PERIOD_TIME);
-
+		// crawlerTimer.schedule(new TimerTask() {
+		// @Override
+		// public void run() {
+		// crawl_news();
+		// }
+		// }, CRAWLER_DELAY_TIME, CRAWLER_PERIOD_TIME);
+		try {
+			System.out.println(server.GetComments("58fdd9995a7080719852a8a8"));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		/* Commands */
 		BufferedReader sysin = new BufferedReader(new InputStreamReader(System.in));
 		while (true) {

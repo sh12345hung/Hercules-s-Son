@@ -8,7 +8,7 @@ import org.jsoup.select.Elements;
 
 import com.thaonguyen.mongodbconnector.MongoDBConnectorForCrawler;
 
-public class ZingNews implements News {
+public class ZingNews extends News {
 	private MongoDBConnectorForCrawler conn;
 	public String _currentTopic;
 	public String url = "http://news.zing.vn/";
@@ -18,7 +18,7 @@ public class ZingNews implements News {
 		conn = new MongoDBConnectorForCrawler("localhost", 27017, DATABASE_NAME);
 		System.out.println("Crawling: " + url);
 		try {
-			Document doc = Jsoup.connect(url).get();
+			Document doc = Jsoup.connect(url).timeout(TIMEOUT_PERIOD).get();
 			Elements NewsZing = doc.select("nav[class=categories] ").select("ul").select("li")
 					.select("div[class=subcate]").remove().select("li");
 			for (Element Zing : NewsZing) {
@@ -44,7 +44,7 @@ public class ZingNews implements News {
 	@Override
 	public void hotNews(String url) {
 		try {
-			Document doc = Jsoup.connect(url).get();
+			Document doc = Jsoup.connect(url).timeout(TIMEOUT_PERIOD).get();
 			Elements medias = doc.select("div[class=block_mid_new]").select("li");
 			for (Element media : medias) {
 				String _address = media.select("a").attr("href");
@@ -63,7 +63,8 @@ public class ZingNews implements News {
 				} else {
 //					System.out.println("ADD");
 					try {
-						conn.AddNews(_address, _title, _image, _currentTopic, _content, "ZingNews");
+						_tmpImage = getImage(_image);
+						conn.AddNews(_address, _title, _image, _tmpImage.getHeight(null), _tmpImage.getWidth(null), _currentTopic, _content, "ZingNews");
 					} catch (Exception e) {
 						e.printStackTrace();
 //						System.out.println("ADD FAIL");
@@ -78,7 +79,7 @@ public class ZingNews implements News {
 	@Override
 	public void mainNews(String url) {
 		try {
-			Document doc = Jsoup.connect(url).get();
+			Document doc = Jsoup.connect(url).timeout(TIMEOUT_PERIOD).get();
 			Elements link = doc.select("section[class=cate_content]").select("article");
 			for (Element _mainNews : link) {
 				String _address = _mainNews.select("a").attr("abs:href");
@@ -98,7 +99,8 @@ public class ZingNews implements News {
 				} else {
 //					System.out.println("ADD");
 					try {
-						conn.AddNews(_address, _title, _image, _currentTopic, _description, "ZingNews");
+						_tmpImage = getImage(_image);
+						conn.AddNews(_address, _title, _image, _tmpImage.getHeight(null), _tmpImage.getWidth(null), _currentTopic, _description, "ZingNews");
 					} catch (Exception e) {
 						e.printStackTrace();
 //						System.out.println("ADD FAIL");
@@ -226,5 +228,11 @@ public class ZingNews implements News {
 			break;
 		}
 		return this._currentTopic = a;
+	}
+
+	@Override
+	protected String getBigImage(String url) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
