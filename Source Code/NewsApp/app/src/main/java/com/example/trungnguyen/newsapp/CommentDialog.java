@@ -118,6 +118,7 @@ public class CommentDialog extends DialogFragment implements View.OnClickListene
             String content = etCmt.getText().toString();
             if (!content.isEmpty()) {
                 mClient.AddComment(mNewsId, content);
+                mAdapter.addOneMoreItem(content);
                 etCmt.setText("");
                 etCmt.requestFocus();
             }
@@ -125,6 +126,7 @@ public class CommentDialog extends DialogFragment implements View.OnClickListene
     }
 
     public static void pushData(ArrayList<Comment> listCmt) {
-        mAdapter.addNewList(listCmt);
+        if (listCmt.size() > 0)
+            mAdapter.addNewList(listCmt);
     }
 }

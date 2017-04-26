@@ -209,6 +209,7 @@ public class MainActivity extends AppCompatActivity implements
                 public void Search_Callback(String keyword, List<String> list) {
                     mNewsList.clear();
                     if (list.size() > 0) {
+                        Log.d(TAG, list.toString());
                         for (String item : list) {
                             Log.d(TAG, item);
                             try {
@@ -221,10 +222,8 @@ public class MainActivity extends AppCompatActivity implements
                                 String commentCount = itemObj.getString("COMMENTCOUNT");
                                 String source = itemObj.getString("SOURCE");
                                 String time = CalculateTimesAgo.calculate(itemObj.getString("TIME"));
-//                                String time = tempTime != null ? tempTime : "Chua xác d?nh";
                                 News news = new News(id, title, commentCount, url, imageUrl, source, time);
                                 mNewsList.add(news);
-//                                Log.d(TAG, id + " " + title);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -235,19 +234,24 @@ public class MainActivity extends AppCompatActivity implements
 
                 @Override
                 public void GetComment_Callback(List<String> list) {
-//                    Log.d("DIALOG", "GetComment_Callback");
-                    ArrayList<Comment> listCmt = new ArrayList<>();
-                    Log.d("DIALOG", list.size() + "");
-                    for (String item : list) {
-                        Log.d("DIALOG", item);
-                        try {
-                            JSONObject itemObj = new JSONObject(item);
-                            String content = itemObj.getString("Comment");
-                            String name = itemObj.getString("Name");
-                            Comment cmt = new Comment(new User("", name, "", ""), content);
-                            listCmt.add(cmt);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                    ArrayList<Comment> listCmt = null;
+                    Log.d("DIALOG", "GetComment_Callback");
+                    Log.d("DIALOG", "size " + list.size() + "");
+                    if (list.size() > 0) {
+                        Log.d("DIALOG", "list " + list.toString() + "");
+                        listCmt = new ArrayList<>();
+                        for (String item : list) {
+                            Log.d(TAG, "Item : " + item);
+                            try {
+                                JSONObject itemObj = new JSONObject(item);
+                                String content = itemObj.getString("Comment");
+                                String name = itemObj.getString("Name");
+                                Log.d("DIALOG", name + " " + content);
+                                Comment cmt = new Comment(new User("", name, "", ""), content);
+                                listCmt.add(cmt);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                     CommentDialog.pushData(listCmt);

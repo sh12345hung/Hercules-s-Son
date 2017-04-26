@@ -208,7 +208,7 @@ public class FragmentKinhTe extends FragmentTheGioi implements
                 try {
                     mIsLoading = true;
                     mAdapter.addProgressItem(null); // add null news item for checking progress bar visibility
-                    ((MainActivity) getActivity()).getClient().GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
+                    ((MainActivity) getActivity()).getClient().GetNews(TOPIC, mCurrentNews, GET_NEWS_COUNT);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -421,7 +421,7 @@ public class FragmentKinhTe extends FragmentTheGioi implements
             mAdapter.clearData();
         }
         try {
-            ((MainActivity) getActivity()).getClient().GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
+            ((MainActivity) getActivity()).getClient().GetNews(TOPIC, mCurrentNews, GET_NEWS_COUNT);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -458,7 +458,7 @@ public class FragmentKinhTe extends FragmentTheGioi implements
                 try {
 //                    Thread.sleep(300);
 //                    Log.d("FragmentTheThao", "GetNews");
-                    ((MainActivity) getActivity()).getClient().GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
+                    ((MainActivity) getActivity()).getClient().GetNews(TOPIC, mCurrentNews, GET_NEWS_COUNT);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

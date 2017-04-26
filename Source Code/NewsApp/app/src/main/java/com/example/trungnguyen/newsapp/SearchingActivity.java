@@ -29,6 +29,7 @@ import static com.example.trungnguyen.newsapp.fragment.FragmentCongNghe.NEWS_ID;
 public class SearchingActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
     private static final String COMMENT = "comment";
     private static final String COMMENT_DIALOG = "dialog";
+    private static final int SEARCH_ITEM_COUNT = 20;
     SearchView searchView;
     MongoDBConnectorClient mClient;
     private String mQueryString;
@@ -92,7 +93,7 @@ public class SearchingActivity extends AppCompatActivity implements SearchView.O
 ////                        mAdapter.notifyItemInserted(mNewsList.size() - 1);
 //                        mClient.GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
 //                        updateCurrentNewsPosition();
-                        Log.d("SEARCHACTIVITY", "ENDLIST");
+//                        Log.d("SEARCHACTIVITY", "ENDLIST");
                         mAdapter.loadingStart();
                     }
 //                    mClient.GetNews(TOPIC, mCurrentNews + 1, GET_NEWS_COUNT);
@@ -116,7 +117,7 @@ public class SearchingActivity extends AppCompatActivity implements SearchView.O
                 try {
                     mIsLoading = true;
                     mAdapter.addProgressItem(null); // add null news item for checking progress bar visibility
-                    mClient.Search(mQueryString, mCurrent + 1, 20);
+                    mClient.Search(mQueryString, mCurrent, SEARCH_ITEM_COUNT);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -168,7 +169,7 @@ public class SearchingActivity extends AppCompatActivity implements SearchView.O
             searchView.clearFocus(); //TODO: fix onQueryTextSubmit called twice
 //          On real device the method just called once
             try {
-                mClient.Search(query, mCurrent + 1, 20);
+                mClient.Search(query, mCurrent, SEARCH_ITEM_COUNT);
             } catch (Exception e) {
                 e.printStackTrace();
             }

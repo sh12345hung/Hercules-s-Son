@@ -260,6 +260,9 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 //        notifyItemRemoved(pos);
     }
 
+    public void addOneMoreItem(String content) {
+    }
+
     public static class LoadingMoreHolder extends RecyclerView.ViewHolder {
         ProgressBar Loading;
 
