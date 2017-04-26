@@ -146,7 +146,6 @@ public class SearchingActivity extends AppCompatActivity implements SearchView.O
 //                comments.add(comment);
 //                comments.add(comment);
 //                comments.add(comment);
-                mClient.GetComment(newsID);
                 CommentDialog dialogFragment = new CommentDialog();
                 Bundle bundle = new Bundle();
 //                bundle.putParcelableArrayList(COMMENT, (ArrayList<? extends Parcelable>) comments);
@@ -163,6 +162,7 @@ public class SearchingActivity extends AppCompatActivity implements SearchView.O
     @Override
     public boolean onQueryTextSubmit(String query) {
         mAdapter.clearData();
+        mCurrent = 0;
         if (!query.equals("")) {
             mQueryString = query;
             searchView.clearFocus(); //TODO: fix onQueryTextSubmit called twice
@@ -182,11 +182,18 @@ public class SearchingActivity extends AppCompatActivity implements SearchView.O
     }
 
     public static void updateSearchResults(ArrayList<News> list) {
-        mCurrent = mCurrent + 20;
+
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         if (mIsLoading) {
             mIsLoading = false;
             mAdapter.loadingfinish();
             if (list.size() >= 0) {
+                mCurrent = mCurrent + list.size();
                 mAdapter.addMoreItems(list);
                 mAdapter.notifyItemRangeChanged(0, mCurrent - 1);
             }

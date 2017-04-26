@@ -37,10 +37,10 @@ public class CommentDialog extends DialogFragment implements View.OnClickListene
 
 
     private EditText etCmt;
-    ProgressDialog dialog;
-    MongoDBConnectorClient mClient;
-    String mNewsId;
-    static CommentAdapter mAdapter;
+    private ProgressDialog dialog;
+    private MongoDBConnectorClient mClient;
+    private String mNewsId;
+    private static CommentAdapter mAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,7 +59,7 @@ public class CommentDialog extends DialogFragment implements View.OnClickListene
         ImageView btnSubmitCmt = (ImageView) mReturnView.findViewById(R.id.btn_submit_cmt);
         btnSubmitCmt.setOnClickListener(this);
         Bundle bundle = getArguments();
-        mNewsId = bundle.getString(FragmentCongNghe.NEWS_ID, "NULL");
+        mNewsId = bundle.getString(FragmentCongNghe.NEWS_ID, null);
         if (!bundle.getBoolean(MainActivity.IS_LOGIN)) {
             etCmt.setVisibility(View.GONE);
             tvLoginCmt.setVisibility(View.VISIBLE);
@@ -94,15 +94,20 @@ public class CommentDialog extends DialogFragment implements View.OnClickListene
 
     @Override
     public void onResume() {
-        mClient = MainActivity.getClient();
-        ViewGroup.LayoutParams params = getDialog().getWindow().getAttributes();
-        params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        try {
+            mClient = MainActivity.getClient();
+            ViewGroup.LayoutParams params = getDialog().getWindow().getAttributes();
+            params.width = ViewGroup.LayoutParams.MATCH_PARENT;
 //        params.height = getResources().getDimensionPixelSize(R.dimen.comment_dialog_height);
 
-        params.height = ViewGroup.LayoutParams.MATCH_PARENT;
-        getDialog().getWindow().setAttributes((WindowManager.LayoutParams) params);
-        Log.d("DIALOG", "onResume");
-        mClient.GetComment(mNewsId);
+            params.height = ViewGroup.LayoutParams.MATCH_PARENT;
+            getDialog().getWindow().setAttributes((WindowManager.LayoutParams) params);
+            Log.d("DIALOG", "onResume");
+            if (mNewsId != null)
+                mClient.GetComment(mNewsId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         dialog.dismiss();
         super.onResume();
     }
@@ -113,6 +118,7 @@ public class CommentDialog extends DialogFragment implements View.OnClickListene
             String content = etCmt.getText().toString();
             if (!content.isEmpty()) {
                 mClient.AddComment(mNewsId, content);
+                etCmt.setText("");
                 etCmt.requestFocus();
             }
         }

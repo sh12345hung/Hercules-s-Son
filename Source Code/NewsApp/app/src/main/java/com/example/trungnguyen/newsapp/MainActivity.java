@@ -143,6 +143,7 @@ public class MainActivity extends AppCompatActivity implements
             mClient = new MongoDBConnectorClient(new URI("ws://ec2-54-250-240-202.ap-northeast-1.compute.amazonaws.com:7778")) {
                 @Override
                 public void Login_Callback(boolean b, String s, boolean b1) {
+                    mClient.set_userID(mAccessToken.getUserId());
                 }
 
                 @Override
@@ -228,15 +229,15 @@ public class MainActivity extends AppCompatActivity implements
                                 e.printStackTrace();
                             }
                         }
-                        SearchingActivity.updateSearchResults(mNewsList);
                     }
+                    SearchingActivity.updateSearchResults(mNewsList);
                 }
 
                 @Override
                 public void GetComment_Callback(List<String> list) {
-                    Log.d("DIALOG", "GetComment_Callback");
+//                    Log.d("DIALOG", "GetComment_Callback");
                     ArrayList<Comment> listCmt = new ArrayList<>();
-                    Log.d("DIALOG", list+ "");
+                    Log.d("DIALOG", list.size() + "");
                     for (String item : list) {
                         Log.d("DIALOG", item);
                         try {
