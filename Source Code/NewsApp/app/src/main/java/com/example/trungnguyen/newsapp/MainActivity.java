@@ -1,5 +1,6 @@
 package com.example.trungnguyen.newsapp;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -41,7 +42,9 @@ import com.example.trungnguyen.newsapp.fragment.FragmentXeCo;
 import com.example.trungnguyen.newsapp.helper.AppNewsPreference;
 import com.example.trungnguyen.newsapp.helper.CalculateTimesAgo;
 import com.example.trungnguyen.newsapp.helper.NetworkStateReceiver;
+import com.example.trungnguyen.newsapp.model.Comment;
 import com.example.trungnguyen.newsapp.model.News;
+import com.example.trungnguyen.newsapp.model.User;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.FacebookSdk;
@@ -54,6 +57,7 @@ import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements
     private String facebookPictureUrl;
     private static int OFFSCREENS_PAGE = 7;
     private View mHeaderView;
-    MongoDBConnectorClient mClient;
+    private static MongoDBConnectorClient mClient;
     //    OnGetNewsCompleted mListener;
     private ArrayList<News> mNewsList;
     private ViewPagerAdapter mPagerAdapter;
@@ -135,12 +139,10 @@ public class MainActivity extends AppCompatActivity implements
             request.setParameters(parameters);
             request.executeAsync();
         }
-        Log.d("TESTING", "onCreate - main");
         try {
-            mClient = new MongoDBConnectorClient() {
+            mClient = new MongoDBConnectorClient(new URI("ws://ec2-54-250-240-202.ap-northeast-1.compute.amazonaws.com:7778")) {
                 @Override
                 public void Login_Callback(boolean b, String s, boolean b1) {
-
                 }
 
                 @Override
@@ -148,6 +150,7 @@ public class MainActivity extends AppCompatActivity implements
                     try {
                         mNewsList.clear();
                         for (String item : list) {
+                            Log.d(TAG, item);
                             try {
                                 JSONObject itemObj = new JSONObject(item);
                                 JSONObject idObj = itemObj.getJSONObject("_id");
@@ -202,8 +205,51 @@ public class MainActivity extends AppCompatActivity implements
                 }
 
                 @Override
-                public void GetComment_Callback(List<String> list) {
+                public void Search_Callback(String keyword, List<String> list) {
+                    mNewsList.clear();
+                    if (list.size() > 0) {
+                        for (String item : list) {
+                            Log.d(TAG, item);
+                            try {
+                                JSONObject itemObj = new JSONObject(item);
+                                JSONObject idObj = itemObj.getJSONObject("_id");
+                                String id = idObj.getString("$oid");
+                                String title = itemObj.getString("TITLE");
+                                String url = itemObj.getString("URL");
+                                String imageUrl = itemObj.getString("IMAGEURL");
+                                String commentCount = itemObj.getString("COMMENTCOUNT");
+                                String source = itemObj.getString("SOURCE");
+                                String time = CalculateTimesAgo.calculate(itemObj.getString("TIME"));
+//                                String time = tempTime != null ? tempTime : "Chua xác d?nh";
+                                News news = new News(id, title, commentCount, url, imageUrl, source, time);
+                                mNewsList.add(news);
+//                                Log.d(TAG, id + " " + title);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        SearchingActivity.updateSearchResults(mNewsList);
+                    }
+                }
 
+                @Override
+                public void GetComment_Callback(List<String> list) {
+                    Log.d("DIALOG", "GetComment_Callback");
+                    ArrayList<Comment> listCmt = new ArrayList<>();
+                    Log.d("DIALOG", list+ "");
+                    for (String item : list) {
+                        Log.d("DIALOG", item);
+                        try {
+                            JSONObject itemObj = new JSONObject(item);
+                            String content = itemObj.getString("Comment");
+                            String name = itemObj.getString("Name");
+                            Comment cmt = new Comment(new User("", name, "", ""), content);
+                            listCmt.add(cmt);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    CommentDialog.pushData(listCmt);
                 }
 
                 @Override
@@ -320,7 +366,7 @@ public class MainActivity extends AppCompatActivity implements
         try {
             if (mClient == null)
                 mClient = AppNewsPreference.getCurrentClient(this);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -336,7 +382,7 @@ public class MainActivity extends AppCompatActivity implements
         AppNewsPreference.saveLastClient(this, mClient);
     }
 
-    public MongoDBConnectorClient getClient() {
+    public static MongoDBConnectorClient getClient() {
         return mClient;
     }
 

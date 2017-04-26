@@ -6,5 +6,5 @@ package com.example.trungnguyen.newsapp;
 
 public interface OnLoadMoreDataListener {
     void onLoadMoreData();
-    void onCommentClick(int position);
+    void onCommentClick(String newsID);
 }

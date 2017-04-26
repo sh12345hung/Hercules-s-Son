@@ -58,7 +58,8 @@ public class FragmentCongNghe extends FragmentTheGioi implements
     public static final String TAG = "FragmentTheThao";
     public static final int GET_NEWS_COUNT = 15;
     private static final String COMMENT_DIALOG = "comment_dialog";
-//    private ArrayList<News> mNewsList;
+    public static final String NEWS_ID = "news_id";
+    //    private ArrayList<News> mNewsList;
     private LinearLayout llBackground;
     private RecyclerView mRecyclerView;
     private SwipeRefreshLayout mSwipeLayout;
@@ -217,32 +218,34 @@ public class FragmentCongNghe extends FragmentTheGioi implements
             }
 
             @Override
-            public void onCommentClick(int position) {
-                List<Comment> comments = new ArrayList<>();
-                String url = "https://scontent.xx.fbcdn.net/v/t1.0-1/p50x50/16427427_590536551139263_444919452715704300_n.jpg?oh=12843c9c03620ffd91e9febaf2a7add8&oe=596DC86E";
-                User user = new User(url, "Duy Trung", "", "");
-                String content = "Bố anh hút rất nhiều thuốc, mẹ anh chửi ổng quá trời";
-                Comment comment = new Comment(user, content);
-                comments.add(comment);
-                comments.add(comment);
-                comments.add(comment);
-                comments.add(comment);
-                comments.add(comment);
-                comments.add(comment);
-                comments.add(comment);
-                comments.add(comment);
-                comments.add(comment);
-                comments.add(comment);
-                comments.add(comment);
-                comments.add(comment);
-                comments.add(comment);
-                comments.add(comment);
-                comments.add(comment);
-                comments.add(comment);
-                comments.add(comment);
+            public void onCommentClick(String newsID) {
+//                List<Comment> comments = new ArrayList<>();
+//                String url = "https://scontent.xx.fbcdn.net/v/t1.0-1/p50x50/16427427_590536551139263_444919452715704300_n.jpg?oh=12843c9c03620ffd91e9febaf2a7add8&oe=596DC86E";
+//                User user = new User(url, "Duy Trung", "", "");
+//                String content = "Bố anh hút rất nhiều thuốc, mẹ anh chửi ổng quá trời";
+//                Comment comment = new Comment(user, content);
+//                comments.add(comment);
+//                comments.add(comment);
+//                comments.add(comment);
+//                comments.add(comment);
+//                comments.add(comment);
+//                comments.add(comment);
+//                comments.add(comment);
+//                comments.add(comment);
+//                comments.add(comment);
+//                comments.add(comment);
+//                comments.add(comment);
+//                comments.add(comment);
+//                comments.add(comment);
+//                comments.add(comment);
+//                comments.add(comment);
+//                comments.add(comment);
+//                comments.add(comment);
+//                mClient.GetComment(newsID);
                 CommentDialog dialogFragment = new CommentDialog();
                 Bundle bundle = new Bundle();
-                bundle.putParcelableArrayList(COMMENT, (ArrayList<? extends Parcelable>) comments);
+//                bundle.putParcelableArrayList(COMMENT, (ArrayList<? extends Parcelable>) comments);
+                bundle.putString(NEWS_ID, newsID);
                 bundle.putBoolean(MainActivity.IS_LOGIN, MainActivity.getLoginStatus());
                 dialogFragment.setArguments(bundle);
                 if (CheckForNetworkState.isNetworkAvailable())

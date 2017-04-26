@@ -5,4 +5,6 @@
     <string name="tim_tin_tuc">Tìm kiếm tin tức...</string>
     <string name="facebook_app_id">261074514343564</string>
     <string name="log_in">Log in</string>
+    <string name="type_your_comments">Type your comments...</string>
+    <string name="please_login_to_comment">Login requirement</string>
 </resources>

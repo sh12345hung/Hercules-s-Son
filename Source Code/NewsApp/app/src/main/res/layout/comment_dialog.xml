@@ -5,31 +5,44 @@
     android:background="@drawable/background_comment_dialog"
     android:orientation="vertical">
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/lvComments"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_weight="1">
-    </ListView>
+    </android.support.v7.widget.RecyclerView>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="60dp">
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Please login to comment"
+            android:text="@string/please_login_to_comment"
             android:id="@+id/tvLoginCmt"
+            android:visibility="invisible"
             android:gravity="center"
             android:textSize="25sp"/>
-
-        <EditText
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@null"
-            android:visibility="invisible"
-            android:id="@+id/etComment"
-            android:hint="Type your comments..." />
+            android:layout_height="match_parent">
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:visibility="visible"
+                android:id="@+id/etComment"
+                android:layout_weight="8"
+                android:hint="@string/type_your_comments" />
+
+            <ImageView
+                android:id="@+id/btn_submit_cmt"
+                android:src="@drawable/send"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:layout_height="match_parent" />
+        </LinearLayout>
     </FrameLayout>
 </LinearLayout>

@@ -18,4 +18,5 @@
     <color name="purple_white">#BA68C8</color>
     <color name="deep_purple">#4527A0</color>
     <color name="deep_purple_white">#B39DDB</color>
+    <color name="deep_purple_fab">#9575CD</color>
 </resources>

@@ -35,5 +35,4 @@ public class AppNewsPreference {
             mCurrentClient = mGson.fromJson(lastClient, MongoDBConnectorClient.class);
         return mCurrentClient;
     }
-
 }

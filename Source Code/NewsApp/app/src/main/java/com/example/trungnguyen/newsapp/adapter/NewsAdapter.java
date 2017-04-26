@@ -205,7 +205,6 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
 
@@ -323,7 +322,7 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         @Override
         public void onClick(View view) {
             if (view == llComment) {
-                mLoadMoreListener.onCommentClick(getAdapterPosition());
+                mLoadMoreListener.onCommentClick(mNewsList.get(getAdapterPosition()).getId());
             } else {
                 try {
                     if (CheckForNetworkState.isNetworkAvailable()) {
